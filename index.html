@@ -352,7 +352,7 @@
         
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xa4caff);
-        scene.fog = new THREE.FogExp2(0xbcd6ff, 0.0012); // Slightly lighter fog for bigger map
+        scene.fog = new THREE.FogExp2(0xbcd6ff, 0.0012);
 
         const camera = new THREE.PerspectiveCamera(130, window.innerWidth / window.innerHeight, 0.1, 4000);
         
@@ -392,7 +392,6 @@
         skyLight.position.set(200, 500, 100);
         scene.add(skyLight);
 
-        // Bigger map floor
         const floorCanvas = document.createElement('canvas');
         floorCanvas.width = 512; floorCanvas.height = 512;
         const ctxFloor = floorCanvas.getContext('2d');
@@ -411,7 +410,6 @@
         const floorMat = new THREE.MeshBasicMaterial({ map: floorTex });
         scene.add(new THREE.Mesh(floorGeo, floorMat));
 
-        // Procedural Grass blades on ground using InstancedMesh or grouped elements for performance
         const grassMat = new THREE.MeshBasicMaterial({ color: 0x4a6b35, side: THREE.DoubleSide });
         const grassGeo = new THREE.PlaneGeometry(0.6, 1.2);
         grassGeo.translate(0, 0.6, 0);
@@ -420,7 +418,7 @@
         for (let i = 0; i < 3000; i++) {
             const x = (Math.random() - 0.5) * 2000;
             const z = (Math.random() - 0.5) * 2000;
-            if (Math.abs(x) < 50 && Math.abs(z) < 50) continue; // Keep spawn clear
+            if (Math.abs(x) < 50 && Math.abs(z) < 50) continue;
             dummy.position.set(x, 0, z);
             dummy.rotation.y = Math.random() * Math.PI;
             dummy.scale.set(1 + Math.random() * 0.8, 0.8 + Math.random() * 1.0, 1 + Math.random() * 0.8);
@@ -482,21 +480,18 @@
             obstacles.push({ minX: x - w/2, maxX: x + w/2, minZ: z - d/2, maxZ: z + d/2, minY: 0, maxY: h });
         }
 
-        // Dive Buildings (Tall skyscrapers & towers specifically for diving down)
         function createDiveBuilding(x, z, w, h, d) {
             const towerMesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), darkMetalMat);
             towerMesh.position.set(x, h / 2, z);
             scene.add(towerMesh);
             obstacles.push({ minX: x - w/2, maxX: x + w/2, minZ: z - d/2, maxZ: z + d/2, minY: 0, maxY: h });
             
-            // Add some architectural fins / rooftop structures
             const roofAcc = new THREE.Mesh(new THREE.BoxGeometry(w * 0.6, 15, d * 0.6), rustMat);
             roofAcc.position.set(x, h + 7.5, z);
             scene.add(roofAcc);
             obstacles.push({ minX: x - (w*0.6)/2, maxX: x + (w*0.6)/2, minZ: z - (d*0.6)/2, maxZ: z + (d*0.6)/2, minY: h, maxY: h + 15 });
         }
 
-        // Spawning many standard buildings and dive buildings across the expanded map
         for (let i = 0; i < 40; i++) {
             const bx = (Math.random() - 0.5) * 1800;
             const bz = (Math.random() - 0.5) * 1800;
@@ -504,31 +499,26 @@
             createIndustrialBuilding(bx, bz, 20 + Math.random() * 30, 25 + Math.random() * 40, 20 + Math.random() * 30);
         }
 
-        // Add specific towering dive buildings
         createDiveBuilding(150, -200, 30, 180, 30);
         createDiveBuilding(-200, -250, 25, 220, 25);
         createDiveBuilding(300, 180, 35, 150, 35);
         createDiveBuilding(-250, 220, 28, 200, 28);
         createDiveBuilding(0, -350, 40, 250, 40);
 
-        // --- BANDO (Race Gates / Obstacle Hoops) Generation ---
         const bandoMaterial = new THREE.MeshBasicMaterial({ color: 0xff3300 });
         const bandoGlowMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
 
         function createBando(x, y, z, rotY = 0) {
             const bandoGroup = new THREE.Group();
             
-            // Outer Torus Gate
             const gateGeo = new THREE.TorusGeometry(6, 0.6, 16, 32);
             const gateMesh = new THREE.Mesh(gateGeo, bandoMaterial);
             bandoGroup.add(gateMesh);
 
-            // Inner glowing strip ring
             const innerGeo = new THREE.TorusGeometry(5.8, 0.2, 16, 32);
             const innerMesh = new THREE.Mesh(innerGeo, bandoGlowMat);
             bandoGroup.add(innerMesh);
 
-            // Support stands
             const standGeo = new THREE.CylinderGeometry(0.3, 0.3, y, 8);
             const standMat = new THREE.MeshBasicMaterial({ color: 0x222222 });
             
@@ -544,11 +534,10 @@
             bandoGroup.rotation.y = rotY;
             scene.add(bandoGroup);
 
-            // Add to collision / gates array if needed, or proximity tracker
-            obstacles.push({ minX: x - 6, maxX: x + 6, minZ: z - 1, maxZ: z + 1, minY: 0, maxY: y + 6 });
+            obstacles.push({ minX: x - 6.5, maxX: x - 4.5, minZ: z - 0.8, maxZ: z + 0.8, minY: 0, maxY: y });
+            obstacles.push({ minX: x + 4.5, maxX: x + 6.5, minZ: z - 0.8, maxZ: z + 0.8, minY: 0, maxY: y });
         }
 
-        // Create multiple Bando gates across the map for FPV racing/freestyle lines
         createBando(0, 8, 15, 0);
         createBando(0, 14, -60, 0);
         createBando(40, 20, -120, Math.PI / 4);
@@ -559,7 +548,6 @@
         createBando(100, 25, 100, Math.PI / 3);
         createBando(-120, 30, 150, -Math.PI / 3);
 
-        // --- DUST SPRINT EFFECT (When flying at 1.0m or lower) ---
         const dustCount = 150;
         const dustGeo = new THREE.BufferGeometry();
         const dustPositions = new Float32Array(dustCount * 3);
@@ -694,7 +682,7 @@
         let cinematicSlowdownFactor = 1.0;
         let tumbleRotationVelocity = new THREE.Vector3(0, 0, 0);
 
-        let keys = { w: false, s: false, a: false, d: false, ' ': false };
+        let keys = { w: false, s: false, a: false, d: false, i: false, j: false, k: false, l: false, ' ': false };
         let mousePitch = 0, mouseRoll = 0;
         let rawMouseX = 0, rawMouseY = 0;
 
@@ -745,7 +733,7 @@
                 document.getElementById('menu-title').innerText = "TRYP FPV";
                 const instructionTextEl = document.getElementById('instruction-text');
                 if(instructionTextEl) {
-                    instructionTextEl.innerHTML = `<b>Ready to Fly</b><br>Tap screen anywhere to change mode`;
+                    instructionTextEl.innerHTML = `<b>Ready to Fly</b><br>Controls: W/S (Throttle), A/D (Yaw)<br>Mouse or I/J/K/L (Pitch/Roll)`;
                 }
                 document.getElementById('btn-start-game').innerText = "RESUME";
             }
@@ -770,12 +758,15 @@
         });
 
         inst.addEventListener('click', (e) => {
+            // Re-acquire pointer lock if clicking background instruction overlay to resume
             startGameSession();
         });
 
         container.addEventListener('click', (e) => {
             if (isMobile && gameStarted && inst.style.display === 'none') {
                 cycleFlightMode();
+            } else if (!isMobile && gameStarted && inst.style.display !== 'flex' && document.pointerLockElement !== container) {
+                container.requestPointerLock();
             }
         });
 
@@ -1014,14 +1005,26 @@
                     if (keys.d) inputYaw = YAW_RATE * dt;
                     drone.euler.y -= inputYaw;
 
+                    let klPitch = 0;
+                    let klRoll = 0;
+                    if (keys.i) klPitch += 2.0 * dt; 
+                    if (keys.k) klPitch -= 2.0 * dt; 
+                    if (keys.j) klRoll -= 2.0 * dt;
+                    if (keys.l) klRoll += 2.0 * dt;
+
+                    let effectivePitch = mousePitch + klPitch;
+                    let effectiveRoll = mouseRoll + klRoll;
+                    rawMouseX += klRoll * 15;
+                    rawMouseY -= klPitch * 15;
+
                     if (modeCfg.hasAutoLevel) {
-                        drone.euler.x = THREE.MathUtils.clamp(drone.euler.x + mousePitch, -modeCfg.maxAngle, modeCfg.maxAngle);
-                        drone.euler.z = THREE.MathUtils.clamp(drone.euler.z - mouseRoll, -modeCfg.maxAngle, modeCfg.maxAngle);
-                        if (Math.abs(mousePitch) < 0.001) drone.euler.x *= Math.exp(-6.0 * dt);
-                        if (Math.abs(mouseRoll) < 0.001) drone.euler.z *= Math.exp(-6.0 * dt);
+                        drone.euler.x = THREE.MathUtils.clamp(drone.euler.x + effectivePitch, -modeCfg.maxAngle, modeCfg.maxAngle);
+                        drone.euler.z = THREE.MathUtils.clamp(drone.euler.z - effectiveRoll, -modeCfg.maxAngle, modeCfg.maxAngle);
+                        if (Math.abs(effectivePitch) < 0.001) drone.euler.x *= Math.exp(-6.0 * dt);
+                        if (Math.abs(effectiveRoll) < 0.001) drone.euler.z *= Math.exp(-6.0 * dt);
                         drone.rotation.setFromEuler(drone.euler);
                     } else {
-                        const deltaRotation = new THREE.Quaternion().setFromEuler(new THREE.Euler(-mousePitch * 30.0 * dt, -inputYaw, -mouseRoll * 30.0 * dt, 'YXZ'));
+                        const deltaRotation = new THREE.Quaternion().setFromEuler(new THREE.Euler(-effectivePitch * 30.0 * dt, -inputYaw, -effectiveRoll * 30.0 * dt, 'YXZ'));
                         drone.rotation.multiply(deltaRotation).normalize();
                     }
                 } else {
@@ -1054,17 +1057,15 @@
             droneGroup.position.copy(drone.position);
             droneGroup.quaternion.copy(drone.rotation);
 
-            // --- Dust Sprint Effect (Active at height <= 1.0m and moving) ---
             if (drone.position.y <= 1.0 && drone.velocity.length() > 2.0) {
                 dustSystem.visible = true;
                 dustSystem.position.copy(drone.position);
-                dustSystem.position.y = 0.1; // ground level
+                dustSystem.position.y = 0.1;
                 const positions = dustSystem.geometry.attributes.position.array;
                 const speedMult = drone.velocity.length() * 0.1;
                 for (let i = 0; i < positions.length; i += 3) {
                     positions[i] += (Math.random() - 0.5) * speedMult;
                     positions[i+2] += (Math.random() - 0.5) * speedMult;
-                    // Reset if too far
                     if (Math.abs(positions[i]) > 6 || Math.abs(positions[i+2]) > 6) {
                         positions[i] = (Math.random() - 0.5) * 2;
                         positions[i+2] = (Math.random() - 0.5) * 2;
@@ -1085,10 +1086,6 @@
             propMat.opacity = propsMoving ? 0.3 : 1.0;
             if (propsMoving) propMeshes.forEach(prop => { prop.rotation.y += 1.0; });
 
-            cloudGroup.children.children?.forEach?.(c => {
-                c.position.x += 1.5 * dt;
-                if(c.position.x > 1500) c.position.x = -1500;
-            });
             cloudGroup.children.forEach(c => {
                 c.position.x += 1.5 * dt;
                 if(c.position.x > 1500) c.position.x = -1500;
@@ -1108,9 +1105,12 @@
                 droneGroup.visible = true;
                 propMeshes.forEach(prop => { prop.position.x = prop.userData.baseX; });
                 droneGroup.children.forEach(part => { part.visible = true; });
-                const frontOffset = new THREE.Vector3(0, 2.5, 7.5).applyQuaternion(drone.rotation);
-                camera.position.lerp(new THREE.Vector3().addVectors(drone.position, frontOffset), 0.2);
-                camera.lookAt(drone.position);
+                
+                const backOffset = new THREE.Vector3(0, 2.5, 7.5).applyQuaternion(drone.rotation);
+                camera.position.lerp(new THREE.Vector3().addVectors(drone.position, backOffset), 0.2);
+                
+                const lookTarget = drone.position.clone().add(new THREE.Vector3(0, 0.5, -5).applyQuaternion(drone.rotation));
+                camera.lookAt(lookTarget);
             }
             if (camera.position.y < 0.5) camera.position.y = 0.5;
 
@@ -1132,10 +1132,13 @@
                 rightX = touchRightValX * maxPixelOffset; rightY = touchRightValY * maxPixelOffset;
             } else {
                 leftY = -(stickyThrottleValue * 2 - 1) * maxPixelOffset; 
-                leftX = (keys.d ? 1 : (keys.a ? -1 : 0)) * maxPixelOffset;
+                let klYaw = (keys.d ? 1 : (keys.a ? -1 : 0));
+                let klRollStick = (keys.l ? 1 : (keys.j ? -1 : 0));
+                let klPitchStick = (keys.i ? -1 : (keys.k ? 1 : 0)); 
+                leftX = klYaw * maxPixelOffset;
                 rawMouseX *= Math.exp(-12.0 * dt); rawMouseY *= Math.exp(-12.0 * dt);
-                rightX = Math.max(-maxPixelOffset, Math.min(maxPixelOffset, rawMouseX * 1.4));
-                rightY = Math.max(-maxPixelOffset, Math.min(maxPixelOffset, rawMouseY * 1.4));
+                rightX = Math.max(-maxPixelOffset, Math.min(maxPixelOffset, (rawMouseX + klRollStick * 20) * 1.4));
+                rightY = Math.max(-maxPixelOffset, Math.min(maxPixelOffset, (rawMouseY + klPitchStick * 20) * 1.4));
             }
 
             stickLeft.style.transform = `translate(calc(-50% + ${leftX}px), calc(-50% + ${leftY}px))`;
