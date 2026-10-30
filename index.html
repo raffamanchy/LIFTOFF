@@ -145,7 +145,7 @@
         #hs-hint { position: absolute; right: 6.4vw; bottom: 23.6vh; font-size: clamp(9px, 0.8vw, 13px); opacity: 0.8; text-shadow: 0 1px 4px #000; }
         #menu-content { position: absolute; inset: 0; pointer-events: none; }
         #menu-title, #instruction-text { display: none; }
-        #hs-side { position: absolute; left: 2.2vw; top: 11.3vh; display: grid; grid-auto-rows: 7.95vh; align-items: center; justify-items: center; height: 47.7vh; }
+        #hs-side { position: absolute; left: 2.2vw; top: 11.3vh; display: grid; grid-auto-rows: 7.95vh; align-items: center; justify-items: center; height: 55.65vh; }
         #hs-kb { position: absolute; left: 2.2vw; top: 2.4vh; width: 2.1vw; min-width: 24px; aspect-ratio: 1; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; } #hs-kb svg { width: 60%; stroke: #333; fill: none; stroke-width: 1.8; }
         #hs-side svg { width: 1.9vw; min-width: 22px; height: auto; stroke: #fff; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
         #hs-list { position: absolute; left: 5.8vw; top: 11.3vh; width: 21vw; min-width: 190px; display: flex; flex-direction: column; gap: 2.65vh; pointer-events: auto; }
@@ -213,6 +213,29 @@
         .mc p { margin: 0 0 1.4vh 0.4vw; font-size: clamp(9px, 0.78vw, 13px); line-height: 1.5; color: #777; }
         #map-bar { position: absolute; left: 9.4vw; bottom: 4vh; display: flex; align-items: center; gap: 1vw; font-size: clamp(10px, 0.95vw, 16px); text-shadow: 0 1px 4px #000; }
         #map-bar .pbtn { background: rgba(255,255,255,0.2); color: #fff; } #map-bar .pbtn.on { background: #5b9a8b; }
+
+        /* ===== CALIBRATION SCREEN ===== */
+        #calib { display:none; position:fixed; inset:0; z-index:60; overflow:hidden; font-family:"Segoe UI",Arial,sans-serif; color:#333;
+            background: radial-gradient(ellipse 22% 30% at 12% 52%, #3e7a36 0 60%, transparent 62%), radial-gradient(ellipse 26% 34% at 34% 50%, #4f8a3c 0 60%, transparent 62%), radial-gradient(ellipse 20% 28% at 55% 55%, #356b30 0 60%, transparent 62%), linear-gradient(#6fb0ee 0%, #cfe5f7 48%, #6c9a4a 48%, #3f6b33 100%); }
+        #calib-cv { position:absolute; inset:0; width:100% !important; height:100% !important; touch-action:none; }
+        #cal-panel { position:absolute; left:18px; top:18px; width:min(340px,88vw); max-height:72vh; overflow:auto; background:#fff; border-left:12px solid #e0605a; padding:16px 16px 14px; box-shadow:0 4px 18px rgba(0,0,0,.25); font-size:12px; line-height:1.5; }
+        #cal-panel .cal-h { display:flex; align-items:center; gap:8px; font-size:15px; letter-spacing:.04em; margin-bottom:10px; }
+        #cal-panel .cal-h svg { width:20px; height:20px; stroke:#555; fill:none; stroke-width:1.8; }
+        #cal-panel p { color:#666; margin-bottom:12px; }
+        .cal-row { display:flex; gap:10px; margin-bottom:10px; }
+        #cal-panel button, #cal-exit { flex:1; border:0; background:#ececec; color:#444; padding:7px 4px; font:inherit; font-size:12px; cursor:pointer; }
+        #cal-panel button:hover, #cal-exit:hover { background:#dedede; }
+        #cal-panel button.red { background:#d9534f; color:#fff; } #cal-panel button.red:hover { background:#c9433f; }
+        #cal-panel button.wide { width:100%; display:block; margin-top:4px; padding:9px; }
+        #cal-fine-box { display:none; margin:2px 0 10px; } #cal-fine-box.on { display:block; }
+        #cal-fine-box label { display:flex; align-items:center; gap:8px; color:#555; margin:4px 0; } #cal-fine-box label span { flex:0 0 88px; } #cal-fine-box input { flex:1; accent-color:#d9534f; } #cal-fine-box b { width:38px; text-align:right; font-weight:600; }
+        #cal-exit { position:absolute; left:42px; bottom:max(34px, env(safe-area-inset-bottom)); width:108px; flex:none; padding:9px; background:#fff; z-index:3; }
+        #cal-lcd { position:absolute; right:12vw; bottom:5vh; z-index:2; width:min(300px,60vw); padding:12px 16px; background:#aeb9a6; color:#2a3328; border:3px solid #2b2c2f; border-radius:8px; font:16px/1.3 Consolas,monospace; text-align:center; box-shadow:0 6px 16px rgba(0,0,0,.35); pointer-events:none; }
+        #cal-lcd small { display:block; font-size:12px; letter-spacing:.08em; opacity:.75; margin-bottom:3px; }
+        .cal-pad { display:none; position:absolute; bottom:max(36px, env(safe-area-inset-bottom)); width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.22); border:2px solid rgba(255,255,255,.7); touch-action:none; z-index:4; }
+        .cal-pad i { position:absolute; left:50%; top:50%; width:52px; height:52px; margin:0; border-radius:50%; background:rgba(255,255,255,.85); transform:translate(-50%,-50%); pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.3); }
+        #cal-pl { left:max(190px, 22vw); } #cal-pr { right:max(24px, env(safe-area-inset-right)); }
+        body.cal-mobile #cal-exit { left:18px; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -283,6 +306,7 @@
                     <svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="3"/><circle cx="16" cy="7" r="3"/><path d="M2 20v-5a4 4 0 0 1 4-4M22 20v-5a4 4 0 0 0-4-4M8 20v-5h8v5"/></svg>
                     <svg viewBox="0 0 24 24"><circle cx="5" cy="5" r="2.2"/><circle cx="19" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><rect x="9" y="9" width="6" height="6" rx="1.5"/><path d="M7 7l2 2M17 7l-2 2M7 17l2-2M17 17l-2-2"/></svg>
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="2.8"/><path d="M12 8.3V14M4 20.5h16M6.5 20.5l1.8-6.5h7.4l1.8 6.5M9.500 17.200h5"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 4 4v3a2 2 0 0 1-3.500 1.300L16 14H8l-2.500 2.300A2 2 0 0 1 2 15v-3a4 4 0 0 1 4-4z"/><path d="M7 11v2M6 12h2"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 3v8M7 6a8 8 0 1 0 10 0"/></svg>
                 </div>
@@ -291,6 +315,7 @@
                     <button class="hs-btn" style="--c:#f2e08a" data-panel="multi">MULTIPLAYER</button>
                     <button class="hs-btn" style="--c:#7ac0e0" data-panel="drone">DJI NEO 2</button>
                     <button class="hs-btn" style="--c:#f2a96b" data-panel="tools">TOOLS</button>
+                    <button class="hs-btn" style="--c:#c28fe0" data-cal="1">CALIBRATION</button>
                     <button class="hs-btn" style="--c:#e0605a" data-panel="options">OPTIONS</button>
                     <button class="hs-btn" style="--c:#9a3f3f" data-panel="quit">QUIT</button>
                 </div>
@@ -309,6 +334,21 @@
                 <div id="hs-toast"></div>
             </div>
         </div>
+    </div>
+
+
+    <div id="calib">
+        <canvas id="calib-cv"></canvas>
+        <div id="cal-panel">
+            <div class="cal-h"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.500v3M2.500 12h3M18.500 12h3M5.300 5.300l2.100 2.100M16.600 16.600l2.100 2.100M18.700 5.300l-2.100 2.100M7.400 16.600l-2.100 2.100"/></svg>CALIBRATION</div>
+            <p id="cal-msg"></p>
+            <div class="cal-row"><button id="cal-sel">Select</button><button id="cal-cal" class="red">Calibrate</button><button id="cal-fine">Fine-tune</button></div>
+            <div id="cal-fine-box"></div>
+            <button id="cal-save" class="wide">Save</button>
+        </div>
+        <button id="cal-exit">Exit</button>
+        <div id="cal-lcd"><small>DJI Virtual Joystick</small><span id="cal-lcd2">Is the drone reacting properly?</span></div>
+        <div id="cal-pl" class="cal-pad"><i></i></div><div id="cal-pr" class="cal-pad"><i></i></div>
     </div>
 
     <script>
@@ -1132,8 +1172,8 @@
 
         document.addEventListener('mousemove', (e) => {
             if (!gameStarted || isMobile || document.pointerLockElement !== container) return;
-            mousePitch = -e.movementY * MOUSE_SENSITIVITY;
-            mouseRoll = e.movementX * MOUSE_SENSITIVITY;
+            mousePitch = -e.movementY * MOUSE_SENSITIVITY * CAL.sens;
+            mouseRoll = e.movementX * MOUSE_SENSITIVITY * CAL.sens;
             rawMouseX += e.movementX * 0.4;
             rawMouseY += e.movementY * 0.4;
             rawMouseX = Math.max(-28, Math.min(28, rawMouseX));
@@ -1207,12 +1247,12 @@
                 leftKnob.dataset.dy = 47.5;
             }
             setupTouchJoystick('touch-left-pad', 'touch-left-knob', (x, y) => { 
-                touchLeftValX = x; 
+                touchLeftValX = CAL.f(x, 0); 
                 if (y !== null) touchLeftValY = y; 
             }, true);
             setupTouchJoystick('touch-right-pad', 'touch-right-knob', (x, y) => { 
-                touchRightValX = x; 
-                touchRightValY = y; 
+                touchRightValX = CAL.f(x, 2); 
+                touchRightValY = CAL.f(y, 3); 
             }, false);
         }
 
@@ -1998,6 +2038,136 @@
         }
 
         animate();
+
+        /* ===== DJI Virtual Joystick calibration ===== */
+        const CAL = Object.assign({ sens: 1, dz: 0.04, trim: [0, 0, 0, 0], c: [0, 0, 0, 0], mn: [-1, -1, -1, -1], mx: [1, 1, 1, 1], dev: isMobile ? 1 : 0 }, store.get('dji_calib', {}));
+        CAL.f = (v, i) => { const a = Math.abs(v), d = a < CAL.dz ? 0 : Math.sign(v) * (a - CAL.dz) / (1 - CAL.dz); return Math.max(-1, Math.min(1, d * CAL.sens + CAL.trim[i])); };
+        (() => {
+            const $ = id => document.getElementById(id), ov = $('calib'), msgEl = $('cal-msg'), lcd = $('cal-lcd2'), clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+            const DEVS = ['Keyboard + Mouse (WASD + mouse)', 'On-screen virtual joysticks', 'Gamepad'];
+            const IDLE = 'Click <b>Calibrate</b> if the drone does not react as expected.<br><br>Alternatively, fine-tune the current calibration by clicking on <b>Fine-tune</b>.';
+            if (isMobile) document.body.classList.add('cal-mobile');
+            let R, S, C, ctrl, sticks = [], drone, props = [], raf = 0, last = 0, thr = 0, step = 0, yaw = 0, alt = 0, spin = 0;
+            const raw = [0, 0, 0, 0], out = [0, 0, 0, 0], kk = {}, mouse = { x: 0, y: 0 }, pad = { l: [0, 0], r: [0, 0] };
+            const setMsg = (h, l) => { msgEl.innerHTML = h; lcd.textContent = l || 'Is the drone reacting properly?'; };
+            const tex = (w, h, fn) => { const c = document.createElement('canvas'); c.width = w; c.height = h; fn(c.getContext('2d'), w, h); return new THREE.CanvasTexture(c); };
+            const std = (c, r) => new THREE.MeshStandardMaterial({ color: c, roughness: r === undefined ? 0.7 : r, metalness: 0.05 });
+
+            function buildScene() {
+                S = new THREE.Scene(); C = new THREE.PerspectiveCamera(35, 1, 0.1, 100); C.position.set(0, 0, 16);
+                S.add(new THREE.HemisphereLight(0xffffff, 0x7f9a6a, 0.95)); const dl = new THREE.DirectionalLight(0xffffff, 0.85); dl.position.set(-4, 6, 9); S.add(dl);
+                const gray = std(0xa6a7aa), dark = std(0x26272a, 0.5), mid = std(0x8d8f93), light = std(0xc3c4c8), white = std(0xf1f1f1, 0.4);
+                ctrl = new THREE.Group();
+                // DJI FPV Remote Controller 3 body (top view outline)
+                const sh = new THREE.Shape();
+                sh.moveTo(-1.9, 1.75); sh.lineTo(1.9, 1.75);
+                sh.bezierCurveTo(2.4, 1.75, 3.05, 1.5, 3.05, 0.7); sh.bezierCurveTo(3.1, -0.2, 3.25, -1.0, 3.0, -1.75);
+                sh.bezierCurveTo(2.85, -2.25, 2.05, -2.3, 1.75, -1.7); sh.bezierCurveTo(1.5, -1.15, 1.2, -0.85, 0.7, -0.85);
+                sh.lineTo(-0.7, -0.85); sh.bezierCurveTo(-1.2, -0.85, -1.5, -1.15, -1.75, -1.7);
+                sh.bezierCurveTo(-2.05, -2.3, -2.85, -2.25, -3.0, -1.75); sh.bezierCurveTo(-3.25, -1.0, -3.1, -0.2, -3.05, 0.7);
+                sh.bezierCurveTo(-3.05, 1.5, -2.4, 1.75, -1.9, 1.75);
+                const bg = new THREE.ExtrudeGeometry(sh, { depth: 0.45, bevelEnabled: true, bevelThickness: 0.2, bevelSize: 0.18, bevelSegments: 5, curveSegments: 24 }); bg.translate(0, 0, -0.2);
+                ctrl.add(new THREE.Mesh(bg, gray));
+                const cyl = (r, h, m, x, y, z, axisZ) => { const g = new THREE.CylinderGeometry(r, r, h, 36); if (axisZ) g.rotateX(Math.PI / 2); const o = new THREE.Mesh(g, m); o.position.set(x, y, z); ctrl.add(o); return o; };
+                const box = (w, h, d, m, x, y, z) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); ctrl.add(o); return o; };
+                // gimbals + sticks
+                [-1, 1].forEach(sx => {
+                    const X = sx * 1.67, Y = 0.6;
+                    cyl(0.8, 0.1, light, X, Y, 0.47, true); cyl(0.62, 0.12, dark, X, Y, 0.5, true); box(0.95, 0.72, 0.1, std(0x151618, 0.4), X, Y, 0.53);
+                    const pv = new THREE.Group(); pv.position.set(X, Y, 0.56); ctrl.add(pv);
+                    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.5, 16).rotateX(Math.PI / 2), mid); stem.position.z = 0.25; pv.add(stem);
+                    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.14, 28).rotateX(Math.PI / 2), white); cap.position.z = 0.55; pv.add(cap);
+                    const rg = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.03, 8, 24), light); rg.position.z = 0.63; pv.add(rg);
+                    sticks.push(pv);
+                });
+                // logo, buttons, switch, LEDs
+                const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.95, 0.4), new THREE.MeshBasicMaterial({ map: tex(256, 108, (g, w, h) => { g.fillStyle = '#f4f4f4'; g.font = 'italic 900 78px Arial'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('dji', w / 2, h / 2); }), transparent: true })); logo.position.set(0, 0.72, 0.47); ctrl.add(logo);
+                const btn = (x, fn) => { cyl(0.23, 0.09, mid, x, -0.13, 0.5, true); const p = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.4), new THREE.MeshBasicMaterial({ map: tex(128, 128, fn), transparent: true })); p.position.set(x, -0.13, 0.551); ctrl.add(p); };
+                btn(-0.67, (g, w, h) => { g.fillStyle = '#f4f4f4'; g.font = 'bold 54px Arial'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('C1', w / 2, h / 2); });
+                btn(0.67, (g, w, h) => { g.strokeStyle = '#f4f4f4'; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.arc(w / 2, h / 2 + 4, 26, -Math.PI * 0.32, Math.PI * 1.32 + Math.PI * 2 * 0 - Math.PI * 0.0); g.stroke(); g.beginPath(); g.moveTo(w / 2, 26); g.lineTo(w / 2, h / 2 + 2); g.stroke(); });
+                box(0.4, 0.3, 0.1, dark, 0, -0.13, 0.5); box(0.16, 0.34, 0.14, std(0x3a3b3f), 0, -0.13, 0.55);
+                [-0.34, -0.1, 0.12, 0.34].forEach(x => { const d = new THREE.Mesh(new THREE.SphereGeometry(0.03, 10, 8), dark); d.position.set(x, -0.54, 0.47); ctrl.add(d); });
+                // shoulders / top posts
+                [-1.5, 1.5].forEach(x => cyl(0.1, 0.32, std(0x5b5d62), x, 1.88, 0.1, false));
+                box(1.7, 0.14, 0.14, dark, 0, 1.75, 0.3); [-1, 1].forEach(sx => { const b = box(0.95, 0.24, 0.3, dark, sx * 2.55, 1.58, 0.15); b.rotation.z = sx * -0.35; });
+                S.add(ctrl);
+            }
+
+            function makeDrone() {
+                if (drone) S.remove(drone);
+                const d = droneGroup.clone(true); d.visible = true; d.position.set(0, 0, 0); d.rotation.set(0, 0, 0); d.scale.set(1, 1, 1); d.updateMatrixWorld(true);
+                const a = [], b = []; droneGroup.traverse(o => a.push(o)); d.traverse(o => b.push(o)); props = propMeshes.map(p => b[a.indexOf(p)]).filter(Boolean);
+                const bx = new THREE.Box3().setFromObject(d), sz = bx.getSize(new THREE.Vector3()), ct = bx.getCenter(new THREE.Vector3());
+                d.position.sub(ct); drone = new THREE.Group(); drone.rotation.order = 'YXZ'; drone.add(d); drone.userData.k = 3.2 / (Math.max(sz.x, sz.z) || 1); S.add(drone);
+            }
+
+            function layout() {
+                const W = innerWidth, H = innerHeight, a = W / H; R.setSize(W, H, false); C.aspect = a; C.updateProjectionMatrix();
+                const hw = 16 * Math.tan(C.fov * Math.PI / 360) * a, s = clamp(hw * 0.95 / 3.5, 0.55, 1.05);
+                ctrl.scale.setScalar(s); drone.userData.s = clamp(hw / 9, 0.5, 1);
+                if (a > 1) { ctrl.position.set(hw * 0.44, 0.9, 0); drone.userData.p = [-hw * 0.5, -2.3]; } else { ctrl.position.set(0, 2.2, 0); drone.userData.p = [0, -3.6]; }
+            }
+
+            function readInput(dt) {
+                const dev = CAL.dev, t = [0, 0, 0, 0], k = Math.min(1, dt * 9);
+                if (dev === 0) { t[0] = (kk.d ? 1 : 0) - (kk.a ? 1 : 0); thr = clamp(thr + ((kk.w ? 1 : 0) - (kk.s ? 1 : 0)) * dt * 1.2, -1, 1); t[1] = thr; t[2] = mouse.x; t[3] = mouse.y; }
+                else if (dev === 1) { t[0] = pad.l[0]; t[1] = pad.l[1]; t[2] = pad.r[0]; t[3] = pad.r[1]; }
+                else { const gp = (navigator.getGamepads ? [...navigator.getGamepads()].find(g => g) : null); if (gp) { t[0] = gp.axes[0] || 0; t[1] = -(gp.axes[1] || 0); t[2] = gp.axes[2] || 0; t[3] = -(gp.axes[3] || 0); } }
+                for (let i = 0; i < 4; i++) {
+                    raw[i] += (t[i] - raw[i]) * ((dev === 0 && i < 2) || dev === 1 ? k : 1);
+                    if (step === 2) { CAL.mn[i] = Math.min(CAL.mn[i], raw[i]); CAL.mx[i] = Math.max(CAL.mx[i], raw[i]); }
+                    const d = raw[i] - CAL.c[i], sp = d >= 0 ? CAL.mx[i] - CAL.c[i] : CAL.c[i] - CAL.mn[i];
+                    out[i] = CAL.f(clamp(sp > 0.05 ? d / sp : d, -1, 1), i);
+                }
+            }
+
+            function frame(ts) {
+                raf = requestAnimationFrame(frame); const dt = Math.min(0.05, (ts - last) / 1000) || 0.016; last = ts; readInput(dt);
+                sticks[0].rotation.set(-out[1] * 0.5, out[0] * 0.5, 0); sticks[1].rotation.set(-out[3] * 0.5, out[2] * 0.5, 0);
+                ctrl.rotation.set(-0.32 - out[3] * 0.04, -0.28 + out[2] * 0.05, 0);
+                yaw -= out[0] * 2.2 * dt; alt += (out[1] * 0.8 - alt) * Math.min(1, dt * 5); spin += dt * 40 * (0.4 + (out[1] + 1) / 2);
+                const u = drone.userData; drone.scale.setScalar(u.k * u.s); drone.position.set(u.p[0], u.p[1] + alt + Math.sin(ts / 600) * 0.06, 1.5);
+                drone.rotation.set(-out[3] * 0.5 - 0.12, yaw + 0.6, -out[2] * 0.5);
+                props.forEach(p => { p.rotation.y = spin; });
+                R.render(S, C);
+            }
+
+            function openCal() {
+                ov.style.display = 'block';
+                if (!R) { R = new THREE.WebGLRenderer({ canvas: $('calib-cv'), alpha: true, antialias: true }); R.setPixelRatio(Math.min(devicePixelRatio, 2)); buildScene(); }
+                makeDrone(); layout(); step = 0; yaw = 0; thr = 0; pad.l = [0, 0]; $('cal-pl').firstElementChild.style.transform = 'translate(-50%,-50%)'; $('cal-cal').textContent = 'Calibrate'; $('cal-fine-box').classList.remove('on'); setDev(CAL.dev, true);
+                setMsg(IDLE); last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame);
+            }
+            function closeCal() { cancelAnimationFrame(raf); ov.style.display = 'none'; Object.keys(kk).forEach(k => kk[k] = false); }
+            function setDev(d, quiet) {
+                CAL.dev = d; $('cal-pl').style.display = $('cal-pr').style.display = d === 1 ? 'block' : 'none';
+                if (!quiet) setMsg('<b>Input:</b> ' + DEVS[d] + (d === 2 && !(navigator.getGamepads && [...navigator.getGamepads()].some(g => g)) ? '<br><br>No gamepad detected. Connect one and press a button.' : '') + '<br><br>' + IDLE, DEVS[d].split(' (')[0]);
+            }
+
+            $('cal-sel').onclick = () => { step = 0; $('cal-cal').textContent = 'Calibrate'; setDev((CAL.dev + 1) % 3); };
+            $('cal-cal').onclick = () => {
+                if (step === 0) { step = 1; $('cal-cal').textContent = 'Next'; setMsg('<b>Step 1/2</b> - Release the sticks (no keys pressed, mouse in the position that feels centered), then click <b>Next</b>.', 'Centre the sticks'); }
+                else if (step === 1) { for (let i = 0; i < 4; i++) { CAL.c[i] = (CAL.dev === 0 && i < 2) ? 0 : raw[i]; CAL.mn[i] = CAL.mx[i] = CAL.c[i]; } step = 2; setMsg('<b>Step 2/2</b> - Move both sticks to every extreme (W/A/S/D and the mouse to all edges, or the joysticks in full circles), then click <b>Next</b>.', 'Move the sticks'); }
+                else { step = 0; $('cal-cal').textContent = 'Calibrate'; for (let i = 0; i < 4; i++) { if (CAL.mx[i] - CAL.c[i] < 0.2) CAL.mx[i] = CAL.c[i] + 1; if (CAL.c[i] - CAL.mn[i] < 0.2) CAL.mn[i] = CAL.c[i] - 1; } setMsg('Calibration finished. Check that the drone follows the sticks, then click <b>Save</b>.'); }
+            };
+            const fb = $('cal-fine-box'), FINE = [['Sensitivity', () => CAL.sens, v => CAL.sens = v, 0.5, 1.5, 0.05], ['Deadzone', () => CAL.dz, v => CAL.dz = v, 0, 0.3, 0.01], ['Yaw trim', () => CAL.trim[0], v => CAL.trim[0] = v, -0.3, 0.3, 0.01], ['Throttle trim', () => CAL.trim[1], v => CAL.trim[1] = v, -0.3, 0.3, 0.01], ['Roll trim', () => CAL.trim[2], v => CAL.trim[2] = v, -0.3, 0.3, 0.01], ['Pitch trim', () => CAL.trim[3], v => CAL.trim[3] = v, -0.3, 0.3, 0.01]];
+            FINE.forEach(f => { const l = document.createElement('label'), i = document.createElement('input'), b = document.createElement('b'); l.innerHTML = '<span>' + f[0] + '</span>'; i.type = 'range'; i.min = f[3]; i.max = f[4]; i.step = f[5]; i.value = f[1](); b.textContent = (+f[1]()).toFixed(2); i.oninput = () => { f[2](parseFloat(i.value)); b.textContent = (+i.value).toFixed(2); }; l.append(i, b); fb.appendChild(l); f.push(i, b); });
+            $('cal-fine').onclick = () => { fb.classList.toggle('on'); FINE.forEach(f => { f[6].value = f[1](); f[7].textContent = (+f[1]()).toFixed(2); }); if (fb.classList.contains('on')) setMsg('Adjust the sliders until the drone reacts exactly like your sticks, then click <b>Save</b>.'); };
+            $('cal-save').onclick = () => { store.set('dji_calib', CAL); const b = $('cal-save'); b.textContent = 'Saved \u2713'; setTimeout(() => b.textContent = 'Save', 1400); };
+            $('cal-exit').onclick = closeCal;
+            document.querySelector('[data-cal]').addEventListener('click', e => { e.stopPropagation(); openCal(); });
+            addEventListener('resize', () => { if (R && ov.style.display === 'block') layout(); });
+            addEventListener('keydown', e => { if (ov.style.display !== 'block') return; const k = e.key.toLowerCase(); if (k === 'escape') closeCal(); if ('wasd'.includes(k) && k.length === 1) { kk[k] = true; e.preventDefault(); } });
+            addEventListener('keyup', e => { kk[e.key.toLowerCase()] = false; });
+            ov.addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; mouse.x = clamp((e.clientX / innerWidth - 0.5) * 2, -1.5, 1.5); mouse.y = clamp(-(e.clientY / innerHeight - 0.5) * 2, -1.5, 1.5); });
+            function mkPad(el, key) {
+                const kn = el.firstElementChild; let id = null;
+                const mv = e => { const r = el.getBoundingClientRect(); let dx = (e.clientX - r.left - r.width / 2) / (r.width / 2), dy = (e.clientY - r.top - r.height / 2) / (r.height / 2); const m = Math.hypot(dx, dy); if (m > 1) { dx /= m; dy /= m; } pad[key] = [dx, -dy]; kn.style.transform = 'translate(calc(-50% + ' + dx * 48 + 'px), calc(-50% + ' + dy * 48 + 'px))'; };
+                const up = e => { if (e.pointerId === id) { id = null; if (key === 'l') { pad.l = [0, pad.l[1]]; kn.style.transform = 'translate(-50%, calc(-50% + ' + (-pad.l[1] * 48) + 'px))'; } else { pad[key] = [0, 0]; kn.style.transform = 'translate(-50%,-50%)'; } } };
+                el.onpointerdown = e => { id = e.pointerId; el.setPointerCapture(id); mv(e); e.preventDefault(); }; el.onpointermove = e => { if (e.pointerId === id) mv(e); }; el.onpointerup = up; el.onpointercancel = up;
+            }
+            mkPad($('cal-pl'), 'l'); mkPad($('cal-pr'), 'r');
+        })();
     </script>
 </body>
 </html>
