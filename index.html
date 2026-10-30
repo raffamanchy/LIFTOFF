@@ -15,11 +15,11 @@
         /* OSD - DJI GOGGLES STYLE */
         :root { --osd-scale: 1; } /* change this one number to resize the whole OSD (1 = original size) */
         .fosd { position: absolute; z-index: 15; pointer-events: none; color: #f2f2f2; font-family: "Arial Black", Arial, sans-serif; font-style: italic; font-weight: 800; text-shadow: 0 0 3px rgba(0,0,0,0.5); }
-        #fpv-osd-left { left: max(4.1vw, env(safe-area-inset-left)); bottom: 3.9vh; display: flex; align-items: flex-end; gap: 1.2vw; font-size: calc(var(--osd-scale) * clamp(10px, 1.6vw, 28px)); }
-        #osd-mode { background: #eee; color: #111; width: 1.75em; height: 1.5em; transform: skewX(-8deg); display: flex; align-items: center; justify-content: center; font-size: 1.4em; border-radius: 3px; text-shadow: none; }
+        #fpv-osd-left { left: max(6.4vw, env(safe-area-inset-left)); bottom: 6vh; display: flex; align-items: flex-end; gap: 1.2vw; font-size: calc(var(--osd-scale) * clamp(10px, 1.6vw, 28px)); }
+        #osd-mode { background: #eee; color: #111; width: 1.75em; height: 1.5em; transform: skewX(-8deg); display: flex; align-items: center; justify-content: center; font-size: 1.4em; border-radius: 3px; text-shadow: none; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
         .osd-col { display: flex; flex-direction: column; line-height: 1.15; min-width: 5.5em; }
         .osd-sp { padding-left: 1.5em; }
-        #fpv-osd-right { right: max(12vw, env(safe-area-inset-right)); bottom: 4.2vh; display: flex; align-items: center; gap: 1.8vw; font-size: calc(var(--osd-scale) * clamp(8px, 0.8vw, 14px)); }
+        #fpv-osd-right { right: max(6.4vw, env(safe-area-inset-right)); bottom: 6vh; display: flex; align-items: center; gap: 1.2vw; font-size: calc(var(--osd-scale) * clamp(8px, 0.8vw, 14px)); }
         #fpv-osd-right svg { height: 2.3em; width: auto; }
         .osd-bars { display: flex; flex-direction: column; gap: 0.2em; line-height: 1; }
         .osd-bars > div { display: flex; align-items: flex-end; }
@@ -246,7 +246,7 @@
     <div id="canvas-container">
         <!-- OSD (DJI Goggles style) -->
         <div id="fpv-osd-left" class="fosd">
-            <div id="osd-mode">M</div>
+            <div id="osd-mode"></div>
             <div class="osd-col"><span class="osd-sp" id="osd-vs">0.0m/s</span><span class="osd-lb">H&nbsp;&nbsp;<span id="osd-h">0m</span></span></div>
             <div class="osd-col"><span class="osd-sp" id="osd-hs">0.0m/s</span><span class="osd-lb">D&nbsp;&nbsp;<span id="osd-d">0m</span></span></div>
         </div>
@@ -2001,7 +2001,7 @@
             document.getElementById('osd-h').innerText = Math.max(0, Math.round(drone.position.y - 0.3)) + 'm';
             const homeDist = Math.hypot(drone.position.x, drone.position.z - 45);
             document.getElementById('osd-d').innerText = Math.round(homeDist) + 'm';
-            document.getElementById('osd-mode').innerText = ({1:'N',2:'S',3:'M'})[activeMode];
+            setOsdMode(({1:'N',2:'S',3:'M'})[activeMode]);
             const sigN = Math.max(1, 4 - Math.floor(homeDist / 220));
             if (sigN !== window._osdSig) {
                 window._osdSig = sigN;
@@ -2168,6 +2168,15 @@
             }
             mkPad($('cal-pl'), 'l'); mkPad($('cal-pr'), 'r');
         })();
+
+        /* mode indicator: letter is cut out of the white box (transparent text) */
+        function setOsdMode(ch) {
+            if (setOsdMode.c === ch) return; setOsdMode.c = ch;
+            const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 60' preserveAspectRatio='none'><mask id='m'><rect width='70' height='60' fill='#fff'/><text x='35' y='46' text-anchor='middle' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='46' fill='#000'>" + ch + "</text></mask><rect width='70' height='60' rx='5' fill='#000' mask='url(#m)'/></svg>";
+            const u = 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")', e = document.getElementById('osd-mode');
+            e.style.webkitMaskImage = u; e.style.maskImage = u;
+        }
+        setOsdMode('M');
     </script>
 </body>
 </html>
