@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>LIFTOFF</title>
+    <title>DJI</title>
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/raffamanchy/TRYP-FPV/main/PNG.ico">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
@@ -236,12 +236,83 @@
         .cal-pad i { position:absolute; left:50%; top:50%; width:52px; height:52px; margin:0; border-radius:50%; background:rgba(255,255,255,.85); transform:translate(-50%,-50%); pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.3); }
         #cal-pl { left:max(190px, 22vw); } #cal-pr { right:max(24px, env(safe-area-inset-right)); }
         body.cal-mobile #cal-exit { left:18px; }
+
+        /* ===== LIFTOFF-STYLE ADDITIONS ===== */
+        #hs-tabs .bar2 { display: none; background: #fff; padding: 0 2vw 0 1vw; clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%); }
+        #hs-tabs.opt .arrow { background: #e0605a; }
+        #hs-tabs.opt .hs-tab:hover { color: #e0605a; }
+        .ctl-cards { display: flex; gap: 2vw; padding: 1vh 0; }
+        .ctl-card { flex: 1; text-align: center; cursor: pointer; font-size: 0.85em; color: #666; }
+        .ctl-card b { display: block; color: #222; margin-bottom: 0.8em; letter-spacing: 0.06em; }
+        .ctl-card .ci { height: 11vh; min-height: 80px; margin: 0 auto 0.8em; width: 70%; background: linear-gradient(135deg, #3e8fe0, #1b5fb8); display: flex; align-items: center; justify-content: center; }
+        .ctl-card .ci:after { content: ""; border-left: 22px solid rgba(255,255,255,0.85); border-top: 13px solid transparent; border-bottom: 13px solid transparent; }
+        .ctl-card:hover .ci { filter: brightness(1.15); }
+        #dev-toast { position: fixed; right: 1.4vw; top: 7.5vh; z-index: 70; display: flex; flex-direction: column; gap: 8px; pointer-events: none; font-family: "Segoe UI", Arial, sans-serif; }
+        .dev-card { display: flex; align-items: center; gap: 14px; min-width: 260px; background: #fff; color: #333; border-left: 8px solid #e0605a; padding: 12px 20px 12px 14px; box-shadow: 0 6px 22px rgba(0,0,0,.4); transform: translateX(120%); opacity: 0; transition: transform .35s ease, opacity .35s ease; }
+        .dev-card.show { transform: none; opacity: 1; }
+        .dev-card svg { width: 44px; height: 44px; stroke: #444; fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+        .dev-card b { display: block; font-size: 17px; } .dev-card span { font-size: 13px; color: #888; }
+
+        #intro { position: fixed; inset: 0; z-index: 200; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; font-family: "Segoe UI", Arial, sans-serif; transition: opacity .6s ease; }
+        #intro .it { position: absolute; display: flex; align-items: center; gap: 18px; opacity: 0; transition: opacity 1s ease; font-size: clamp(22px, 3.4vw, 54px); letter-spacing: .08em; font-weight: 300; }
+        #intro .it.on { opacity: 1; } #intro .it svg { height: 1.5em; width: auto; }
+        #loading { position: fixed; inset: 0; z-index: 190; display: none; background: #0a0a0a; overflow: hidden; color: #fff; font-family: "Segoe UI", "Open Sans", Arial, sans-serif; transition: opacity .5s ease; }
+        #loading .lband { position: absolute; left: 0; right: 0; top: 15.7%; bottom: 9.2%; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), rgba(255,255,255,.1)); }
+        #loading::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background-image: radial-gradient(rgba(0,0,0,.55) 38%, transparent 42%); background-size: 4px 4px; }
+        #loading .lvig { position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse at 55% 50%, transparent 40%, rgba(0,0,0,.65) 100%), linear-gradient(#000 0, transparent 16%, transparent 90%, #000 100%); }
+        #loading svg.ldrone { position: absolute; left: -4%; top: 4%; height: 96%; z-index: 0; }
+        #loading .ltip { position: absolute; z-index: 3; top: 7.5%; width: 100%; text-align: center; font-size: clamp(11px, 1.15vw, 18px); }
+        #loading .lbar { position: absolute; z-index: 3; right: 3.5vw; bottom: 3.6%; display: flex; align-items: center; gap: 12px; font-size: clamp(10px, .95vw, 15px); }
+        #loading .lbar .tr { width: 21vw; height: 7px; background: rgba(255,255,255,.3); } #loading .lbar .tr i { display: block; height: 100%; width: 0; background: #fff; }
+
+
+
+        /* ===== TAB INFO CARDS + WORKBENCH SCREEN ===== */
+        .hs-tab.sel { background: #5b9a8b; color: #fff; font-weight: 700; clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); }
+        #hs-panel.tabcard { left: calc(5.8vw + 21vw + 6vw); top: 17vh; width: min(46vw, 620px); padding: 2.6vh 2vw 3.2vh 1.8vw; border-top: 0; border-left: 10px solid #5b9a8b; }
+        .tc-h { display: flex; align-items: center; gap: .7em; font-weight: 800; letter-spacing: .05em; margin-bottom: 1.3em; font-size: 1.05em; color: #333; } .tc-h svg { width: 1.6em; stroke: #444; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+        .tc-b { display: flex; gap: 1.8vw; align-items: flex-start; }
+        .tc-t { position: relative; flex: 0 0 42%; aspect-ratio: 1.25; cursor: pointer; background: linear-gradient(135deg, var(--g), #222); box-shadow: inset 0 0 40px rgba(0,0,0,.35); }
+        .tc-t:after { content: ""; position: absolute; left: 50%; top: 50%; margin: -22px 0 0 -14px; border-left: 40px solid rgba(255,255,255,.85); border-top: 24px solid transparent; border-bottom: 24px solid transparent; transition: transform .15s; } .tc-t:hover:after { transform: scale(1.15); }
+        .tc-d { font-size: .82em; color: #777; line-height: 1.6; }
+        #wb { display: none; position: fixed; inset: 0; z-index: 35; color: #fff; font-family: "Segoe UI", Arial, sans-serif; overflow: hidden; background: radial-gradient(ellipse at 55% 55%, #3a3a3a, #1b1b1b 70%, #0e0e0e); }
+        #wb::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2; background-image: radial-gradient(rgba(0,0,0,.5) 38%, transparent 42%); background-size: 4px 4px; }
+        #wb svg.ldrone { position: absolute; left: -4%; top: 2%; height: 100%; opacity: .55; z-index: 0; }
+        #wb > * { z-index: 3; } #wb svg.ldrone { z-index: 0; }
+        #wb-gear { position: absolute; left: 6.4vw; top: 12.2vh; width: 2.2vw; min-width: 28px; aspect-ratio: 1; cursor: pointer; } #wb-gear svg { width: 100%; stroke: #fff; fill: none; stroke-width: 1.6; stroke-linecap: round; } #wb-gear:hover { opacity: .7; }
+        #wb-title { position: absolute; left: 6vw; top: 2.4vh; font-size: clamp(11px, 1vw, 16px); }
+        #wb-bar { position: absolute; left: 9.5vw; top: 11.3vh; display: flex; height: 5.6vh; min-height: 36px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.3)); font-size: clamp(11px, 1.05vw, 17px); }
+        #wb-bar .ms-seg { cursor: pointer; } #wb-bar .ms-seg.chev { cursor: default; }
+        #wb-name { position: absolute; left: 50%; top: 20.5vh; transform: translateX(-50%); width: min(26vw, 340px); min-height: 12vh; background: #fff; color: #333; border-left: 1.1vw solid #5b9a8b; padding: 2.2vh 1.4vw; box-sizing: border-box; }
+        #wb-name input { width: 100%; border: 0; outline: 0; font: 700 clamp(13px, 1.15vw, 18px) "Segoe UI", Arial, sans-serif; color: #333; background: none; } #wb-name small { display: block; margin-top: 1.2vh; font-size: clamp(9px, .8vw, 13px); color: #5b9a8b; letter-spacing: .08em; }
+        #wb-stage { position: absolute; left: 0; right: 0; top: 30vh; bottom: 14vh; }
+        .wb-d { position: absolute; transform: translate(-50%, -50%); cursor: pointer; transition: all .25s; filter: drop-shadow(0 12px 14px rgba(0,0,0,.5)); } .wb-d svg { display: block; width: 100%; }
+        .wb-d.c { left: 50%; top: 52%; width: 34vw; cursor: default; } .wb-d.l { left: 27%; top: 30%; width: 17vw; opacity: .85; } .wb-d.r { left: 73%; top: 30%; width: 17vw; opacity: .85; } .wb-d.l:hover, .wb-d.r:hover { opacity: 1; }
+        #wb-plus { position: absolute; left: 20%; top: 18%; font-size: clamp(30px, 3.4vw, 56px); font-weight: 300; cursor: pointer; line-height: 1; text-shadow: 0 2px 6px #000; } #wb-plus:hover { color: #7fd1bd; }
+        #wb-btns { position: absolute; left: 50%; bottom: 3vh; transform: translateX(-50%); display: flex; gap: 1.2vw; }
+        #wb-btns button { width: clamp(80px, 11vw, 170px); padding: .55em 0; background: #ececec; color: #444; border: 0; font: clamp(11px, .95vw, 15px) "Segoe UI", Arial, sans-serif; cursor: pointer; } #wb-btns button:hover { background: #fff; } #wb-btns button.g { background: #5b9a8b; color: #fff; }
+        #wb-bp { position: absolute; left: 0; right: 0; top: 30vh; bottom: 14vh; display: flex; gap: 2.5vw; padding: 0 9vw; overflow-x: auto; align-items: center; scrollbar-width: none; }
+        .bp { flex: 0 0 22vw; min-width: 220px; background: #f7f7f7; color: #444; border-left: 1vw solid #5b9a8b; padding: 1.6vh 1.2vw 2vh; cursor: pointer; } .bp:hover { transform: translateY(-5px); } .bp b { display: block; font-size: clamp(11px, 1vw, 16px); text-transform: uppercase; } .bp i { display: block; font-style: normal; font-size: clamp(9px, .8vw, 13px); color: #5b9a8b; margin-top: .6em; }
+        #wb-edit { display: none; position: absolute; right: 3vw; top: 20vh; width: min(34vw, 420px); max-height: 66vh; overflow-y: auto; background: rgba(250,250,248,.97); color: #2e3436; border-left: 8px solid #5b9a8b; padding: 1.4vh 1.4vw 1.8vh; font-size: clamp(11px, 1vw, 15px); box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+        #wb-edit h2 { margin: .2em 0 .6em; font-size: 1.2em; letter-spacing: .06em; color: #3f7b6d; display: flex; justify-content: space-between; } #wb-edit h2 span { cursor: pointer; color: #888; }
+        #hs-logo svg { width: clamp(90px, 11vw, 210px); display: block; filter: drop-shadow(0 4px 14px rgba(0,0,0,.45)); }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
+<div id="intro">
+  <div class="it" id="it1"><span>Made by HTML</span><svg viewBox="0 0 64 72"><polygon points="6,2 58,2 53,62 32,70 11,62" fill="#e44d26"/><polygon points="32,6 32,66 49,60 53,6" fill="#f16529"/><text x="32" y="46" font-size="38" font-weight="900" font-family="Arial" fill="#fff" text-anchor="middle">5</text></svg></div>
+  <div class="it" id="it2"><span>by Raffachy Studios</span></div>
+</div>
+<div id="loading">
+  <div class="lband"></div>
+  <svg class="ldrone" viewBox="0 0 600 800" fill="none"><g fill="rgba(255,255,255,.3)"><circle cx="150" cy="140" r="170"/><circle cx="470" cy="190" r="140"/><circle cx="130" cy="620" r="190"/><circle cx="500" cy="660" r="120"/></g><g stroke="rgba(0,0,0,.55)" stroke-width="26"><path d="M300 400 L150 140M300 400 L470 190M300 400 L130 620M300 400 L500 660"/></g><polygon points="230,300 380,300 400,500 210,500" fill="rgba(0,0,0,.5)"/><g fill="rgba(0,0,0,.6)"><circle cx="150" cy="140" r="34"/><circle cx="470" cy="190" r="34"/><circle cx="130" cy="620" r="34"/><circle cx="500" cy="660" r="34"/></g></svg>
+  <div class="lvig"></div>
+  <div class="ltip" id="ltip"></div>
+  <div class="lbar"><span id="ltxt">LOADING MENU</span><div class="tr"><i id="lfill"></i></div><span id="lpct">0 %</span></div>
+</div>
 
     <div id="canvas-container">
         <!-- OSD (DJI Goggles style) -->
@@ -299,24 +370,21 @@
 
         <div id="instructions">
             <div id="menu-content">
-                <h1 id="menu-title">LIFTOFF</h1><p id="instruction-text"></p>
+                <h1 id="menu-title">DJI</h1><p id="instruction-text"></p>
                 <div id="hs-kb"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="11" rx="2"/><path d="M7 11h.01M11 11h.01M15 11h.01M7 14h10"/></svg></div>
                 <div id="hs-side">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="3"/><path d="M6 21v-6a6 6 0 0 1 12 0v6"/></svg>
                     <svg viewBox="0 0 24 24"><circle cx="8" cy="7" r="3"/><circle cx="16" cy="7" r="3"/><path d="M2 20v-5a4 4 0 0 1 4-4M22 20v-5a4 4 0 0 0-4-4M8 20v-5h8v5"/></svg>
-                    <svg viewBox="0 0 24 24"><circle cx="5" cy="5" r="2.2"/><circle cx="19" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><rect x="9" y="9" width="6" height="6" rx="1.5"/><path d="M7 7l2 2M17 7l-2 2M7 17l2-2M17 17l-2-2"/></svg>
+                    
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="2.8"/><path d="M12 8.3V14M4 20.5h16M6.5 20.5l1.8-6.5h7.4l1.8 6.5M9.500 17.200h5"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 4 4v3a2 2 0 0 1-3.500 1.300L16 14H8l-2.500 2.300A2 2 0 0 1 2 15v-3a4 4 0 0 1 4-4z"/><path d="M7 11v2M6 12h2"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 3v8M7 6a8 8 0 1 0 10 0"/></svg>
                 </div>
                 <div id="hs-list">
                     <button class="hs-btn active" data-go="1">SINGLE PLAYER</button>
                     <button class="hs-btn" style="--c:#f2e08a" data-panel="multi">MULTIPLAYER</button>
-                    <button class="hs-btn" style="--c:#7ac0e0" data-panel="drone">DJI NEO 2</button>
                     <button class="hs-btn" style="--c:#f2a96b" data-panel="tools">TOOLS</button>
-                    <button class="hs-btn" style="--c:#c28fe0" data-cal="1">CALIBRATION</button>
-                    <button class="hs-btn" style="--c:#e0605a" data-panel="options">OPTIONS</button>
+                                        <button class="hs-btn" style="--c:#e0605a" data-panel="options">OPTIONS</button>
                     <button class="hs-btn" style="--c:#9a3f3f" data-panel="quit">QUIT</button>
                 </div>
                 <div id="hs-tabs"><div class="arrow"></div><div class="bar">
@@ -325,13 +393,16 @@
                     <button class="hs-tab" data-act="free">FREE FLIGHT</button>
                     <button class="hs-tab" data-act="race">RACE</button>
                     <button class="hs-tab" data-act="freestyle">FREESTYLE</button>
+                    <button class="hs-tab" data-wb="workbench">WORKBENCH</button>
+                    <button class="hs-tab" data-wb="trackbuilder">TRACK BUILDER</button>
+                </div><div class="bar bar2">
+                    <button class="hs-tab" data-opt="game">GAME</button><button class="hs-tab" data-opt="graphics">GRAPHICS</button><button class="hs-tab" data-opt="audio">AUDIO</button><button class="hs-tab" data-opt="controls">CONTROLS</button><button class="hs-tab" data-opt="dlc">DLC</button>
                 </div></div>
-                <div id="hs-user"><div>Pilot<span class="sign">Sign In</span></div><div class="av"></div></div>
-                <button id="hs-edit">&#9998; EDIT DRONE</button><div id="hs-hint">Drag to rotate the drone</div>
-                <div id="hs-logo">LIFTOFF</div>
+                <div id="hs-user"><div>Pilot<span class="sign">Signed in</span></div><div class="av"></div></div>
+                <div id="hs-logo"><svg viewBox="0 0 230 120" aria-label="DJI"><text x="4" y="92" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-style="italic" font-size="118" letter-spacing="-8" fill="#fff">dji</text><path d="M122 104h78l-8 9h-78zM30 104h78l-8 9H22z" fill="#fff" opacity=".0"/></svg></div>
                 <div id="hs-ver">v1.0.0 - 26/10/2026</div>
                 <div id="hs-panel"></div>
-                <div id="hs-toast"></div>
+                <div id="hs-toast"></div><button data-cal="1" style="display:none" tabindex="-1" aria-hidden="true"></button>
             </div>
         </div>
     </div>
@@ -453,6 +524,7 @@
         function makeHeight(c) {
             const cl = c.clear || 60;
             return (x, z) => { const r = Math.hypot(x, z), m = smoothS(cl, cl + 200, r); let h = 0;
+                if (c.type === 'pit') return 110 * smoothS(110, 360, r) + 4 * Math.sin(r * 0.22) * smoothS(120, 330, r) + 3 * Math.sin(x * 0.05) * Math.cos(z * 0.04) * smoothS(120, 360, r);
                 if (c.type === 'dunes') { h = 18 * Math.sin(x * 0.01 + Math.sin(z * 0.006) * 3) + 10 * Math.sin(z * 0.013 + x * 0.004) + 4 * Math.sin(x * 0.05 + z * 0.04);
                     const rd = 1 - Math.abs(Math.sin(x * 0.0028 + Math.sin(z * 0.002) * 2.5) * Math.cos(z * 0.0023 + 0.5)); h += Math.pow(rd, 4) * smoothS(200, 900, r) * c.amp; }
                 else if (c.type === 'island') h = c.amp * (1 - smoothS(150, 620, r)) * (0.7 + 0.3 * Math.sin(x * 0.012) * Math.cos(z * 0.011)) - 30 * smoothS(500, 900, r) + 3 * Math.sin(x * 0.05 + z * 0.04);
@@ -846,6 +918,92 @@
             [0x4a7a30, 0xc08a2a, 0x7a8a35, 0x3f6a2a].forEach(c => scatter(crown(c, 4.4), 90, { rMin: 40, rMax: 600, hMin: -1, hMax: 5, slope: 3, scale: [0.8, 1.5], solid: [1.8, 13], avoid }));
             beacon(30, 60); setRoute([[0, 60], [0, -100], [0, -290], [70, -300], [140, -290], [140, -100], [140, 60], [70, 100]], () => 8); } });
 
+
+        // ---------- NEW MAPS ----------
+        const flatGround = (c) => { const g = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000).rotateX(-Math.PI / 2), MB({ color: c })); g.userData.flat = true; scene.add(g); return g; };
+        function stripOn(cv, off, wid, y, mat, tile) { const L = cv.getLength(), N = 600, pos = [], uv = [], idx = [];
+            for (let i = 0; i <= N; i++) { const t = i / N, p = cv.getPointAt(t), tg = cv.getTangentAt(t), nx = -tg.z, nz = tg.x;
+                pos.push(p.x + nx * (off - wid / 2), y, p.z + nz * (off - wid / 2), p.x + nx * (off + wid / 2), y, p.z + nz * (off + wid / 2)); uv.push(0, t * L / tile, 1, t * L / tile);
+                if (i < N) { const k = i * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); } }
+            const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+            g.setAttribute('normal', new THREE.Float32BufferAttribute(pos.map((v, i) => i % 3 === 1 ? 1 : 0), 3)); g.setIndex(idx); mat.side = THREE.DoubleSide;
+            const m = new THREE.Mesh(g, mat); m.userData.flat = true; scene.add(m); return m; }
+        function nearFn(cv) { const pts = []; for (let i = 0; i < 240; i++) pts.push(cv.getPointAt(i / 240)); return (x, z) => { let m = 1e9; for (const p of pts) { const d = Math.hypot(p.x - x, p.z - z); if (d < m) m = d; } return m; }; }
+        function mountains(col, n) { for (let i = 0; i < n; i++) { const a = i / n * 6.283, r = 1500 + rnd() * 300, h = 130 + rnd() * 170, m = new THREE.Mesh(new THREE.ConeGeometry(240 + rnd() * 120, h, 8), MB({ color: col })); m.position.set(Math.cos(a) * r, h / 2 - 5, Math.sin(a) * r); m.userData.flat = true; scene.add(m); } }
+        const bannerTex = (txt, bg) => mkTex(512, 48, (g, w, h) => { g.fillStyle = bg; g.fillRect(0, 0, w, h); for (let i = 0; i < 3; i++) { g.fillStyle = '#f2f2f2'; g.font = 'italic 900 30px Arial'; g.fillText(txt, i * 170 + 6, 34); g.fillStyle = '#d02a2a'; g.fillRect(i * 170 + 118, 4, 52, 40); } });
+
+        MAPS.push({ name: 'Short Circuit', icon: '🏁', desc: 'Compact race track, red wall, FRONTIER bridges', tod: 'day', grad: ['#6fb0f0', '#5b5e66'], build() {
+            heightFn = () => 0; LANDMARK = { x: 0, z: 0 }; flatGround(0x7f8a52);
+            curve = new THREE.CatmullRomCurve3([[0,150],[0,-60],[0,-200],[70,-270],[170,-250],[210,-160],[185,-50],[200,60],[140,130],[60,170]].map(p => new THREE.Vector3(p[0], 0, p[1])), true, 'catmullrom', 0.5);
+            const cv = curve, TL = cv.getLength(), near = nearFn(cv);
+            const asph = mkTex(128, 128, (g, w, h) => { g.fillStyle = '#4a4d55'; g.fillRect(0, 0, w, h); for (let i = 0; i < 700; i++) { g.fillStyle = i % 2 ? '#43464d' : '#53565e'; g.fillRect(rnd() * w, rnd() * h, 3, 3); } g.fillStyle = '#e8e8e4'; g.fillRect(2, 0, 3, 128); g.fillRect(w - 5, 0, 3, 128); });
+            stripOn(cv, 0, 16, 0.06, MB({ map: asph }), 16);
+            const nS = Math.floor(TL / 8), wall = new THREE.InstancedMesh(new THREE.BoxGeometry(0.6, 3, 8.3), MB({ color: 0x9a2230 }), nS), bar = new THREE.InstancedMesh(new THREE.BoxGeometry(0.5, 1.3, 8.3), MB({ color: 0x6f8296 }), nS), o = new THREE.Object3D();
+            for (let k = 0; k < nS; k++) { const t = k * 8 / TL, p = cv.getPointAt(t), tg = cv.getTangentAt(t), nx = -tg.z, nz = tg.x; o.rotation.y = Math.atan2(tg.x, tg.z);
+                o.position.set(p.x + nx * 10, 1.5, p.z + nz * 10); o.updateMatrix(); wall.setMatrixAt(k, o.matrix); o.position.set(p.x - nx * 10, 0.65, p.z - nz * 10); o.updateMatrix(); bar.setMatrixAt(k, o.matrix); }
+            wall.userData.flat = bar.userData.flat = true; scene.add(wall); scene.add(bar);
+            // grandstand (stepped) on one side of the start straight, pit building on the other
+            for (let i = 0; i < 6; i++) { const h = 1 + i * 1.1; box(3.2, h, 250, -(15 + i * 3.2), h / 2, 15, 0x9a9a96, true); box(1.9, 0.25, 250, -(15 + i * 3.2) + 0.4, h + 0.1, 15, 0xb02a2a, false); }
+            box(26, 0.5, 250, -28, 11.5, 15, 0x3a3d42, false); for (let z = -100; z <= 130; z += 46) box(0.6, 11, 0.6, -14.5, 5.5, z, 0xb8b6b0, false);
+            const win = mkTex(128, 64, (g, w, h) => { g.fillStyle = '#dfe3e8'; g.fillRect(0, 0, w, h); g.fillStyle = '#2b313a'; for (let c = 0; c < 4; c++) g.fillRect(6 + c * 31, 18, 24, 22); }); win.repeat.set(30, 1);
+            box(18, 9, 250, 30, 4.5, 15, MB({ map: win }), true); box(24, 0.8, 254, 27, 9.4, 15, 0x33363b, false);
+            // FRONTIER footbridges
+            const ban = bannerTex('FRONTIER', '#0d0d0d'), rust = MB({ color: 0x3b2a22 });
+            for (const z of [100, -120]) { for (const sx of [-1, 1]) box(2.4, 11, 2.4, sx * 17, 5.5, z, 0xb4b0a6, true);
+                box(40, 1.2, 3.4, 0, 11, z, rust, true); box(40, 0.3, 3.4, 0, 15, z, rust, true);
+                for (let x = -18; x <= 18; x += 4.5) { box(0.25, 4, 0.25, x, 13, z + 1.6, rust, false); box(0.25, 4, 0.25, x, 13, z - 1.6, rust, false); }
+                for (const sd of [-1, 1]) { const b = new THREE.Mesh(new THREE.PlaneGeometry(38, 3), MB({ map: ban, side: THREE.DoubleSide })); b.position.set(0, 12.2, z + sd * 1.8); scene.add(b); } }
+            box(2.4, 38, 2.4, -22, 19, -215, 0x15171a, true); box(3.8, 5, 3.8, -22, 40.5, -215, 0xc4242a, false);
+            scatter(crown(0x5a8a3a, 4), 90, { rMin: 40, rMax: 520, hMin: -1, hMax: 1, slope: 3, scale: [0.8, 1.4], solid: [1.8, 13], avoid: (x, z) => near(x, z) < 30 || (x > -50 && x < 50 && z > -130 && z < 160) });
+            mountains(0x7d8a6e, 18); } });
+
+        MAPS.push({ name: 'Iceland Highlands', icon: '🏔️', desc: 'Moss fields, snow patches, red barns, gravel road', tod: 'day', grad: ['#4f8fe0', '#6b6a58'], build() {
+            terrainFor({ type: 'hills', amp: 38, rid: 300, clear: 150, low: [0.30, 0.31, 0.24], high: [0.43, 0.40, 0.34], hh: 70, rock: [0.36, 0.35, 0.35], peak: [0.95, 0.96, 1], peakH: 90 });
+            const patch = (col, n, hMin, sc) => scatter([{ geo: new THREE.CylinderGeometry(7, 7, 0.3, 8), color: col, dy: 0.1 }], n, { rMin: 30, rMax: 600, hMin, hMax: 120, slope: 6, scale: sc });
+            patch(0x9aa63a, 150, -5, [0.8, 2.2]); patch(0xf4f6fa, 70, 14, [0.6, 1.8]); scatter(ROCK(0x55524c), 90, { rMin: 40, rMax: 600, hMin: -2, hMax: 90, slope: 8, scale: [0.8, 2.2], solid: [5, 5] });
+            const rt = mkTex(64, 128, (g, w, h) => { g.fillStyle = '#5c5b58'; g.fillRect(0, 0, w, h); for (let i = 0; i < 300; i++) { g.fillStyle = i % 2 ? '#52514e' : '#68675f'; g.fillRect(rnd() * w, rnd() * h, 2, 2); } g.fillStyle = '#e8e8e0'; g.fillRect(w / 2 - 1, 8, 2, 44); }); rt.repeat.set(1, 26);
+            const rm = new THREE.Mesh(new THREE.PlaneGeometry(10, 260).rotateX(-Math.PI / 2), MB({ map: rt })); rm.position.set(0, 0.08, -20); rm.userData.flat = true; scene.add(rm);
+            house(-38, -30, 0.3, 0x8e2b25, 0x2d2d33); house(55, -90, -0.2, 0x9b3128, 0x2d2d33);
+            for (const sx of [-1, 1]) box(0.4, 12, 0.4, sx * 14, 6, -130, 0xf2f2f2, true);
+            LANDMARK = { x: 0, z: 0 }; setRoute([[0, 100], [0, -120], [60, -200], [160, -190], [200, -80], [140, 10], [60, 60]], (x, z) => heightFn(x, z) + 10); } });
+
+        MAPS.push({ name: 'Hannover', icon: '🏙️', desc: 'Massive urban plaza with a white lattice dome', tod: 'day', grad: ['#9cc4f0', '#aeb4ba'], build() {
+            heightFn = () => 0; LANDMARK = { x: 0, z: 0 }; flatGround(0x8c8f92); const gr = [0x9aa0a8, 0xb8bcc2, 0x7f868f, 0xc9c3b6];
+            for (let i = 0; i < 90; i++) { const a = rnd() * 6.283, r = 175 + rnd() * 280, w = 25 + rnd() * 20, d = 25 + rnd() * 20, h = 25 + rnd() * 65; box(w, h, d, Math.cos(a) * r, h / 2, Math.sin(a) * r, gr[i % 4], true); }
+            const wf = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }); const dome = new THREE.Mesh(new THREE.IcosahedronGeometry(38, 2), wf); dome.position.set(0, 40, -120); scene.add(dome);
+            for (const [rx, ry] of [[1.57, 0], [0, 0], [0.8, 0.8]]) { const t = new THREE.Mesh(new THREE.TorusGeometry(50, 0.8, 6, 40), wf); t.position.set(0, 40, -120); t.rotation.set(rx, ry, 0); scene.add(t); }
+            scatter(crown(0x4f7f3a, 4), 60, { rMin: 35, rMax: 160, hMin: -1, hMax: 1, slope: 3, scale: [0.8, 1.2], solid: [1.8, 13], avoid: (x, z) => Math.hypot(x, z + 120) < 60 || Math.hypot(x, z) < 55 });
+            setRoute([[0, 60], [80, -20], [90, -130], [0, -220], [-90, -130], [-80, -20]], () => 14); } });
+
+        MAPS.push({ name: 'Paris Drone Festival', icon: '🗼', desc: 'Boulevard with truss gates, lit for the festival', tod: 'sunset', grad: ['#f0a070', '#4a4a6a'], build() {
+            heightFn = () => 0; LANDMARK = { x: 0, z: 0 }; flatGround(0x9a968c);
+            const rt = mkTex(64, 128, (g, w, h) => { g.fillStyle = '#3b3d41'; g.fillRect(0, 0, w, h); g.fillStyle = '#e8e8e0'; g.fillRect(w / 2 - 1, 8, 2, 44); }); rt.repeat.set(1, 90);
+            const rm = new THREE.Mesh(new THREE.PlaneGeometry(26, 1000).rotateX(-Math.PI / 2), MB({ map: rt })); rm.position.set(0, 0.05, -380); rm.userData.flat = true; scene.add(rm);
+            const fa = mkTex(128, 128, (g, w, h) => { g.fillStyle = '#e6dcc4'; g.fillRect(0, 0, w, h); for (let r = 0; r < 3; r++) for (let c = 0; c < 2; c++) { const x = 14 + c * 56, y = 8 + r * 40; g.fillStyle = '#31404f'; g.fillRect(x, y, 28, 28); g.fillStyle = '#6d7f91'; g.fillRect(x + 2, y + 2, 11, 24); } });
+            const tn = [0xffffff, 0xf3e9d2, 0xe2dccb, 0xf6efe0];
+            for (const sd of [-1, 1]) for (let z = 110; z > -820;) { const bw = 20 + rnd() * 14, bh = 22 + Math.floor(rnd() * 3) * 3.5, bd = 22, g = new THREE.BoxGeometry(bd, bh, bw), uv = g.attributes.uv;
+                for (let i = 0; i < uv.count; i++) { const f = Math.floor(i / 4); if (f < 2) uv.setXY(i, uv.getX(i) * bw / 9, uv.getY(i) * bh / 9); else if (f >= 4) uv.setXY(i, uv.getX(i) * bd / 9, uv.getY(i) * bh / 9); else uv.setXY(i, 0.01, 0.01); }
+                const m = new THREE.Mesh(g, MB({ map: fa, color: tn[Math.floor(rnd() * 4)] })); m.position.set(sd * (28 + bd / 2), bh / 2, z - bw / 2); scene.add(m); solid(sd * (28 + bd / 2), z - bw / 2, bd, bw, 0, bh); z -= bw + 0.5; }
+            { const NT = 110, tk = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.35, 0.5, 6, 6), MB({ color: 0x4a3a2a }), NT), lf = new THREE.InstancedMesh(new THREE.SphereGeometry(4.6, 9, 7), MB({ color: 0x3a6428 }), NT), o = new THREE.Object3D(); let k = 0;
+              for (const sd of [-1, 1]) for (let z = 100; z > -800 && k < NT; z -= 16) { o.position.set(sd * 17, 3, z); o.updateMatrix(); tk.setMatrixAt(k, o.matrix); o.position.set(sd * 17, 9.2, z); o.updateMatrix(); lf.setMatrixAt(k, o.matrix); solid(sd * 17, z, 2, 2, 0, 13); k++; }
+              tk.count = lf.count = k; scene.add(tk); scene.add(lf); }
+            const bt = mkTex(256, 32, (g, w, h) => { g.fillStyle = '#5a2a8a'; g.fillRect(0, 0, w, h); g.fillStyle = '#fff'; g.font = 'italic 900 22px Arial'; g.fillText('PARIS DRONE FESTIVAL', 8, 24); });
+            for (const z of [-60, -200, -340, -480, -620]) { for (const sx of [-1, 1]) box(0.6, 16, 0.6, sx * 12.5, 8, z, 0xdddddd, true); box(26, 0.8, 0.8, 0, 16, z, 0xdddddd, true); box(26, 0.8, 0.8, 0, 13, z, 0xdddddd, true);
+                const b = new THREE.Mesh(new THREE.PlaneGeometry(24, 2.6), MB({ map: bt, side: THREE.DoubleSide })); b.position.set(0, 14.5, z); scene.add(b); }
+            for (const sx of [-17, 17]) box(14, 50, 24, sx, 25, -880, 0xd0c3a2, true); box(20, 14, 24, 0, 43, -880, 0xd0c3a2, true); box(48, 4, 26, 0, 52, -880, 0xd0c3a2, true);
+            setRoute([[-7, 90], [-7, -250], [-7, -560], [7, -560], [7, -250], [7, 90]], () => 9); } });
+
+        MAPS.push({ name: 'The Pit', icon: '⛏️', desc: 'Defunct mine with red steel scaffolding', tod: 'overcast', grad: ['#a05a3a', '#3a2a2a'], build() {
+            terrainFor({ type: 'pit', clear: 30, low: [0.45, 0.30, 0.25], high: [0.52, 0.38, 0.30], hh: 100, rock: [0.34, 0.29, 0.27] });
+            scatter(ROCK(0x5a4a40), 90, { rMin: 130, rMax: 360, hMin: 0, hMax: 125, slope: 14, scale: [1, 3], solid: [5, 5] });
+            const red = MB({ color: 0xb0261c });
+            for (const z of [-70, 0, 70]) { box(280, 3, 3, 0, 44, z, red, true); box(280, 3, 3, 0, 26, z + 35, red, true); for (let x = -120; x <= 120; x += 40) { box(2.5, 44, 2.5, x, 22, z, red, true); const d = box(1.4, 62, 1.4, x + 20, 22, z, red, false); d.rotation.z = 0.5; } }
+            const cb = box(30, 3, 4, -110, 30, -100, 0x333639, true); cb.rotation.z = 0.5; box(10, 8, 10, -130, 4, -100, 0x6a5a4a, true);
+            LANDMARK = { x: 0, z: 0 }; setRoute([[0, 100], [100, 40], [100, -60], [30, -110], [-70, -90], [-110, 0], [-70, 80]], () => 14); } });
+        MAPINFO[16] = ['Medium', 'Compact circuit with a red wall, grandstand and FRONTIER bridges.']; MAPINFO[17] = ['Medium', 'Moss fields, snow patches and red barns under big mountains.'];
+        MAPINFO[18] = ['Medium', 'This massive urban environment offers something for everyone, from freestyle pilots to speed maniacs.']; MAPINFO[19] = ['Medium', "Here's your opportunity to triumph in the City of Lights!"];
+        MAPINFO[20] = ['Medium', 'This defunct mine is your new favorite location for dizzying dives and free-style shenanigans.'];
+
         // ---------- map loading ----------
         function disposeGroup(g) { g.traverse(o => { if (o.geometry) o.geometry.dispose(); const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : []; ms.forEach(m => { if (m.map) m.map.dispose(); if (m.emissiveMap) m.emissiveMap.dispose(); m.dispose(); }); }); }
         function loadMap(i) {
@@ -1097,7 +1255,7 @@
         function startGameSession() {
             if (!gameStarted) {
                 gameStarted = true;
-                document.getElementById('menu-title').innerText = "LIFTOFF";
+                document.getElementById('menu-title').innerText = "DJI";
                 const instructionTextEl = document.getElementById('instruction-text');
                 if(instructionTextEl) {
                     instructionTextEl.innerHTML = `<b>Ready to Fly</b><br>Controls: W/S (Throttle), A/D (Yaw)<br>Mouse or I/J/K/L (Pitch/Roll)`;
@@ -1477,7 +1635,7 @@
         const fmt = t => { const m = Math.floor(t / 60000), sc = (t % 60000) / 1000; return String(m).padStart(2, '0') + ':' + sc.toFixed(2).padStart(5, '0'); };
         function buildCps() {
             if (R.cps.length) return;
-            for (let k = 0; k < 12; k++) { const t = (k / 12) % 1, p = curve.getPointAt(t), tg = curve.getTangentAt(t), g = new THREE.Group();
+            const NG = window.TBN || 12; for (let k = 0; k < NG; k++) { const t = (k / NG) % 1, p = curve.getPointAt(t), tg = curve.getTangentAt(t), g = new THREE.Group();
                 g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(tg.x, tg.z);
                 const strip = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 90, 10), new THREE.MeshBasicMaterial({ color: 0x35e0ff, transparent: true, opacity: 0.2, depthWrite: false })); g.add(strip);
                 const arrow = new THREE.Mesh(new THREE.ConeGeometry(1.4, 3, 4).rotateX(Math.PI), new THREE.MeshBasicMaterial({ color: 0x35e0ff })); arrow.position.y = 16; g.add(arrow);
@@ -1596,7 +1754,6 @@
         inst.addEventListener('pointerdown', e => { if (!gameStarted && e.target === inst) { home.drag = true; home.lx = e.clientX; try { inst.setPointerCapture(e.pointerId); } catch (x) {} } });
         inst.addEventListener('pointermove', e => { if (home.drag) { home.yaw -= (e.clientX - home.lx) * 0.008; home.lx = e.clientX; } });
         ['pointerup', 'pointercancel'].forEach(ev => inst.addEventListener(ev, () => { home.drag = false; }));
-        document.getElementById('hs-edit').addEventListener('click', e => { e.stopPropagation(); document.querySelector('[data-panel="drone"]').click(); });
 
         // ---- map selection screen (shown before flying) ----
         const mapEl = document.createElement('div'); mapEl.id = 'map-select'; inst.parentNode.appendChild(mapEl);
@@ -1638,35 +1795,120 @@
         mapEl.addEventListener('click', e => e.stopPropagation());
         [document.querySelector('#hs-list [data-go]'), document.getElementById('btn-start-game')].forEach(b => b.addEventListener('click', e => {
             if (!gameStarted) { e.stopImmediatePropagation(); e.stopPropagation(); askMap('free'); } }, true));
-        // ---- home screen backdrop: a Paris-style street (only shown on the home screen) ----
+        // ---- home screen backdrop: highland farm with red barns ----
         const homeGroup = new THREE.Group();
-        { const oa = scene.add; scene.add = function (o) { homeGroup.add(o); return scene; }; seed = 777;
+        { const oa = scene.add; scene.add = function (o) { homeGroup.add(o); return scene; }; seed = 777; heightFn = () => 0;
           try {
-            const pave = mkTex(128, 128, (g, w, h) => { g.fillStyle = '#9a968c'; g.fillRect(0, 0, w, h); for (let i = 0; i < 500; i++) { g.fillStyle = i % 2 ? '#8a867c' : '#aaa69b'; g.fillRect(rnd() * w, rnd() * h, 5, 5); } g.strokeStyle = '#7d796f'; g.strokeRect(0, 0, w, h); }); pave.repeat.set(500, 500);
-            const gm = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000).rotateX(-Math.PI / 2), MB({ map: pave })); gm.userData.flat = true; scene.add(gm);
-            const roadT = mkTex(64, 128, (g, w, h) => { g.fillStyle = '#3b3d41'; g.fillRect(0, 0, w, h); for (let i = 0; i < 300; i++) { g.fillStyle = i % 2 ? '#34363a' : '#44464b'; g.fillRect(rnd() * w, rnd() * h, 2, 2); } g.fillStyle = '#e8e8e0'; g.fillRect(w / 2 - 1, 8, 2, 44); }); roadT.repeat.set(1, 90);
-            const rm = new THREE.Mesh(new THREE.PlaneGeometry(26, 1000).rotateX(-Math.PI / 2), MB({ map: roadT })); rm.position.set(0, 0.05, -330); rm.userData.flat = true; scene.add(rm);
-            [-1, 1].forEach(sd => { const w = new THREE.Mesh(new THREE.PlaneGeometry(14, 1000).rotateX(-Math.PI / 2), MB({ color: 0xb4b0a4 })); w.position.set(sd * 20, 0.06, -330); w.userData.flat = true; scene.add(w); });
-            const facade = mkTex(128, 128, (g, w, h) => { g.fillStyle = '#e6dcc4'; g.fillRect(0, 0, w, h); for (let r = 0; r < 3; r++) for (let c = 0; c < 2; c++) { const x = 14 + c * 56, y = 8 + r * 40; g.fillStyle = '#c9bd9f'; g.fillRect(x - 3, y - 3, 34, 34); g.fillStyle = '#31404f'; g.fillRect(x, y, 28, 28); g.fillStyle = '#6d7f91'; g.fillRect(x + 2, y + 2, 11, 24); } g.fillStyle = '#b9ad90'; g.fillRect(0, 118, w, 4); });
-            const tints = [0xffffff, 0xf3e9d2, 0xe2dccb, 0xf6efe0], awn = [0xb02a2a, 0x1f5a3a, 0x2a3a6a], slate = MB({ color: 0x4a5058 });
-            for (const side of [-1, 1]) for (let z = 110; z > -700;) {
-                const bw = 20 + rnd() * 14, bh = 22 + Math.floor(rnd() * 3) * 3.5, bd = 20 + rnd() * 6, x = side * (28 + bd / 2), zz = z - bw / 2, g = new THREE.BoxGeometry(bd, bh, bw), uv = g.attributes.uv;
-                for (let i = 0; i < uv.count; i++) { const f = Math.floor(i / 4); if (f < 2) uv.setXY(i, uv.getX(i) * bw / 9, uv.getY(i) * bh / 9); else if (f >= 4) uv.setXY(i, uv.getX(i) * bd / 9, uv.getY(i) * bh / 9); else uv.setXY(i, 0.01, 0.01); }
-                const m = new THREE.Mesh(g, MB({ map: facade, color: tints[Math.floor(rnd() * 4)] })); m.position.set(x, bh / 2, zz); scene.add(m);
-                const rf = new THREE.Mesh(new THREE.BoxGeometry(bd * 0.9, 5, bw * 0.9), slate); rf.position.set(x, bh + 2.5, zz); scene.add(rf);
-                const aw = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.3, bw * 0.8), MB({ color: awn[Math.floor(rnd() * 3)] })); aw.position.set(x - side * (bd / 2 + 1.3), 3.6, zz); aw.rotation.z = side * 0.18; scene.add(aw);
-                z -= bw + 0.5; }
-            const NT = 120, trunkI = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.35, 0.5, 6, 6), MB({ color: 0x4a3a2a }), NT), leafI = new THREE.InstancedMesh(new THREE.SphereGeometry(4.6, 9, 7), MB({ color: 0x3a6428 }), NT), o = new THREE.Object3D(); let ti = 0;
-            for (const side of [-1, 1]) for (let z = 100; z > -700 && ti < NT; z -= 13.5) { o.position.set(side * 17, 3, z); o.scale.set(1, 1, 1); o.updateMatrix(); trunkI.setMatrixAt(ti, o.matrix); o.position.set(side * 17, 9.2, z); o.scale.set(1, 0.9 + rnd() * 0.3, 1); o.updateMatrix(); leafI.setMatrixAt(ti, o.matrix); ti++; }
-            trunkI.count = leafI.count = ti; scene.add(trunkI); scene.add(leafI);
-            const lampM = MB({ color: 0x22262b });
-            for (const side of [-1, 1]) for (let z = 95; z > -700; z -= 40) { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 7, 6), lampM); p.position.set(side * 14.5, 3.5, z); scene.add(p); const l = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), new THREE.MeshBasicMaterial({ color: 0xfff2c0 })); l.position.set(side * 14.5, 7.2, z); scene.add(l); }
-            const stone = MB({ color: 0xd0c3a2 }); [[-17, 25, 14, 50], [17, 25, 14, 50]].forEach(a => { const m = new THREE.Mesh(new THREE.BoxGeometry(a[2], a[3], 24), stone); m.position.set(a[0], a[1], -740); scene.add(m); });
-            const t1 = new THREE.Mesh(new THREE.BoxGeometry(20, 14, 24), stone); t1.position.set(0, 43, -740); scene.add(t1); const t2 = new THREE.Mesh(new THREE.BoxGeometry(48, 4, 26), stone); t2.position.set(0, 52, -740); scene.add(t2);
+            const gv = mkTex(128, 128, (g, w, h) => { g.fillStyle = '#6f705a'; g.fillRect(0, 0, w, h); for (let i = 0; i < 700; i++) { g.fillStyle = ['#5f6049', '#7d7e64', '#8a8a6a', '#575842'][i % 4]; g.fillRect(rnd() * w, rnd() * h, 4, 3); } }); gv.repeat.set(300, 300);
+            const gm = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000).rotateX(-Math.PI / 2), MB({ map: gv })); gm.userData.flat = true; scene.add(gm);
+            const rt = mkTex(64, 128, (g, w, h) => { g.fillStyle = '#56554f'; g.fillRect(0, 0, w, h); for (let i = 0; i < 300; i++) { g.fillStyle = i % 2 ? '#4c4b46' : '#625f58'; g.fillRect(rnd() * w, rnd() * h, 2, 2); } g.fillStyle = '#e8e8e0'; g.fillRect(w / 2 - 1, 8, 2, 44); }); rt.repeat.set(1, 80);
+            const rm = new THREE.Mesh(new THREE.PlaneGeometry(14, 1000).rotateX(-Math.PI / 2), MB({ map: rt })); rm.position.set(0, 0.05, -330); rm.userData.flat = true; scene.add(rm);
+            house(-26, -22, 0.3, 0x8e2b25, 0x2d2d33); house(34, -70, -0.2, 0x9b3128, 0x2d2d33); house(-60, -130, 0.1, 0x7a2a24, 0x2d2d33);
+            { const N = 70, bi = new THREE.InstancedMesh(new THREE.SphereGeometry(2.4, 8, 6), MB({ color: 0xffffff }), N), o = new THREE.Object3D(), cs = [0x9aa43a, 0xb4b24a, 0x6f7a2e]; for (let k = 0; k < N; k++) { const a = rnd() * 6.283, r = rnd() * 16, bx = k < 40 ? -20 + Math.cos(a) * r : (rnd() - 0.5) * 160, bz = k < 40 ? -4 + Math.sin(a) * r : -rnd() * 300; if (Math.abs(bx) < 10) { o.position.set(bx + 20, 1.2, bz); } else o.position.set(bx, 1.2, bz); o.scale.set(1, 0.7 + rnd() * 0.4, 1); o.updateMatrix(); bi.setMatrixAt(k, o.matrix); bi.setColorAt(k, new THREE.Color(cs[k % 3])); } scene.add(bi); }
+            { const N = 30, po = new THREE.InstancedMesh(new THREE.BoxGeometry(0.3, 1.6, 0.3), MB({ color: 0x8a7a66 }), N), o = new THREE.Object3D(); for (let k = 0; k < N; k++) { o.position.set(22, 0.8, 40 - k * 6); o.updateMatrix(); po.setMatrixAt(k, o.matrix); } scene.add(po); for (const y of [1.3, 0.8]) { const r = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 180), MB({ color: 0x8a7a66 })); r.position.set(22, y, -50); scene.add(r); } }
+            for (let i = 0; i < 16; i++) { const h = 150 + rnd() * 110, rr = 220 + rnd() * 160, x = (i - 8) * 240, z = -1100 - rnd() * 250, m = new THREE.Mesh(new THREE.ConeGeometry(rr, h, 7), MB({ color: 0x6e6a64 })); m.position.set(x, h / 2 - 5, z); scene.add(m); const c = new THREE.Mesh(new THREE.ConeGeometry(rr * 0.42, h * 0.42, 7), MB({ color: 0xf2f4f8 })); c.position.set(x, h * 0.79 - 5, z); scene.add(c); }
           } finally { scene.add = oa; }
           scene.add(homeGroup); homeGroup.traverse(o => { if (o.isMesh && o.material && o.material.isMeshLambertMaterial) { o.receiveShadow = true; o.castShadow = !o.userData.flat; } if (o.isInstancedMesh) o.frustumCulled = false; }); }
         loadMap(SET.map);
         applySettings();
+
+
+        // ================= LIFTOFF-STYLE MENU EXTRAS =================
+        window.TBN = +store.get('liftoff_tbn', 12) || 12;
+        const devBox = document.createElement('div'); devBox.id = 'dev-toast'; document.body.appendChild(devBox);
+        const DEVICON = { pad: '<svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 4 4v3a2 2 0 0 1-3.500 1.300L16 14H8l-2.500 2.300A2 2 0 0 1 2 15v-3a4 4 0 0 1 4-4z"/><path d="M7 11v2M6 12h2M16 11.500h.01M18 12.500h.01"/></svg>',
+            kb: '<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>', phone: '<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>' };
+        function devNotify(name, sub, kind) { if (!window.__menuReady) { (window.__devQ = window.__devQ || []).push([name, sub, kind]); return; } const c = document.createElement('div'); c.className = 'dev-card'; c.innerHTML = (DEVICON[kind] || DEVICON.pad) + '<div><b></b><span></span></div>'; c.querySelector('b').textContent = name; c.querySelector('span').textContent = sub; devBox.appendChild(c);
+            requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add('show'))); setTimeout(() => { c.classList.remove('show'); setTimeout(() => c.remove(), 450); }, 4200); }
+        const cleanPad = id => (id || '').replace(/\(.*?\)/g, '').replace(/standard gamepad/i, 'Gamepad').replace(/\s+/g, ' ').trim() || 'Controller';
+        window.addEventListener('gamepadconnected', e => devNotify(cleanPad(e.gamepad.id), 'Detected', 'pad'));
+        window.addEventListener('gamepaddisconnected', e => devNotify(cleanPad(e.gamepad.id), 'Disconnected', 'pad'));
+        window.__menuReadyFlush = () => { window.__menuReady = true; const q = window.__devQ || []; window.__devQ = []; const seen = new Set(); q.forEach(a => { const k = a[0] + a[1]; if (!seen.has(k)) { seen.add(k); devNotify(a[0], a[1], a[2]); } });
+            if (navigator.getGamepads) [...navigator.getGamepads()].forEach(g => { if (g && !seen.has(cleanPad(g.id) + 'Detected')) devNotify(cleanPad(g.id), 'Detected', 'pad'); }); };
+        if (isMobile) setTimeout(() => devNotify('Touch Controls', 'Detected', 'phone'), 900);
+        else window.addEventListener('keydown', () => devNotify('Keyboard', 'Detected', 'kb'), { once: true });
+
+        const tabsEl = document.getElementById('hs-tabs'), bar1 = tabsEl.querySelector('.bar'), bar2 = tabsEl.querySelector('.bar2'), optBtn = document.querySelector('[data-panel="options"]');
+        function showOptBar(on) { bar1.style.display = on ? 'none' : ''; bar2.style.display = on ? 'flex' : 'none'; tabsEl.classList.toggle('opt', on); }
+        document.addEventListener('click', e => { const b = e.target.closest('#hs-list .hs-btn'); if (b) showOptBar(b === optBtn); }, true);
+        bar2.querySelectorAll('[data-opt]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); const k = b.dataset.opt;
+            if (k === 'controls') openPanel('CONTROLS', optBtn, p => { const w = el('div', 'ctl-cards', '<div class="ctl-card" data-c="pad"><b>CONTROLLER</b><div class="ci"></div>Select a controller preset or create your own with a step-by-step wizard.</div><div class="ctl-card" data-c="keys"><b>BUTTONS</b><div class="ci"></div>Assign game actions to keys on your keyboard or buttons on your controller.</div>'); p.appendChild(w);
+                w.querySelector('[data-c=pad]').onclick = () => document.querySelector('[data-cal]').click(); w.querySelector('[data-c=keys]').onclick = () => toast('W/S throttle · A/D yaw · I/J/K/L pitch+roll · M arm'); });
+            else if (k === 'dlc') openPanel('DLC', optBtn, p => p.appendChild(el('div', 'pnote', 'No DLC installed.'))); else optBtn.click(); }));
+        const openWorkbench = b => openPanel('WORKBENCH', b, p => { droneBuild(p, b); rng(p, 'Camera tilt', 0, 60, 5, SET.tilt, '°', v => { SET.tilt = v; applySettings(); }); rng(p, 'Field of view', 90, 150, 5, SET.fov, '°', v => { SET.fov = v; applySettings(); }); });
+        document.querySelectorAll('[data-wb]').forEach(b => b.addEventListener('click', e => { e.stopPropagation();
+            if (b.dataset.wb === 'workbench') openWB();
+            else openPanel('TRACK BUILDER', b, p => {
+                rng(p, 'Gates per lap', 6, 30, 1, window.TBN, '', v => { window.TBN = +v; store.set('liftoff_tbn', +v); R.cps = []; while (raceG.children.length) raceG.remove(raceG.children[0]); });
+                rng(p, 'Laps', 1, 10, 1, R.laps, '', v => { R.laps = +v; });
+                act(p, 'Map', MAPS[SET.map].name + '  ▸ CHANGE', () => askMap(null)); act(p, 'Track', 'FLY THIS TRACK', () => launch('race'));
+                p.appendChild(el('div', 'pnote', 'Gates are spaced evenly along the selected map\'s race line.')); }); }));
+
+
+        // ================= TOP-MENU INFO CARDS (click tab -> card -> click play) =================
+        { const _op = openPanel; openPanel = function () { panelEl.classList.remove('tabcard'); return _op.apply(this, arguments); }; }
+        const ICO = { p: '<svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="2.8"/><path d="M12 8.3V14M4 20.5h16M6.5 20.5l1.8-6.5h7.4l1.8 6.5"/></svg>', g: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>' };
+        const TI = { tutorial: ['TUTORIAL', 'Learn the basics step by step: arm the motors, take off, hover, fly the gates and land safely.', '#6aa84f', 'p'], quick: ['QUICK PLAY', 'Jump straight into the action. Pick a map and start flying right away.', '#4f8fe0', 'p'],
+            free: ['FREE FLIGHT', 'No rules, no stress! Hone your piloting skills, get a feel for the environment or practice on a track of your choice.', '#3f9a7b', 'p'], race: ['RACE', 'Race against the clock through the gates. Chase your best lap and beat your own record.', '#d0503a', 'p'],
+            freestyle: ['FREESTYLE', 'Throw your drone around and show off. Flips, dives and power loops with no timer.', '#a050d0', 'p'], workbench: ['WORKBENCH', 'Fix those broken props and try out that new LiPo. Put together the racing machine that meets your exact demands!', '#8a6a3a', 'g'],
+            trackbuilder: ['TRACK BUILDER', 'Design your own race: choose the map, the number of gates and the laps, then fly it.', '#3a7a9a', 'g'] };
+        function tabCard(b) { const k = b.dataset.act || b.dataset.wb || 'quick', i = TI[k] || TI.quick;
+            document.querySelectorAll('#hs-tabs .hs-tab').forEach(x => x.classList.toggle('sel', x === b)); document.querySelectorAll('#hs-list .hs-btn').forEach(x => x.classList.remove('active'));
+            openPanel(i[0], b, p => { const h = p.querySelector('h2'); if (h) h.remove(); p.appendChild(el('div', 'tc-h', ICO[i[3]] + '<span>' + i[0] + '</span>'));
+                const body = el('div', 'tc-b', '<div class="tc-t" style="--g:' + i[2] + '"></div><div class="tc-d">' + i[1] + '</div>'); p.appendChild(body);
+                body.querySelector('.tc-t').onclick = ev => { ev.stopPropagation(); if (k === 'workbench') { closePanel(); openWB(); } else { b._pass = true; b.click(); } }; });
+            panelEl.classList.add('tabcard'); b.classList.add('sel'); }
+        document.addEventListener('click', e => { const b = e.target.closest('#hs-tabs .hs-tab[data-act], #hs-tabs .hs-tab[data-wb], #btn-start-game'); if (!b) return; if (b._pass) { b._pass = false; return; }
+            e.stopImmediatePropagation(); e.stopPropagation(); tabCard(b); }, true);
+        document.addEventListener('click', e => { if (e.target.closest('#hs-list .hs-btn')) document.querySelectorAll('#hs-tabs .hs-tab.sel').forEach(x => x.classList.remove('sel')); }, true);
+
+        // ================= WORKBENCH SCREEN (My Fleet / Blueprints) =================
+        const wb = document.createElement('div'); wb.id = 'wb';
+        wb.innerHTML = '<div id="wb-title">Workbench</div><div id="wb-gear" title="Back to menu"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>'
+            + '<div id="wb-bar"><div class="ms-seg">DRONE SELECTION</div><div class="ms-seg chev"></div><div class="ms-seg" id="wb-t1">MY FLEET</div><div class="ms-seg grey" id="wb-t2">BLUEPRINTS</div></div>'
+            + '<div id="wb-name"><input id="wb-in" maxlength="24"><small id="wb-act"></small></div><div id="wb-stage"></div><div id="wb-bp"></div>'
+            + '<div id="wb-btns"><button id="wb-sel">Select</button><button id="wb-dup">Duplicate</button><button id="wb-shr">Share</button><button id="wb-del">Delete</button><button id="wb-ed" class="g">Edit</button></div><div id="wb-edit"></div>';
+        document.body.appendChild(wb);
+        { const sv = document.querySelector('#loading svg.ldrone'); if (sv) wb.insertBefore(sv.cloneNode(true), wb.firstChild); }
+        const $w = id => wb.querySelector('#' + id), WD = d => Object.assign({}, DRONE_BASE, d);
+        let fleet = store.get('liftoff_fleet', null), fIdx = 0, fAct = store.get('liftoff_fleetsel', 0), wbView = 'fleet', editing = false;
+        if (!Array.isArray(fleet) || !fleet.length) { fleet = [{ name: DRONE.preset || 'DJI Neo 2', d: WD(DRONE) }]; fAct = 0; }
+        fIdx = fAct = Math.min(fAct, fleet.length - 1);
+        const saveFleet = () => { store.set('liftoff_fleet', fleet); store.set('liftoff_fleetsel', fAct); };
+        function droneSVG(st) { return '<svg viewBox="0 0 300 200"><g transform="translate(150 105) rotate(-10) skewX(-8)"><path d="M-88 -52L88 52M88 -52L-88 52" stroke="' + st.arms + '" stroke-width="13" stroke-linecap="round"/>'
+            + [[-88, -52], [88, -52], [-88, 52], [88, 52]].map(p => '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="38" ry="12" fill="' + st.tip + '" opacity=".72"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="10" fill="' + st.metal + '"/>').join('')
+            + '<rect x="-34" y="-24" width="68" height="48" rx="9" fill="' + st.body + '"/><rect x="-24" y="-17" width="48" height="34" rx="7" fill="' + st.top + '"/><circle cx="34" cy="0" r="9" fill="#111"/><circle cx="-26" cy="17" r="3.5" fill="' + st.led + '"/></g></svg>'; }
+        function renderWB() { const f = fleet[fIdx];
+            $w('wb-in').value = f.name; $w('wb-act').textContent = fIdx === fAct ? 'ACTIVE DRONE' : ''; $w('wb-t1').className = 'ms-seg' + (wbView === 'fleet' ? '' : ' grey'); $w('wb-t2').className = 'ms-seg' + (wbView === 'bp' ? '' : ' grey');
+            $w('wb-stage').style.display = wbView === 'fleet' ? 'block' : 'none'; $w('wb-name').style.display = wbView === 'fleet' ? 'block' : 'none'; $w('wb-btns').style.display = wbView === 'fleet' ? 'flex' : 'none'; $w('wb-bp').style.display = wbView === 'bp' ? 'flex' : 'none';
+            const st = $w('wb-stage'); st.innerHTML = '<div id="wb-plus" title="New drone">+</div>';
+            [['l', fIdx - 1], ['c', fIdx], ['r', fIdx + 1]].forEach(([c, i]) => { if (!fleet[i]) return; const d = el('div', 'wb-d ' + c, droneSVG(WD(fleet[i].d))); if (c !== 'c') d.onclick = () => { fIdx = i; renderWB(); }; st.appendChild(d); });
+            st.querySelector('#wb-plus').onclick = () => { fleet.push({ name: 'New Drone', d: WD({}) }); fIdx = fleet.length - 1; saveFleet(); renderWB(); };
+            const bp = $w('wb-bp'); bp.innerHTML = ''; Object.keys(DRONE_PRESETS).forEach(k => { const c = el('div', 'bp', '<div style="width:100%">' + droneSVG(WD(DRONE_PRESETS[k])) + '</div><b>' + k + '</b><i>ADD TO FLEET</i>'); c.onclick = () => { fleet.push({ name: k, d: WD(Object.assign({}, DRONE_PRESETS[k], { preset: k })) }); fIdx = fleet.length - 1; wbView = 'fleet'; saveFleet(); renderWB(); toast(k + ' added to fleet'); }; bp.appendChild(c); }); }
+        const syncFleet = () => { if (editing) { fleet[fAct].d = WD(DRONE); fleet[fAct].d.preset = DRONE.preset; saveFleet(); } };
+        function selectDrone() { fAct = fIdx; Object.assign(DRONE, DRONE_BASE, fleet[fIdx].d); applyMyStyle(); saveFleet(); renderWB(); toast(fleet[fIdx].name + ' selected'); }
+        function closeEdit() { syncFleet(); editing = false; $w('wb-edit').style.display = 'none'; renderWB(); }
+        function openEdit() { if (fIdx !== fAct) selectDrone(); editing = true; const box = $w('wb-edit'); const fake = { click: () => draw() };
+            function draw() { box.innerHTML = '<h2>EDIT DRONE<span id="wb-x">&#10005;</span></h2>'; const c = el('div'); box.appendChild(c); droneBuild(c, fake); box.querySelector('#wb-x').onclick = closeEdit; }
+            draw(); box.style.display = 'block'; }
+        function openWB() { wbView = 'fleet'; fIdx = fAct; renderWB(); wb.style.display = 'block'; document.body.classList.add('wb-open'); }
+        function closeWB() { closeEdit(); wb.style.display = 'none'; }
+        $w('wb-gear').onclick = closeWB; $w('wb-t1').onclick = () => { wbView = 'fleet'; renderWB(); }; $w('wb-t2').onclick = () => { wbView = 'bp'; closeEdit(); };
+        wb.querySelector('#wb-bar .ms-seg').onclick = () => { wbView = 'fleet'; renderWB(); };
+        $w('wb-sel').onclick = selectDrone; $w('wb-ed').onclick = openEdit;
+        $w('wb-dup').onclick = () => { fleet.splice(fIdx + 1, 0, { name: fleet[fIdx].name + ' copy', d: WD(fleet[fIdx].d) }); fIdx++; if (fIdx <= fAct) fAct++; saveFleet(); renderWB(); };
+        $w('wb-del').onclick = () => { if (fleet.length < 2) { toast('You need at least one drone'); return; } fleet.splice(fIdx, 1); if (fIdx < fAct) fAct--; else if (fIdx === fAct) { fAct = 0; Object.assign(DRONE, DRONE_BASE, fleet[0].d); applyMyStyle(); } fIdx = Math.max(0, Math.min(fIdx, fleet.length - 1)); closeEdit(); saveFleet(); renderWB(); };
+        $w('wb-shr').onclick = () => { const t = JSON.stringify(fleet[fIdx]); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Drone copied to clipboard'), () => toast('Could not copy')); };
+        $w('wb-in').oninput = e => { fleet[fIdx].name = e.target.value || 'Drone'; saveFleet(); }; $w('wb-in').addEventListener('keydown', e => e.stopPropagation());
+        window.addEventListener('keydown', e => { if (wb.style.display !== 'block' || e.target.tagName === 'INPUT') return; if (e.key === 'ArrowLeft' && fIdx > 0) { fIdx--; renderWB(); } else if (e.key === 'ArrowRight' && fIdx < fleet.length - 1) { fIdx++; renderWB(); } else if (e.key === 'Escape') closeWB(); });
+
+        // ---- click the background to close windows ----
+        { let dn = null; window.addEventListener('pointerdown', e => { dn = [e.clientX, e.clientY]; }, true);
+          window.addEventListener('click', e => { const moved = dn && Math.hypot(e.clientX - dn[0], e.clientY - dn[1]) > 6; if (moved || gameStarted) return;
+              if (e.target.closest('#hs-panel, #hs-list, #hs-tabs, #hs-user, #hs-logo, #hs-kb, #wb, #map-select, #loading, #intro, .dev-card, #hs-ver, button, input, select, a, label')) return;
+              if (panelEl.style.display === 'block') { closePanel(); setActive(null); showOptBar(false); document.querySelectorAll('#hs-tabs .hs-tab.sel').forEach(x => x.classList.remove('sel')); } }); }
+        wb.addEventListener('click', e => { if (editing && !e.target.closest('#wb-edit, #wb-btns, #wb-bar, #wb-gear, #wb-name, .wb-d, #wb-plus')) closeEdit(); });
+        setInterval(() => { if (editing && wb.style.display === 'block') { syncFleet(); const c = wb.querySelector('.wb-d.c'); if (c) c.innerHTML = droneSVG(WD(fleet[fAct].d)); } }, 500);
 
         // ================= MULTIPLAYER (peer-to-peer via PeerJS room codes) =================
         const MP = { peer: null, conn: null, code: '', host: false, connected: false, remote: null, label: null, tp: new THREE.Vector3(), tq: new THREE.Quaternion(), armed: false,
@@ -1763,13 +2005,20 @@
             window.audioApply();
         }
         function makeEngine(out, spatial) {
-            const ctx = AUD.ctx, lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400; lp.Q.value = 3;
-            const g = ctx.createGain(); g.gain.value = 0; const oscs = [['sawtooth', 1], ['square', 2.01], ['triangle', 0.5]].map(o => { const x = ctx.createOscillator(); x.type = o[0]; x.start(); x.mult = o[1]; x.connect(lp); return x; });
-            const ns = ctx.createBufferSource(); ns.buffer = AUD.noise; ns.loop = true; const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1500; bp.Q.value = 0.7; const ng = ctx.createGain(); ng.gain.value = 0;
-            ns.connect(bp); bp.connect(ng); lp.connect(g);
-            let tail = g, ntail = ng, pan = null; if (spatial) { pan = ctx.createStereoPanner(); g.connect(pan); ng.connect(pan); pan.connect(out); } else { g.connect(out); ng.connect(out); }
+            // DJI Neo 2: four small 3-inch ducted props -> high, piercing "wasp" whine (blade-pass tone + harmonics), little bass,
+            // slight detune between the four motors (beating), duct resonance around 2-3 kHz and a thin airy rush.
+            const ctx = AUD.ctx, hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 300; hp.Q.value = 0.5;
+            const pk = ctx.createBiquadFilter(); pk.type = 'peaking'; pk.frequency.value = 2700; pk.Q.value = 1.3; pk.gain.value = 7;
+            const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 8000; lp.Q.value = 0.4;
+            const g = ctx.createGain(); g.gain.value = 0; hp.connect(pk); pk.connect(lp); lp.connect(g);
+            const wave = ctx.createPeriodicWave(new Float32Array(9), new Float32Array([0, 1, 0.62, 0.4, 0.26, 0.16, 0.1, 0.06, 0.035]));
+            const mot = [1, 1.012, 0.991, 1.026].map((d, i) => { const o = ctx.createOscillator(); o.setPeriodicWave(wave); o.frequency.value = 600 * d; const mg = ctx.createGain(); mg.gain.value = 0.22;
+                const lfo = ctx.createOscillator(); lfo.frequency.value = 2.7 + i * 0.9; const lg = ctx.createGain(); lg.gain.value = 5 + i * 2; lfo.connect(lg); lg.connect(o.detune); o.connect(mg); mg.connect(hp); o.start(); lfo.start(); return { o, d }; });
+            const ns = ctx.createBufferSource(); ns.buffer = AUD.noise; ns.loop = true; const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3200; bp.Q.value = 0.9; const ng = ctx.createGain(); ng.gain.value = 0; ns.connect(bp); bp.connect(ng);
+            let pan = null; if (spatial) { pan = ctx.createStereoPanner(); g.connect(pan); ng.connect(pan); pan.connect(out); } else { g.connect(out); ng.connect(out); }
             ns.start();
-            return { pan, set(f, vol, nvol) { const t = ctx.currentTime; oscs.forEach(o => o.frequency.setTargetAtTime(f * o.mult, t, 0.05)); g.gain.setTargetAtTime(vol, t, 0.08); ng.gain.setTargetAtTime(nvol, t, 0.1); bp.frequency.setTargetAtTime(900 + f * 2, t, 0.1); } };
+            return { pan, set(f, vol, nvol) { const t = ctx.currentTime, p = Math.min(1.4, Math.max(0, (f - 150) / 520)), base = 430 + p * 780; // ~430 Hz idle -> ~1.5 kHz full power
+                mot.forEach(m => m.o.frequency.setTargetAtTime(base * m.d, t, 0.14)); g.gain.setTargetAtTime(vol * 2.3, t, 0.1); ng.gain.setTargetAtTime(nvol * 1.7, t, 0.12); bp.frequency.setTargetAtTime(2800 + p * 2600, t, 0.15); pk.frequency.setTargetAtTime(2300 + p * 900, t, 0.2); } };
         }
         window.audioApply = () => { if (AUD.master) AUD.master.gain.value = SET.sound ? SET.vol / 100 : 0; };
         function tone(f, dur, type, vol, delay, slide) {
@@ -2178,5 +2427,24 @@
         }
         setOsdMode('M');
     </script>
+<script>
+(function(){
+  const $=id=>document.getElementById(id), ld=$('loading'), TIPS=['In the <b>Race Editor</b> you can define Races for Tracks you created.','Use the <b>Workbench</b> to tweak your drone before you fly.','Press <b>M</b> to arm and disarm the motors.','Try <b>Free Flight</b> to get a feel for the environment.','Build your own race line in the <b>Track Builder</b>.'];
+  let tipI=0;
+  function runLoad(label,
+                dur,done){ ld.style.display='block'; ld.style.opacity=1; $('ltxt').textContent=label; $('ltip').innerHTML=TIPS[(tipI++)%TIPS.length]; const t0=performance.now(); let p=0;
+    (function step(now){ const k=Math.min(1,(now-t0)/dur); p=Math.min(100,Math.round(100*(k<.5?k*k*2:1-Math.pow(-2*k+2,2)/2)*1.0)); $('lfill').style.width=p+'%'; $('lpct').textContent=p+' %';
+      if(k<1) requestAnimationFrame(step); else setTimeout(()=>{ ld.style.opacity=0; setTimeout(()=>{ ld.style.display='none'; if(done)done(); },520); },250); })(t0); }
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  (async()=>{ const a=$('it1'),b=$('it2'),it=$('intro');
+    await wait(500); a.classList.add('on'); await wait(2400); a.classList.remove('on'); await wait(1200);
+    b.classList.add('on'); await wait(2400); b.classList.remove('on'); await wait(1200);
+    ld.style.display='block'; ld.style.opacity=1; it.style.opacity=0; setTimeout(()=>it.remove(),700);
+    runLoad('LOADING MENU',2800,()=>{ if(window.__menuReadyFlush) window.__menuReadyFlush(); else window.__menuReady=true; }); })();
+  // loading screen when entering a game session
+  const orig=window.startGameSession;
+  if(typeof orig==='function') window.startGameSession=function(){ const r=orig.apply(this,arguments); runLoad('LOADING MAP',1600); return r; };
+})();
+</script>
 </body>
 </html>
