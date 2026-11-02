@@ -127,6 +127,9 @@
             font-size: 12px; font-weight: bold; font-family: consolas, sans-serif;
         }
         .top-btn:hover { background: rgba(40, 50, 70, 0.95); }
+        #top-action-bar { transition: opacity .25s ease, transform .25s ease; }
+        body.is-desktop #top-action-bar { display: none !important; }   /* desktop uses the keyboard */
+        body.flying #top-action-bar { opacity: 0; transform: translateY(-14px); pointer-events: none; }   /* hidden in the air, back when landed */
 
         #top-menu-bar { 
             position: absolute; top: max(12px, env(safe-area-inset-top)); left: max(15px, env(safe-area-inset-left)); display: flex; align-items: center; gap: 10px; z-index: 8; pointer-events: auto; 
@@ -253,9 +256,17 @@
         .dev-card svg { width: 44px; height: 44px; stroke: #444; fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
         .dev-card b { display: block; font-size: 17px; } .dev-card span { font-size: 13px; color: #888; }
 
-        #intro { position: fixed; inset: 0; z-index: 200; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; font-family: "Segoe UI", Arial, sans-serif; transition: opacity .6s ease; }
-        #intro .it { position: absolute; display: flex; align-items: center; gap: 18px; opacity: 0; transition: opacity 1s ease; font-size: clamp(22px, 3.4vw, 54px); letter-spacing: .08em; font-weight: 300; }
-        #intro .it.on { opacity: 1; } #intro .it svg { height: 1.5em; width: auto; }
+        #intro { position: fixed; inset: 0; z-index: 200; background: #121212; color: #fff; display: flex; align-items: center; justify-content: center; transition: opacity .6s ease; }
+        #intro .st { width: min(90vw, 175vh); height: min(92vh, 52vw); display: flex; flex-direction: column; justify-content: space-between; }
+        #intro .top { display: flex; justify-content: space-around; align-items: center; height: 30%; }
+        #intro .grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(4, 1fr); height: 50%; }
+        #intro .grid > div { display: flex; align-items: center; justify-content: center; }
+        #intro .grid svg, #intro .grid img { width: 56%; max-height: 62%; object-fit: contain; }
+        #intro .top > * { height: 78%; width: 28%; display: flex; align-items: center; justify-content: center; }
+        #intro .top svg, #intro .top img { width: 100%; height: 100%; object-fit: contain; }
+        #intro .dj { height: 11%; display: flex; justify-content: center; } #intro .dj svg { height: 100%; width: auto; }
+        #intro .top > *, #intro .grid > div, #intro .dj { opacity: 0; transform: translateY(6px) scale(.97); transition: opacity .7s ease, transform .7s ease; }
+        #intro .on { opacity: 1 !important; transform: none !important; }
         #loading { position: fixed; inset: 0; z-index: 190; display: none; background: #0a0a0a; overflow: hidden; color: #fff; font-family: "Segoe UI", "Open Sans", Arial, sans-serif; transition: opacity .5s ease; }
         #loading .lband { position: absolute; left: 0; right: 0; top: 15.7%; bottom: 9.2%; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), rgba(255,255,255,.1)); }
         #loading::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background-image: radial-gradient(rgba(0,0,0,.55) 38%, transparent 42%); background-size: 4px 4px; }
@@ -295,17 +306,14 @@
         .bp { flex: 0 0 22vw; min-width: 220px; background: #f7f7f7; color: #444; border-left: 1vw solid #5b9a8b; padding: 1.6vh 1.2vw 2vh; cursor: pointer; } .bp:hover { transform: translateY(-5px); } .bp b { display: block; font-size: clamp(11px, 1vw, 16px); text-transform: uppercase; } .bp i { display: block; font-style: normal; font-size: clamp(9px, .8vw, 13px); color: #5b9a8b; margin-top: .6em; }
         #wb-edit { display: none; position: absolute; right: 3vw; top: 20vh; width: min(34vw, 420px); max-height: 66vh; overflow-y: auto; background: rgba(250,250,248,.97); color: #2e3436; border-left: 8px solid #5b9a8b; padding: 1.4vh 1.4vw 1.8vh; font-size: clamp(11px, 1vw, 15px); box-shadow: 0 8px 30px rgba(0,0,0,.5); }
         #wb-edit h2 { margin: .2em 0 .6em; font-size: 1.2em; letter-spacing: .06em; color: #3f7b6d; display: flex; justify-content: space-between; } #wb-edit h2 span { cursor: pointer; color: #888; }
-        #hs-logo svg { width: clamp(90px, 11vw, 210px); display: block; filter: drop-shadow(0 4px 14px rgba(0,0,0,.45)); }
+        #hs-logo svg { width: clamp(100px, 12.5vw, 240px); display: block; filter: drop-shadow(0 4px 14px rgba(0,0,0,.45)); }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
-<div id="intro">
-  <div class="it" id="it1"><span>Made by HTML</span><svg viewBox="0 0 64 72"><polygon points="6,2 58,2 53,62 32,70 11,62" fill="#e44d26"/><polygon points="32,6 32,66 49,60 53,6" fill="#f16529"/><text x="32" y="46" font-size="38" font-weight="900" font-family="Arial" fill="#fff" text-anchor="middle">5</text></svg></div>
-  <div class="it" id="it2"><span>by Raffachy Studios</span></div>
-</div>
+<div id="intro"><div class="st"><div class="top" id="in-top"></div><div class="grid" id="in-grid"></div><div class="dj" id="in-dj"></div></div></div>
 <div id="loading">
   <div class="lband"></div>
   <svg class="ldrone" viewBox="0 0 600 800" fill="none"><g fill="rgba(255,255,255,.3)"><circle cx="150" cy="140" r="170"/><circle cx="470" cy="190" r="140"/><circle cx="130" cy="620" r="190"/><circle cx="500" cy="660" r="120"/></g><g stroke="rgba(0,0,0,.55)" stroke-width="26"><path d="M300 400 L150 140M300 400 L470 190M300 400 L130 620M300 400 L500 660"/></g><polygon points="230,300 380,300 400,500 210,500" fill="rgba(0,0,0,.5)"/><g fill="rgba(0,0,0,.6)"><circle cx="150" cy="140" r="34"/><circle cx="470" cy="190" r="34"/><circle cx="130" cy="620" r="34"/><circle cx="500" cy="660" r="34"/></g></svg>
@@ -399,7 +407,7 @@
                     <button class="hs-tab" data-opt="game">GAME</button><button class="hs-tab" data-opt="graphics">GRAPHICS</button><button class="hs-tab" data-opt="audio">AUDIO</button><button class="hs-tab" data-opt="controls">CONTROLS</button><button class="hs-tab" data-opt="dlc">DLC</button>
                 </div></div>
                 <div id="hs-user"><div>Pilot<span class="sign">Signed in</span></div><div class="av"></div></div>
-                <div id="hs-logo"><svg viewBox="0 0 230 120" aria-label="DJI"><text x="4" y="92" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-style="italic" font-size="118" letter-spacing="-8" fill="#fff">dji</text><path d="M122 104h78l-8 9h-78zM30 104h78l-8 9H22z" fill="#fff" opacity=".0"/></svg></div>
+                <div id="hs-logo"><svg viewBox="0 0 230 140" aria-label="DJI"><path fill="#fff" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" fill-rule="evenodd" d="M110.2 5.0 L142.7 5.0 L144.1 6.2 L135.5 39.3 L123.4 81.5 L118.0 93.4 L114.2 97.0 L110.2 99.2 L100.3 101.2 L92.5 101.7 L41.8 101.9 L18.7 101.5 L9.7 99.0 L6.1 95.0 L5.0 90.2 L5.2 86.7 L11.7 60.0 L16.2 47.0 L19.4 40.7 L22.0 37.8 L26.3 34.8 L32.1 32.8 L44.0 31.5 L92.2 31.5 L92.9 32.4 L92.7 34.4 L89.1 47.2 L88.0 49.0 L57.5 49.3 L53.9 51.0 L49.9 62.4 L45.9 78.6 L46.3 82.4 L49.4 84.1 L81.7 84.1 L85.1 83.5 L88.4 79.9 L90.8 73.0 L107.5 10.4Z M147.0 31.3 L179.5 31.2 L180.8 31.9 L167.6 83.1 L160.9 104.8 L154.4 117.8 L148.5 124.6 L142.7 128.8 L137.5 131.3 L130.4 133.3 L109.1 134.9 L75.2 134.7 L74.7 133.3 L80.8 111.8 L81.9 110.6 L100.3 110.6 L110.4 109.2 L116.7 107.0 L123.8 100.8 L127.6 94.5 L131.4 84.9 L140.2 54.6Z M190.5 31.3 L223.2 31.2 L225.0 32.4 L205.9 101.7 L171.4 101.5Z"/></svg></div>
                 <div id="hs-ver">v1.0.0 - 26/10/2026</div>
                 <div id="hs-panel"></div>
                 <div id="hs-toast"></div><button data-cal="1" style="display:none" tabindex="-1" aria-hidden="true"></button>
@@ -444,6 +452,7 @@
                 instructionTextEl.innerHTML = `<b>Cinematic World Preview</b><br>Landscape Mode Recommended`;
             }
         } else {
+            document.body.classList.add('is-desktop');
             document.getElementById('btn-motor-toggle').style.display = 'none';
             document.getElementById('btn-fullscreen-toggle').style.display = 'none';
         }
@@ -1004,6 +1013,50 @@
         MAPINFO[18] = ['Medium', 'This massive urban environment offers something for everyone, from freestyle pilots to speed maniacs.']; MAPINFO[19] = ['Medium', "Here's your opportunity to triumph in the City of Lights!"];
         MAPINFO[20] = ['Medium', 'This defunct mine is your new favorite location for dizzying dives and free-style shenanigans.'];
 
+        MAPS.push({ name: 'Liftoff Arena', icon: '\ud83c\udfdf\ufe0f', desc: 'Stadium race arena', tod: 'day', grad: ['#e8702a', '#3f8a2f'], build() {
+            heightFn = () => 0; LANDMARK = { x: 0, z: 45 };
+            const CZ = 45, PW = 112, PD = 72, hx = PW / 2 + 12, hz = PD / 2 + 12, TIERS = 12, TH = 2.4, TD = 2.6;   // pitch size, stand boundary, tiers (the drone spawns on the centre of the pitch)
+            const out = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000).rotateX(-Math.PI / 2), MB({ color: 0x5d5a55 })); out.userData.flat = true; out.position.y = -0.05; scene.add(out);
+            const apron = new THREE.Mesh(new THREE.PlaneGeometry(2 * hx, 2 * hz).rotateX(-Math.PI / 2), MB({ color: 0x8a5a44 })); apron.position.set(0, 0.01, CZ); apron.userData.flat = true; scene.add(apron);
+            const pt = mkTex(1024, 660, (g, w, h) => { for (let i = 0; i < 14; i++) { g.fillStyle = i % 2 ? '#3f8a2a' : '#4a9633'; g.fillRect(i * w / 14, 0, w / 14 + 1, h); }
+                g.strokeStyle = 'rgba(255,255,255,.9)'; g.lineWidth = 5; g.strokeRect(30, 30, w - 60, h - 60); g.beginPath(); g.moveTo(w / 2, 30); g.lineTo(w / 2, h - 30); g.stroke(); g.beginPath(); g.arc(w / 2, h / 2, 86, 0, 6.283); g.stroke();
+                g.strokeRect(30, h / 2 - 150, 170, 300); g.strokeRect(w - 200, h / 2 - 150, 170, 300); g.strokeRect(30, h / 2 - 70, 70, 140); g.strokeRect(w - 100, h / 2 - 70, 70, 140); });
+            const pitch = new THREE.Mesh(new THREE.PlaneGeometry(PW, PD).rotateX(-Math.PI / 2), MB({ map: pt })); pitch.position.set(0, 0.03, CZ); pitch.userData.flat = true; scene.add(pitch);
+            // advertising boards around the pitch
+            for (const sz of [-1, 1]) { box(PW + 10, 1.1, 0.4, 0, 0.55, CZ + sz * (PD / 2 + 4), 0x1d2f6a, true); box(PW + 10, 0.25, 0.45, 0, 0.9, CZ + sz * (PD / 2 + 4), 0xf0f0f0, false); box(0.4, 1.1, PD + 8, sz * (PW / 2 + 5), 0.55, CZ, 0x1d2f6a, true); box(0.45, 0.25, PD + 8, sz * (PW / 2 + 5), 0.9, CZ, 0xf0f0f0, false); }
+            // four grandstands with tiers, spectators, back wall and an arched roof
+            const SIDES = [{ ox: 0, oz: CZ + hz, ux: 1, uz: 0, dx: 0, dz: 1, L: 2 * (hx + TIERS * TD) }, { ox: 0, oz: CZ - hz, ux: 1, uz: 0, dx: 0, dz: -1, L: 2 * (hx + TIERS * TD) },
+                           { ox: hx, oz: CZ, ux: 0, uz: 1, dx: 1, dz: 0, L: 2 * hz }, { ox: -hx, oz: CZ, ux: 0, uz: 1, dx: -1, dz: 0, L: 2 * hz }];
+            const seatCols = [0xb8321c, 0xd5532a, 0xc2411f, 0xe06a32], crowdCols = [0xf0f0f0, 0xd9402a, 0x2a68c8, 0xe0b030, 0x33363c, 0xb7bcc4, 0x2f9a5a];
+            const roofMat = MB({ color: 0x7a4a34, side: THREE.DoubleSide }), ribMat = MB({ color: 0x2f2623 }), specs = [];
+            SIDES.forEach(S => {
+                const W = (a, b, u0, d0) => ({ x: S.ox + S.ux * u0 + S.dx * d0, z: S.oz + S.uz * u0 + S.dz * d0, w: Math.abs(S.ux) * a + Math.abs(S.dx) * b, dd: Math.abs(S.uz) * a + Math.abs(S.dz) * b });
+                for (let i = 0; i < TIERS; i++) { const h = (i + 1) * TH, c = W(S.L, TD, 0, i * TD + TD / 2); box(c.w, h, c.dd, c.x, h / 2, c.z, seatCols[(i >> 1) % 4], true);
+                    for (let u = -S.L / 2 + 1; u < S.L / 2 - 0.5; u += 1.4) if (rnd() < 0.55) { const c2 = W(0, 0, u, i * TD + TD * 0.55); specs.push([c2.x, h + 0.5, c2.z, crowdCols[(rnd() * crowdCols.length) | 0]]); } }
+                { const h = TIERS * TH + 1, c = W(S.L, 1.2, 0, TIERS * TD + 0.6); box(c.w, h, c.dd, c.x, h / 2, c.z, 0x7d756e, true); }
+                // curved roof: quadratic arc from the back of the stand, up and over the seats
+                const d0 = TIERS * TD, y0 = TIERS * TH + 1, dc = 15, yc = 47, d1 = -3, y1 = 34, Bz = t => { const a = (1 - t) * (1 - t), b = 2 * (1 - t) * t, c = t * t; return [a * d0 + b * dc + c * d1, a * y0 + b * yc + c * y1]; };
+                const P = (d, y, u0) => new THREE.Vector3(S.ox + S.ux * u0 + S.dx * d, y, S.oz + S.uz * u0 + S.dz * d), NS = 8;
+                for (let k = 0; k < NS; k++) { const A = Bz(k / NS), Bq = Bz((k + 1) / NS), len = Math.hypot(Bq[0] - A[0], Bq[1] - A[1]), dy = Bq[1] - A[1], mid = P((A[0] + Bq[0]) / 2, (A[1] + Bq[1]) / 2, 0);
+                    const m = new THREE.Mesh(S.dz !== 0 ? new THREE.BoxGeometry(S.L, 0.6, len) : new THREE.BoxGeometry(len, 0.6, S.L), roofMat); m.position.copy(mid);
+                    if (S.dz !== 0) m.rotation.x = Math.atan(-dy / (S.dz * (Bq[0] - A[0]))); else m.rotation.z = Math.atan(dy / (S.dx * (Bq[0] - A[0]))); scene.add(m); }
+                for (let u0 = -S.L / 2 + 6; u0 <= S.L / 2 - 5; u0 += 12) { const cv = new THREE.QuadraticBezierCurve3(P(d0, y0 - 0.4, u0), P(dc, yc - 0.6, u0), P(d1, y1 - 0.4, u0)); scene.add(new THREE.Mesh(new THREE.TubeGeometry(cv, 14, 0.42, 5, false), ribMat)); }
+                { const c = W(S.L, d0 + 3, 0, (d0 - 3) / 2); solid(c.x, c.z, c.w, c.dd, 28, 41); }
+            });
+            { const im = new THREE.InstancedMesh(new THREE.BoxGeometry(0.7, 1.0, 0.5), MB({ color: 0xffffff }), specs.length), t = new THREE.Object3D(), col = new THREE.Color();
+              specs.forEach((sp, i) => { t.position.set(sp[0], sp[1], sp[2]); t.updateMatrix(); im.setMatrixAt(i, t.matrix); im.setColorAt(i, col.setHex(sp[3])); }); im.instanceColor.needsUpdate = true; scene.add(im); }
+            // race lap inside the stadium + blue square gates (same positions as the race checkpoints)
+            const route = []; for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; route.push([Math.cos(a) * 50, CZ + Math.sin(a) * 28 * (1 + 0.15 * Math.cos(a * 2))]); }
+            setRoute(route, (x, z) => { const a = Math.atan2(z - CZ, x); return 6.5 + 3 * Math.sin(a * 2 + 0.6) + Math.cos(a * 3); });
+            const NG = window.TBN || 12, gm = new THREE.MeshBasicMaterial({ color: 0x2a62ff }), gl = new THREE.MeshBasicMaterial({ color: 0xdfe8ff }), pm = MB({ color: 0x2b3038 });
+            for (let k = 0; k < NG; k++) { const p = curve.getPointAt(k / NG), tg = curve.getTangentAt(k / NG), g = new THREE.Group(), S = 3.4, T = 0.55;
+                g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(tg.x, tg.z);
+                [[0, S, 2 * S + T, T], [0, -S, 2 * S + T, T], [S, 0, T, 2 * S + T], [-S, 0, T, 2 * S + T]].forEach(a => { const m = new THREE.Mesh(new THREE.BoxGeometry(a[2], a[3], 0.5), gm); m.position.set(a[0], a[1], 0); g.add(m); });
+                [[0, S, 2 * S + T, 0.12], [0, -S, 2 * S + T, 0.12]].forEach(a => { const m = new THREE.Mesh(new THREE.BoxGeometry(a[2], a[3], 0.56), gl); m.position.set(a[0], a[1], 0); g.add(m); });
+                scene.add(g); const bot = p.y - S - T / 2; if (bot > 0.6) box(0.35, bot, 0.35, p.x, bot / 2, p.z, pm, true); }
+        } });
+        MAPINFO[MAPS.length - 1] = ['Medium', 'A stadium arena with a green pitch, red grandstands, a curved roof and blue race gates. Fly fast laps just like the Liftoff videos.'];
+
         // ---------- map loading ----------
         function disposeGroup(g) { g.traverse(o => { if (o.geometry) o.geometry.dispose(); const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : []; ms.forEach(m => { if (m.map) m.map.dispose(); if (m.emissiveMap) m.emissiveMap.dispose(); m.dispose(); }); }); }
         function loadMap(i) {
@@ -1122,7 +1175,7 @@
         const goproBodyMat = new THREE.MeshBasicMaterial({ color: 0x08090b });
         const goproLensMat = new THREE.MeshBasicMaterial({ color: 0x16283d });
 
-        const droneBody = new THREE.Group(); droneBody.rotation.y = Math.PI; droneGroup.add(droneBody);   // the drone flies towards -z, so the front of the model faces -z
+        const droneBody = new THREE.Group(); droneBody.rotation.y = Math.PI; droneBody.userData.model = 'neo'; droneGroup.add(droneBody); var fpvTilt = null;   // the drone flies towards -z, so the front of the model faces -z
         const SM = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r === undefined ? 0.8 : r, metalness: m === undefined ? 0.0 : m }), BM = (c) => new THREE.MeshBasicMaterial({ color: c });
         const mShell = SM(0x7e8186), mDark = SM(0x7a7d82), mTop = SM(0x8c8f94, 0.85), mMetal = SM(0x4a4c50, 0.35, 0.3), tipMat = BM(0xf08a1c), ledMat = BM(0x34ff7c), mBlack = SM(0x131417, 0.32, 0.1);
         mShell.userData.role = 'body'; mDark.userData.role = 'arms'; mTop.userData.role = 'top'; mMetal.userData.role = 'metal'; tipMat.userData.role = 'tip'; ledMat.userData.role = 'led';
@@ -1132,50 +1185,51 @@
         const slab = (shape, depth, bev, mat, y, parent) => { const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: bev, bevelSize: bev, bevelSegments: 3, curveSegments: 10 }); g.rotateX(-Math.PI / 2);
             const m = new THREE.Mesh(g, mat); m.position.y = y; (parent || droneBody).add(m); return m; };
         // --- fuselage: rounded grey body with a raised, lighter battery cover and the DJI logo ---
-        slab(rr(0.43, -0.95, 0.95, 0.3, 0.2), 0.36, 0.07, mShell, -0.24);
+        slab(rr(0.43, -1.12, 0.78, 0.12, 0.2), 0.36, 0.07, mShell, -0.24);   // nose is cut back so the camera sits in an open fork
         slab(rr(0.34, -0.72, 0.68, 0.22, 0.16), 0.07, 0.04, mTop, 0.19);
         { const lg = mkTex(128, 64, (g, w, h) => { g.clearRect(0, 0, w, h); g.fillStyle = '#f4f4f4'; g.font = 'italic 900 46px Arial'; g.textAlign = 'center'; g.fillText('dji', w / 2, 48); }); lg.wrapS = lg.wrapT = THREE.ClampToEdgeWrapping;
           const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.17), new THREE.MeshBasicMaterial({ map: lg, transparent: true })); logo.rotation.set(-Math.PI / 2, 0, Math.PI); logo.position.set(0, 0.332, -0.5); droneBody.add(logo);
           const lg2 = mkTex(128, 32, (g, w, h) => { g.clearRect(0, 0, w, h); g.fillStyle = '#d9dbde'; g.font = '700 22px Arial'; g.textAlign = 'center'; g.fillText('NEO 2', w / 2, 24); }); lg2.wrapS = lg2.wrapT = THREE.ClampToEdgeWrapping;
           const lab = new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.08), new THREE.MeshBasicMaterial({ map: lg2, transparent: true })); lab.rotation.y = -Math.PI / 2; lab.position.set(-0.505, -0.02, 0.42); droneBody.add(lab); }
         // --- front: camera sits inside a U-shaped cut-out in the nose (level with the body), black sensor panels on the guards ---
-        dBox(0.6, 0.4, 0.5, 0, -0.04, 0.98, mBlack);                                       // dark recess
-        for (const sx of [-1, 1]) dBox(0.1, 0.38, 0.36, sx * 0.355, -0.05, 1.04, mShell);   // the two prongs of the nose fork
+        { const mRec = SM(0x3b3e44, 0.6); dBox(0.7, 0.4, 0.04, 0, -0.04, 0.87, mRec); dBox(0.7, 0.04, 0.46, 0, -0.23, 1.0, mRec); }   // back wall + floor only (NOT a solid block) so the camera is visible                                       // dark recess
+        for (const sx of [-1, 1]) dBox(0.1, 0.38, 0.46, sx * 0.4, -0.05, 1.0, mShell);   // the two prongs of the nose fork
         // 2-axis gimbal: roll motor on top turns the yoke, tilt axle turns the camera
-        const gimbalRoll = new THREE.Group(); gimbalRoll.position.set(0, 0.15, 0.86); droneBody.add(gimbalRoll);
-        { const rm = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.16, 18), mBlack); rm.rotation.x = Math.PI / 2; gimbalRoll.add(rm);
-          const top = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.06, 0.1), mBlack); top.position.set(0, -0.06, 0.07); gimbalRoll.add(top);
-          for (const sx of [-1, 1]) { const arm = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.3, 0.08), mBlack); arm.position.set(sx * 0.25, -0.2, 0.1); gimbalRoll.add(arm); } }
-        const gimbalTilt = new THREE.Group(); gimbalTilt.position.set(0, -0.19, 0.16); gimbalRoll.add(gimbalTilt);
-        { const ax = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.56, 12), mBlack); ax.rotation.z = Math.PI / 2; gimbalTilt.add(ax);
-          const cam = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.36, 24), mBlack); cam.rotation.x = Math.PI / 2; cam.position.z = 0.06; gimbalTilt.add(cam);
-          const lr = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.19, 0.06, 24), mMetal); lr.rotation.x = Math.PI / 2; lr.position.z = 0.25; gimbalTilt.add(lr);
-          const ln = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.125, 0.08, 24), SM(0x0a1424, 0.05, 0.6)); ln.rotation.x = Math.PI / 2; ln.position.z = 0.28; gimbalTilt.add(ln);
-          const glint = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), BM(0xa8c8ff)); glint.position.set(0.045, 0.035, 0.32); gimbalTilt.add(glint); }
-        function updateGimbal() { gimbalTilt.rotation.x = -CAMERA_UPTILT * 0.5; }
+        const gimbalRoll = new THREE.Group(); gimbalRoll.position.set(0, 0.15, 0.84); droneBody.add(gimbalRoll);
+        { const rm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.14, 18), mBlack); rm.rotation.x = Math.PI / 2; gimbalRoll.add(rm);
+          const top = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.06, 0.1), mBlack); top.position.set(0, -0.06, 0.07); gimbalRoll.add(top);
+          for (const sx of [-1, 1]) { const arm = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.3, 0.08), mBlack); arm.position.set(sx * 0.2, -0.2, 0.1); gimbalRoll.add(arm); } }
+        const gimbalTilt = new THREE.Group(); gimbalTilt.position.set(0, -0.19, 0.1); gimbalRoll.add(gimbalTilt);
+        { const ax = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.44, 12), mBlack); ax.rotation.z = Math.PI / 2; gimbalTilt.add(ax);
+          const cam = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.19, 0.3, 24), mBlack); cam.rotation.x = Math.PI / 2; cam.position.z = 0.02; gimbalTilt.add(cam);
+          const lr = new THREE.Mesh(new THREE.CylinderGeometry(0.145, 0.16, 0.06, 24), SM(0xa9afb8, 0.3, 0.5)); lr.rotation.x = Math.PI / 2; lr.position.z = 0.19; gimbalTilt.add(lr);
+          const ln = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.105, 0.08, 24), SM(0x0a1424, 0.05, 0.6)); ln.rotation.x = Math.PI / 2; ln.position.z = 0.21; gimbalTilt.add(ln);
+          const glint = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), BM(0xa8c8ff)); glint.position.set(0.04, 0.03, 0.255); gimbalTilt.add(glint); }
+        function updateGimbal() { gimbalTilt.rotation.x = -CAMERA_UPTILT * 0.5; if (fpvTilt) fpvTilt.rotation.x = -CAMERA_UPTILT; }   // axis 1: tilt
+        const _gEul = new THREE.Euler();   // axis 2: roll motor keeps the camera level while the drone banks (see main loop)
         for (const sx of [-1, 1]) { const sp = dBox(0.5, 0.11, 0.06, sx * 0.64, -0.06, 1.2, mBlack); sp.rotation.y = sx * 0.12; }
         dBox(0.03, 0.03, 0.02, 0.86, 0.0, 1.24, ledMat);                                   // little green light by the right sensor
         for (let i = 0; i < 3; i++) dBox(0.022, 0.012, 0.022, -0.04 - i * 0.05, 0.335, 0.5, ledMat);   // battery level lights on top
         dBox(0.11, 0.02, 0.06, 0.12, 0.335, 0.5, mMetal);   // button and cover seam
         // --- rear antenna module (ribbed grey block) with short black antenna stalks capped by YELLOW protector balls, like the photo ---
         const mProt = SM(0xffd60a, 0.55, 0.0); mProt.userData.role = 'prot';
-        { const mod = new THREE.Group(); mod.position.set(0, 0.04, -1.0); droneBody.add(mod);
-          slab(rr(0.27, -0.22, 0.2, 0.08, 0.1), 0.3, 0.05, mShell, -0.17, mod);
+        { const mod = new THREE.Group(); mod.position.set(0, 0.04, -1.3); droneBody.add(mod);
+          slab(rr(0.4, -0.22, 0.2, 0.08, 0.1), 0.3, 0.05, mShell, -0.17, mod);
           for (let i = 0; i < 7; i++) { const rb = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.26, 0.035), mMetal); rb.position.set(-0.15 + i * 0.05, 0.0, -0.305); mod.add(rb); }
           const aMat = SM(0x111214, 0.5);
           for (const sx of [-1, 1]) {
-              const sk = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.03, 14), mBlack); sk.rotation.x = Math.PI / 2; sk.position.set(sx * 0.215, -0.02, -0.31); mod.add(sk);   // little socket
-              const A = new THREE.Vector3(sx * 0.215, -0.02, -0.29), B = new THREE.Vector3(sx * 0.62, -0.05, -0.14), d = B.clone().sub(A);
-              const st = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.03, d.length(), 10), aMat);
+              const sk = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.03, 14), mBlack); sk.rotation.x = Math.PI / 2; sk.position.set(sx * 0.31, -0.03, -0.31); mod.add(sk);   // little socket
+              const A = new THREE.Vector3(sx * 0.31, -0.03, -0.29), B = new THREE.Vector3(sx * 0.93, 0.12, -0.17), d = B.clone().sub(A);   // stalk goes OUTWARD and UP
+              const st = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.032, d.length(), 10), aMat);
               st.position.copy(A).addScaledVector(d, 0.5); st.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize()); mod.add(st);
-              const ball = new THREE.Mesh(new THREE.SphereGeometry(0.13, 22, 16), mProt); ball.position.copy(B); mod.add(ball); } }
+              const ball = new THREE.Mesh(new THREE.SphereGeometry(0.19, 24, 18), mProt); ball.position.copy(B); mod.add(ball); } }
         // rear sensor window just in front of the antenna module
-        { const bz = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.11, 0.03, 24), mBlack); bz.position.set(0, 0.2, -0.84); droneBody.add(bz);
-          const br = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.016, 8, 28), mMetal); br.rotation.x = Math.PI / 2; br.position.set(0, 0.205, -0.84); droneBody.add(br); }
+        { const bz = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.11, 0.03, 24), mBlack); bz.position.set(0, 0.2, -0.97); droneBody.add(bz);
+          const br = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.016, 8, 28), mMetal); br.rotation.x = Math.PI / 2; br.position.set(0, 0.205, -0.97); droneBody.add(br); }
         // --- prop guards like the real Neo 2 photo: ONE smooth oval ring per prop + thin radial spokes from the motor cap (no top cage / inner rings). Props spin underneath. ---
         const propMat = new THREE.MeshStandardMaterial({ color: 0x55585d, roughness: 0.6, transparent: true, opacity: 0.95, side: THREE.DoubleSide });
         const mSpoke = SM(0x6f7880, 0.7); mSpoke.userData.role = 'spoke';
-        const propMeshes = [];
+        const neoProps = [], fpvProps = [], propMeshes = [];   // propMeshes = props of the ACTIVE model (see useModel)
         const motorPositions = [{ x: 1.1, z: 0.62, y: -0.06, f: 1 }, { x: -1.1, z: 0.62, y: -0.06, f: 1 }, { x: 1.1, z: -0.74, y: 0.05, f: 0 }, { x: -1.1, z: -0.74, y: 0.05, f: 0 }];
         const GR = 0.66, GZ = 0.86;   // ring radius, front-to-back squash (oval)
         motorPositions.forEach(pos => {
@@ -1193,8 +1247,52 @@
             dBox(Math.abs(pos.x) - 0.25, 0.13, 0.36, sx * ((Math.abs(pos.x) - 0.25) / 2 + 0.3), pos.y * 0.6, pos.z * 0.9, mDark);
             if (pos.f === 1) dBox(0.22, 0.12, 0.3, sx * 1.1, -0.01, -0.06, mDark);   // web joining front and rear guard
             const prop = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.02, 0.12), propMat);
-            prop.position.set(pos.x, pos.y + 0.02, -pos.z); prop.userData.baseX = pos.x; droneGroup.add(prop); propMeshes.push(prop);
+            prop.position.set(pos.x, pos.y + 0.02, -pos.z); prop.userData.baseX = pos.x; prop.userData.model = 'neo'; droneGroup.add(prop); neoProps.push(prop);
         });
+
+        // ================= DJI FPV (the default drone): dark body, vents, 4 round arms, 3-blade props with red tips, front camera on a tilt gimbal =================
+        const fpvBody = new THREE.Group(); fpvBody.rotation.y = Math.PI; fpvBody.userData.model = 'fpv'; droneGroup.add(fpvBody);
+        const fShell = SM(0x26282c, 0.5, 0.15), fTop = SM(0x303338, 0.45, 0.15), fArm = SM(0x3a3d42, 0.5, 0.2), fMetal = SM(0x8e9197, 0.35, 0.5), fBlack = SM(0x0c0d0f, 0.4, 0.2), fRed = BM(0xff2b2b);
+        fShell.userData.role = 'body'; fTop.userData.role = 'top'; fArm.userData.role = 'arms'; fMetal.userData.role = 'metal';
+        const fBox = (w, h, d, x, y, z, m, par) => { const q = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); q.position.set(x, y, z); (par || fpvBody).add(q); return q; };
+        const fTube = (A, B, r, m) => { const d = B.clone().sub(A), q = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.08, d.length(), 14), m); q.position.copy(A).addScaledVector(d, 0.5); q.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize()); fpvBody.add(q); return q; };
+        const fDecal = (w, h, draw, tw, th) => { const t = mkTex(tw, th, draw); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: t, transparent: true })); };
+        slab(rr(0.44, -0.9, 0.98, 0.28, 0.22), 0.34, 0.08, fShell, -0.25, fpvBody);        // main shell
+        slab(rr(0.37, -0.75, 0.62, 0.2, 0.16), 0.1, 0.05, fTop, 0.16, fpvBody);            // top cover
+        slab(rr(0.34, -0.85, 0.1, 0.15, 0.12), 0.3, 0.05, fArm, -0.62, fpvBody);           // battery underneath
+        for (let i = 0; i < 6; i++) fBox(0.4, 0.03, 0.035, 0, 0.325, -0.05 - i * 0.075, fBlack);   // cooling vents on top
+        for (const sx of [-1, 1]) { const dc = fDecal(0.46, 0.15, (g, w, h) => { g.clearRect(0, 0, w, h); g.fillStyle = '#8d9299'; g.font = 'italic 900 70px Arial'; g.textAlign = 'center'; g.fillText('FPV', w / 2, 76); }, 256, 96); dc.rotation.y = sx * Math.PI / 2; dc.position.set(sx * 0.528, 0.0, 0.45); fpvBody.add(dc); }
+        // front: camera pod + tilt gimbal with a big lens (so the camera is clearly visible)
+        fBox(0.6, 0.3, 0.5, 0, -0.2, 0.98, fBlack);
+        { const dc = fDecal(0.22, 0.08, (g, w, h) => { g.clearRect(0, 0, w, h); g.fillStyle = '#9aa0a8'; g.font = 'italic 900 44px Arial'; g.textAlign = 'center'; g.fillText('dji', w / 2, 48); }, 128, 64); dc.position.set(0, -0.26, 1.236); fpvBody.add(dc); }
+        fpvTilt = new THREE.Group(); fpvTilt.position.set(0, -0.1, 1.1); fpvBody.add(fpvTilt);
+        { for (const sx of [-1, 1]) fBox(0.04, 0.42, 0.34, sx * 0.3, 0, 0.1, fBlack, fpvTilt);                    // gimbal cage plates
+          const ax = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.62, 12), fMetal); ax.rotation.z = Math.PI / 2; fpvTilt.add(ax);
+          const cb = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.23, 0.48, 28), fBlack); cb.rotation.x = Math.PI / 2; cb.position.z = 0.14; fpvTilt.add(cb);
+          const lr = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.2, 0.07, 28), SM(0x9aa0a8, 0.3, 0.5)); lr.rotation.x = Math.PI / 2; lr.position.z = 0.4; fpvTilt.add(lr);
+          const ln = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.08, 28), SM(0x0a1424, 0.05, 0.6)); ln.rotation.x = Math.PI / 2; ln.position.z = 0.43; fpvTilt.add(ln);
+          const gl = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 6), BM(0xa8c8ff)); gl.position.set(0.05, 0.04, 0.48); fpvTilt.add(gl);
+          const dc = fDecal(0.3, 0.1, (g, w, h) => { g.clearRect(0, 0, w, h); g.fillStyle = '#c9ccd1'; g.font = 'bold 40px Arial'; g.textAlign = 'center'; g.fillText('4K 60P', w / 2, 44); }, 256, 64); dc.rotation.y = Math.PI / 2; dc.position.set(0.236, 0, 0.12); fpvTilt.add(dc); }
+        // 3-blade props with red tips
+        const fpvPropMat = new THREE.MeshStandardMaterial({ color: 0x2b2d31, roughness: 0.5, side: THREE.DoubleSide });
+        const bladeGeo = (() => { const sh = new THREE.Shape(); sh.moveTo(0.1, -0.06); sh.quadraticCurveTo(0.45, -0.14, 0.76, -0.05); sh.quadraticCurveTo(0.8, 0, 0.76, 0.05); sh.quadraticCurveTo(0.45, 0.07, 0.1, 0.07); sh.lineTo(0.1, -0.06);
+            const g = new THREE.ExtrudeGeometry(sh, { depth: 0.018, bevelEnabled: false, curveSegments: 8 }); g.rotateX(-Math.PI / 2); return g; })();
+        const bladeTipGeo = (() => { const sh = new THREE.Shape(); sh.moveTo(0.6, -0.084); sh.quadraticCurveTo(0.7, -0.08, 0.76, -0.05); sh.quadraticCurveTo(0.8, 0, 0.76, 0.05); sh.quadraticCurveTo(0.7, 0.058, 0.6, 0.063); sh.lineTo(0.6, -0.084);
+            const g = new THREE.ExtrudeGeometry(sh, { depth: 0.024, bevelEnabled: false, curveSegments: 8 }); g.rotateX(-Math.PI / 2); g.translate(0, -0.003, 0); return g; })();
+        function fpvProp(pos) { const g = new THREE.Group();
+            for (let k = 0; k < 3; k++) { const b = new THREE.Group(); b.rotation.y = k * Math.PI * 2 / 3 + 0.2; b.add(new THREE.Mesh(bladeGeo, fpvPropMat)); b.add(new THREE.Mesh(bladeTipGeo, tipMat)); g.add(b); }
+            const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.1, 0.07, 16), fBlack); hub.position.y = 0.02; g.add(hub);
+            const dot = new THREE.Mesh(new THREE.CircleGeometry(0.04, 16), BM(0x4a6cff)); dot.rotation.x = -Math.PI / 2; dot.position.y = 0.06; g.add(dot);
+            g.position.set(pos.x, pos.y + 0.24, -pos.z); g.userData.baseX = pos.x; g.userData.model = 'fpv'; droneGroup.add(g); fpvProps.push(g); }
+        [{ x: 1.25, y: 0.12, z: 1.0, f: 1 }, { x: -1.25, y: 0.12, z: 1.0, f: 1 }, { x: 1.2, y: -0.12, z: -1.0, f: 0 }, { x: -1.2, y: -0.12, z: -1.0, f: 0 }].forEach(pos => {
+            const sx = Math.sign(pos.x), P = new THREE.Vector3(pos.x, pos.y - 0.02, pos.z), root = new THREE.Vector3(sx * 0.4, pos.f ? 0.0 : -0.12, pos.f ? 0.55 : -0.5);
+            fTube(root, P, pos.f ? 0.105 : 0.12, fArm);
+            fBox(0.34, 0.26, 0.4, sx * 0.46, root.y, root.z, fArm);                                                          // arm root
+            const mt = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.19, 0.3, 24), fMetal); mt.position.set(pos.x, pos.y + 0.03, pos.z); fpvBody.add(mt);   // motor bell
+            const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.17, 0.05, 24), fBlack); cap.position.set(pos.x, pos.y + 0.2, pos.z); fpvBody.add(cap);
+            if (pos.f) { const rg = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.03, 8, 24), tipMat); rg.rotation.x = Math.PI / 2; rg.position.set(pos.x, pos.y - 0.08, pos.z); fpvBody.add(rg); }
+            fBox(0.06, 0.18, 0.06, pos.x, pos.y - 0.24, pos.z + (pos.f ? 0.12 : -0.12), pos.f ? fRed : ledMat);                // LED bar: red front, green rear
+            fpvProp(pos); });
         scene.add(droneGroup);
 
         const drone = {
@@ -1248,8 +1346,10 @@
             }
         }
         motorBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMotors(); });
+        const uiTick = () => { try { initAudio(); AUD.quietArm = performance.now(); sfx('ui'); } catch (err) {} };
 
         const fullscreenBtn = document.getElementById('btn-fullscreen-toggle');
+        [motorBtn, fullscreenBtn].forEach(b => b.addEventListener('pointerdown', uiTick));
         fullscreenBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
@@ -1633,7 +1733,7 @@
                 act(b, 'Records', 'CLEAR BEST TIMES', () => { store.set('liftoff_best', null); toast('Records cleared'); });
                 b.appendChild(el('div', 'pnote', '<b>Controls</b><br>W/S throttle &bull; A/D yaw &bull; mouse or I/J/K/L pitch and roll<br>M arm/disarm &bull; 1/2/3 Normal/Sport/Manual &bull; C camera &bull; R reset')); });
             else if (k === 'multi') { MP.btn = btn; renderMP(); }
-            else if (k === 'drone') openPanel('DJI NEO 2 EDITOR', btn, b => droneBuild(b, btn));
+            else if (k === 'drone') openPanel('DRONE EDITOR', btn, b => droneBuild(b, btn));
             else if (k === 'quit') { try { window.close(); } catch (e) {} toast('You can close this tab to quit'); }
         }));
         document.querySelector('#hs-list [data-go]').addEventListener('click', () => { closePanel(); setActive(document.querySelector('#hs-list [data-go]')); });
@@ -1698,31 +1798,39 @@
             askMap(a); }));
         document.getElementById('btn-start-game').addEventListener('click', () => { closePanel(); });
         // ---- drone editor: colors, size and flight stats ----
-        const DRONE_BASE = { preset: 'DJI Neo 2', body: '#9aa3ad', top: '#aab4c0', arms: '#a3abb2', spoke: '#6f7880', metal: '#4a4c50', tip: '#6a2f36', prot: '#ffd60a', led: '#34ff7c', size: 100, power: 100, agility: 100, drag: 100 };
+        const NEO_COL = { model: 'neo', body: '#9aa3ad', top: '#aab4c0', arms: '#a3abb2', spoke: '#6f7880', metal: '#4a4c50', tip: '#6a2f36', prot: '#ffd60a', led: '#34ff7c' };
+        const DRONE_BASE = { preset: 'DJI FPV', model: 'fpv', body: '#26282c', top: '#303338', arms: '#3a3d42', spoke: '#6f7880', metal: '#8e9197', tip: '#d8262b', prot: '#ffd60a', led: '#34ff7c', size: 100, power: 100, agility: 100, drag: 100 };
         const DRONE_PRESETS = {
-            'DJI Neo 2': {},
+            'DJI FPV': {},
+            'DJI Neo 2': NEO_COL,
             'Racer': { body: '#c8231c', top: '#1a1a1a', arms: '#0d0d0d', metal: '#d9d9d9', tip: '#ffd23f', led: '#ff3b30', size: 85, power: 125, agility: 125, drag: 85 },
             'Freestyle': { body: '#1d3b8a', top: '#222a44', arms: '#101420', metal: '#b9c4d8', tip: '#2ff0ff', led: '#2ff0ff', size: 105, power: 110, agility: 115, drag: 95 },
             'Stealth': { body: '#101112', top: '#1b1c1e', arms: '#08090a', metal: '#4a4d52', tip: '#3a3d42', led: '#222628', size: 95, power: 100, agility: 105, drag: 90 }
         };
-        const DRONE = Object.assign({}, DRONE_BASE, store.get('liftoff_drone5', {}));
-        const styleOf = () => ({ body: DRONE.body, top: DRONE.top, arms: DRONE.arms, spoke: DRONE.spoke, metal: DRONE.metal, tip: DRONE.tip, prot: DRONE.prot, led: DRONE.led, size: DRONE.size });
+        const DRONE = Object.assign({}, DRONE_BASE, store.get('liftoff_drone6', {}));
+        function useModel(m) { propMeshes.length = 0; (m === 'neo' ? neoProps : fpvProps).forEach(p => propMeshes.push(p)); }   // spin / animate the props of the active model
+        function showModel(root, m) { if (GLB.active) return; const am = m === 'neo' ? 'neo' : 'fpv'; root.children.forEach(c => { const cm = c.userData && c.userData.model; if (cm) c.visible = (cm === am); }); }
+        useModel(DRONE.model);
+        const styleOf = () => ({ model: DRONE.model, body: DRONE.body, top: DRONE.top, arms: DRONE.arms, spoke: DRONE.spoke, metal: DRONE.metal, tip: DRONE.tip, prot: DRONE.prot, led: DRONE.led, size: DRONE.size });
         function applyDroneStyle(root, st) {
             root.traverse(o => { const r = o.material && o.material.userData && o.material.userData.role; if (r && st[r]) o.material.color.set(st[r]); });
             root.scale.setScalar((st.size || 100) / 100);
+            if (st.model && root !== droneGroup) showModel(root, st.model);
         }
-        function applyMyStyle() { applyDroneStyle(droneGroup, DRONE); store.set('liftoff_drone5', DRONE); try { if (MP.connected) mpSend({ t: 'style', st: styleOf() }); } catch (e) {} }
+        function applyMyStyle() { useModel(DRONE.model); if (!gameStarted) setDroneParts(true); applyDroneStyle(droneGroup, DRONE); store.set('liftoff_drone6', DRONE); try { if (MP.connected) mpSend({ t: 'style', st: styleOf() }); } catch (e) {} }
         function droneBuild(b, btn) {
             seg(b, 'Preset', Object.keys(DRONE_PRESETS), DRONE.preset, v => { Object.assign(DRONE, DRONE_BASE, DRONE_PRESETS[v], { preset: v }); applyMyStyle(); btn.click(); });
             const cRow = (label, key) => { const r = row(b, label), i = el('input'); i.type = 'color'; i.value = DRONE[key]; i.style.cssText = 'width:4em;height:2em;border:0;background:none;cursor:pointer'; i.oninput = () => { DRONE[key] = i.value; DRONE.preset = 'Custom'; applyMyStyle(); }; r.appendChild(i); };
-            cRow('Body color', 'body'); cRow('Top cover', 'top'); cRow('Arms and motors', 'arms'); cRow('Motor bells', 'metal'); cRow('Motor ring', 'tip'); cRow('Guard spokes', 'spoke'); cRow('Antenna protectors', 'prot'); cRow('LED light', 'led');
+            cRow('Body color', 'body'); cRow('Top cover', 'top'); cRow('Arms and motors', 'arms'); cRow('Motor bells', 'metal');
+            if (DRONE.model === 'neo') { cRow('Motor ring', 'tip'); cRow('Guard spokes', 'spoke'); cRow('Antenna protectors', 'prot'); } else cRow('Propeller tips', 'tip');
+            cRow('LED light', 'led');
             rng(b, 'Size', 60, 150, 5, DRONE.size, '%', v => { DRONE.size = v; applyMyStyle(); });
             rng(b, 'Power (thrust)', 70, 140, 5, DRONE.power, '%', v => { DRONE.power = v; DRONE.preset = 'Custom'; applyMyStyle(); });
             rng(b, 'Agility (turn speed)', 60, 150, 5, DRONE.agility, '%', v => { DRONE.agility = v; DRONE.preset = 'Custom'; applyMyStyle(); });
             rng(b, 'Air drag (lower = faster)', 60, 160, 5, DRONE.drag, '%', v => { DRONE.drag = v; DRONE.preset = 'Custom'; applyMyStyle(); });
             act(b, 'Colors', 'RANDOMIZE', () => { const hc = (l) => '#' + new THREE.Color().setHSL(Math.random(), 0.6, l).getHexString(); DRONE.body = hc(0.35); DRONE.top = hc(0.2); DRONE.arms = hc(0.1); DRONE.tip = hc(0.55); DRONE.led = hc(0.6); DRONE.preset = 'Custom'; applyMyStyle(); btn.click(); });
             glbRows(b, btn);
-            act(b, 'Reset', 'BACK TO DJI NEO 2', () => { Object.assign(DRONE, DRONE_BASE); applyMyStyle(); btn.click(); });
+            act(b, 'Reset', 'BACK TO DJI FPV', () => { Object.assign(DRONE, DRONE_BASE); applyMyStyle(); btn.click(); });
             b.appendChild(el('div', 'pnote', 'Changes are saved on this device. Open the drone from the home screen to watch it update live. Power, agility and drag change how the drone flies. Your friend sees your colors in multiplayer.'));
         }
         applyDroneStyle(droneGroup, DRONE);
@@ -1730,7 +1838,7 @@
         const GLB = { active: false, rot: store.get('liftoff_glbrot', 0) };
         const droneModel = new THREE.Group(); droneModel.userData.isModel = true; droneModel.visible = false; droneGroup.add(droneModel);
         const modelPivot = new THREE.Group(); droneModel.add(modelPivot);
-        function setDroneParts(vis) { droneGroup.children.forEach(p => { p.visible = (p === droneModel) ? (vis && GLB.active) : (vis && !GLB.active); }); }
+        function setDroneParts(vis) { const am = DRONE.model === 'neo' ? 'neo' : 'fpv', useG = GLB.active && am === 'neo'; droneGroup.children.forEach(p => { const m = p.userData && p.userData.model; p.visible = (p === droneModel) ? (vis && useG) : (vis && !useG && (!m || m === am)); }); }
         function useGLB(buf) {
             return new Promise(res => {
                 if (!THREE.GLTFLoader) { toast('GLB loader missing (needs internet once)'); return res(false); }
@@ -1752,7 +1860,7 @@
             try { const buf = await idbGet('neo.glb'); if (buf && await useGLB(buf)) return; } catch (e) {}
         }
         function glbRows(b, btn) {
-            b.appendChild(el('div', 'pnote', GLB.active ? 'Your <b>neo.glb</b> model is active. (Colors only apply to the built-in model.)' : 'Using the built-in DJI Neo 2 model. Put <b>neo.glb</b> next to index.html, or load it below once and it is remembered.'));
+            b.appendChild(el('div', 'pnote', GLB.active ? 'Your <b>neo.glb</b> model is active. (Colors only apply to the built-in model.)' : 'Using the built-in drone models. Put <b>neo.glb</b> next to index.html, or load it below once and it is remembered.'));
             const r = row(b, 'Your GLB model'), inp = el('input'), lb = el('button', 'pbtn', 'LOAD .GLB FILE'); inp.type = 'file'; inp.accept = '.glb,.gltf'; inp.style.display = 'none';
             lb.onclick = () => inp.click(); inp.onchange = async () => { const f = inp.files[0]; if (!f) return; const buf = await f.arrayBuffer(); if (await useGLB(buf)) { idbSet('neo.glb', buf).catch(() => {}); toast('Model loaded'); btn.click(); } else toast('Could not read that model'); };
             r.appendChild(inp); r.appendChild(lb);
@@ -1881,13 +1989,25 @@
         document.body.appendChild(wb);
         { const sv = document.querySelector('#loading svg.ldrone'); if (sv) wb.insertBefore(sv.cloneNode(true), wb.firstChild); }
         const $w = id => wb.querySelector('#' + id), WD = d => Object.assign({}, DRONE_BASE, d);
-        let fleet = store.get('liftoff_fleet2', null), fIdx = 0, fAct = store.get('liftoff_fleetsel', 0), wbView = 'fleet', editing = false;
-        if (!Array.isArray(fleet) || !fleet.length) { fleet = [{ name: DRONE.preset || 'DJI Neo 2', d: WD(DRONE) }]; fAct = 0; }
+        let fleet = store.get('liftoff_fleet3', null), fIdx = 0, fAct = store.get('liftoff_fleetsel', 0), wbView = 'fleet', editing = false;
+        if (!Array.isArray(fleet) || !fleet.length) { fleet = [{ name: 'DJI FPV', d: WD({ preset: 'DJI FPV' }) }, { name: 'DJI Neo 2', d: WD(Object.assign({}, NEO_COL, { preset: 'DJI Neo 2' })) }]; fAct = 0; }
         fIdx = fAct = Math.min(fAct, fleet.length - 1);
-        const saveFleet = () => { store.set('liftoff_fleet2', fleet); store.set('liftoff_fleetsel', fAct); };
-        function droneSVG(st) { return '<svg viewBox="0 0 300 200"><g transform="translate(150 105) rotate(-10) skewX(-8)"><path d="M-88 -52L88 52M88 -52L-88 52" stroke="' + st.arms + '" stroke-width="13" stroke-linecap="round"/>'
-            + [[-88, -52], [88, -52], [-88, 52], [88, 52]].map(p => '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="38" ry="12" fill="' + st.tip + '" opacity=".72"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="10" fill="' + st.metal + '"/>').join('')
-            + '<rect x="-34" y="-24" width="68" height="48" rx="9" fill="' + st.body + '"/><rect x="-24" y="-17" width="48" height="34" rx="7" fill="' + st.top + '"/><circle cx="34" cy="0" r="9" fill="#111"/><circle cx="-26" cy="17" r="3.5" fill="' + st.led + '"/></g></svg>'; }
+        const saveFleet = () => { store.set('liftoff_fleet3', fleet); store.set('liftoff_fleetsel', fAct); };
+        function droneSVG(st) {
+            if (st.model === 'neo') {   // DJI Neo 2: oval guards with spokes, yellow antenna protectors at the back
+                let o = '<svg viewBox="0 0 300 200"><g transform="translate(150 100) rotate(-8)">';
+                [[-78, -38], [78, -38], [-78, 42], [78, 42]].forEach(p => { o += '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="46" ry="37" fill="rgba(0,0,0,.14)" stroke="' + st.arms + '" stroke-width="7"/>';
+                    for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; o += '<line x1="' + p[0] + '" y1="' + p[1] + '" x2="' + (p[0] + Math.cos(a) * 43).toFixed(1) + '" y2="' + (p[1] + Math.sin(a) * 34).toFixed(1) + '" stroke="' + st.spoke + '" stroke-width="1.6"/>'; }
+                    o += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="9" fill="#14161a"/>'; });
+                o += '<path d="M-22 66L-52 72M22 66L52 72" stroke="#111" stroke-width="4" stroke-linecap="round"/><circle cx="-54" cy="73" r="10" fill="' + st.prot + '"/><circle cx="54" cy="73" r="10" fill="' + st.prot + '"/>'
+                    + '<rect x="-32" y="-54" width="64" height="106" rx="20" fill="' + st.body + '"/><rect x="-22" y="-36" width="44" height="68" rx="14" fill="' + st.top + '"/><rect x="-26" y="48" width="52" height="20" rx="6" fill="' + st.body + '"/><circle cx="0" cy="-56" r="9" fill="#14161a"/></g></svg>';
+                return o; }
+            const prop = (cx, cy) => { let o = ''; for (let k = 0; k < 3; k++) o += '<g transform="translate(' + cx + ' ' + cy + ') rotate(' + (k * 120 + 25) + ')"><path d="M5 -3.5 Q22 -9 42 -2.5 Q45 0 42 2.5 Q22 5 5 4Z" fill="#2b2d31"/><path d="M33 -5 Q39 -4 42 -2.5 Q45 0 42 2.5 Q38 4 33 4Z" fill="' + st.tip + '"/></g>'; return o + '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="' + st.metal + '"/>'; };
+            return '<svg viewBox="0 0 300 200"><g transform="translate(150 102) rotate(-8)"><path d="M-26 -22L-88 -48M26 -22L88 -48M-26 26L-84 50M26 26L84 50" stroke="' + st.arms + '" stroke-width="11" stroke-linecap="round"/>'
+                + prop(-88, -48) + prop(88, -48) + prop(-84, 50) + prop(84, 50)
+                + '<rect x="-30" y="-46" width="60" height="98" rx="14" fill="' + st.body + '"/><rect x="-20" y="-30" width="40" height="58" rx="10" fill="' + st.top + '"/><rect x="-14" y="6" width="28" height="3" fill="#0c0d0f"/><rect x="-14" y="12" width="28" height="3" fill="#0c0d0f"/><rect x="-14" y="18" width="28" height="3" fill="#0c0d0f"/>'
+                + '<rect x="-14" y="-62" width="28" height="22" rx="6" fill="#0c0d0f"/><circle cx="0" cy="-62" r="9" fill="#9aa0a8"/><circle cx="0" cy="-62" r="5.5" fill="#0a1424"/>'
+                + '<circle cx="-84" cy="58" r="3.5" fill="' + st.led + '"/><circle cx="84" cy="58" r="3.5" fill="' + st.led + '"/></g></svg>'; }
         function renderWB() { const f = fleet[fIdx];
             $w('wb-in').value = f.name; $w('wb-act').textContent = fIdx === fAct ? 'ACTIVE DRONE' : ''; $w('wb-t1').className = 'ms-seg' + (wbView === 'fleet' ? '' : ' grey'); $w('wb-t2').className = 'ms-seg' + (wbView === 'bp' ? '' : ' grey');
             $w('wb-stage').style.display = wbView === 'fleet' ? 'block' : 'none'; $w('wb-name').style.display = wbView === 'fleet' ? 'block' : 'none'; $w('wb-btns').style.display = wbView === 'fleet' ? 'flex' : 'none'; $w('wb-bp').style.display = wbView === 'bp' ? 'flex' : 'none';
@@ -2015,22 +2135,24 @@
             window.audioApply();
         }
         function makeEngine(out, spatial) {
-            // Tuned from the DJI Neo 2 sound-test video: four small ducted props give ONE clear mid-pitch whine (~1 kHz at hover) made of two slightly different
-            // motor speeds (~995 and ~1080 Hz -> ~85 Hz beating "buzz"), 2nd harmonic ~-12 dB, 3rd ~-22 dB, a soft sub tone at 1/3 of the pitch and only a little hiss.
-            // Idle ~250 Hz, quick spool-up (~0.4 s) from idle to hover pitch.
-            const ctx = AUD.ctx, hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 140; hp.Q.value = 0.5;
-            const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 6500; lp.Q.value = 0.5;
+            // Tuned from the Liftoff gameplay video (5" FPV quad): four motors ~11% apart give a wavering whine (idle ~300 Hz, flying 500-900 Hz, full power ~1.1 kHz),
+            // strong 2nd harmonic (-9 dB), a soft sub tone, hiss above 2 kHz (~-11 dB) and a low rumble (40-120 Hz).
+            const ctx = AUD.ctx, hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 60; hp.Q.value = 0.5;
+            const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 9000; lp.Q.value = 0.4;
             const g = ctx.createGain(); g.gain.value = 0; hp.connect(lp); lp.connect(g);
-            // oscillator runs at 1/3 of the blade tone: partial 3 = main tone, 6 = 2nd harmonic, 9 = 3rd, 12 = 4th, partial 1 = sub tone
-            const wave = ctx.createPeriodicWave(new Float32Array(13), new Float32Array([0, 0.14, 0, 1, 0, 0, 0.26, 0, 0, 0.07, 0, 0, 0.03]));
-            const mot = [0.957, 0.962, 1.037, 1.067].map((d, i) => { const o = ctx.createOscillator(); o.setPeriodicWave(wave); o.frequency.value = 1040 * d / 3; const mg = ctx.createGain(); mg.gain.value = 0.24;
-                const lfo = ctx.createOscillator(); lfo.frequency.value = 0.8 + i * 0.55; const lg = ctx.createGain(); lg.gain.value = 12 + i * 4; lfo.connect(lg); lg.connect(o.detune); o.connect(mg); mg.connect(hp); o.start(); lfo.start(); return { o, d }; });
-            const ns = ctx.createBufferSource(); ns.buffer = AUD.noise; ns.loop = true; const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1500; bp.Q.value = 0.55; const ng = ctx.createGain(); ng.gain.value = 0; ns.connect(bp); bp.connect(ng);
-            let pan = null; if (spatial) { pan = ctx.createStereoPanner(); g.connect(pan); ng.connect(pan); pan.connect(out); } else { g.connect(out); ng.connect(out); }
+            // oscillator runs at HALF the blade tone: partial 1 = sub, 2 = main whine, 4 = 2nd harmonic, 6 = 3rd, 8 = 4th, 10 = 5th
+            const wave = ctx.createPeriodicWave(new Float32Array(11), new Float32Array([0, 0.2, 1, 0, 0.34, 0, 0.18, 0, 0.1, 0, 0.06]));
+            const mot = [0.89, 0.98, 1.05, 1.11].map((d, i) => { const o = ctx.createOscillator(); o.setPeriodicWave(wave); o.frequency.value = 600 * d / 2; const mg = ctx.createGain(); mg.gain.value = 0.24;
+                const lfo = ctx.createOscillator(); lfo.frequency.value = 1.3 + i * 1.1; const lg = ctx.createGain(); lg.gain.value = 18 + i * 7; lfo.connect(lg); lg.connect(o.detune);   // pitch wobble in cents
+                o.connect(mg); mg.connect(hp); o.start(); lfo.start(); return { o, d }; });
+            // hiss (prop wash / air) and low rumble from the same noise buffer
+            const ns = ctx.createBufferSource(); ns.buffer = AUD.noise; ns.loop = true;
+            const hh = ctx.createBiquadFilter(); hh.type = 'highpass'; hh.frequency.value = 2000; hh.Q.value = 0.5; const hl = ctx.createBiquadFilter(); hl.type = 'lowpass'; hl.frequency.value = 9000; const hg = ctx.createGain(); hg.gain.value = 0; ns.connect(hh); hh.connect(hl); hl.connect(hg);
+            const rl = ctx.createBiquadFilter(); rl.type = 'lowpass'; rl.frequency.value = 110; const rh = ctx.createBiquadFilter(); rh.type = 'highpass'; rh.frequency.value = 35; const rg = ctx.createGain(); rg.gain.value = 0; ns.connect(rl); rl.connect(rh); rh.connect(rg);
+            let pan = null; if (spatial) { pan = ctx.createStereoPanner(); g.connect(pan); hg.connect(pan); rg.connect(pan); pan.connect(out); } else { g.connect(out); hg.connect(out); rg.connect(out); }
             ns.start();
-            return { pan, set(f, vol, nvol) { const t = ctx.currentTime, p = Math.min(1.4, Math.max(0, (f - 150) / 520)),
-                    base = p <= 0.45 ? 250 + p / 0.45 * 790 : 1040 + (p - 0.45) * 580;   // ~250 Hz idle -> ~1040 Hz hover -> ~1.6 kHz full power
-                mot.forEach(m => m.o.frequency.setTargetAtTime(base * m.d / 3, t, 0.12)); g.gain.setTargetAtTime(vol * 2.4, t, 0.1); ng.gain.setTargetAtTime(nvol * 1.5, t, 0.12); bp.frequency.setTargetAtTime(1200 + p * 1000, t, 0.15); } };
+            return { pan, set(f, vol, nvol) { const t = ctx.currentTime, p = Math.min(1.4, Math.max(0, (f - 150) / 520)), base = 300 + 560 * p;
+                mot.forEach(m => m.o.frequency.setTargetAtTime(base * m.d / 2, t, 0.1)); g.gain.setTargetAtTime(vol * 2.4, t, 0.1); hg.gain.setTargetAtTime(nvol * 3.4, t, 0.12); rg.gain.setTargetAtTime(nvol * 32, t, 0.15); } };
         }
         window.audioApply = () => { if (AUD.master) AUD.master.gain.value = SET.sound ? SET.vol / 100 : 0; };
         function tone(f, dur, type, vol, delay, slide) {
@@ -2042,12 +2164,16 @@
         function sfx(name, v) {
             if (!AUD.ctx || !SET.sound) return;
             switch (name) {
-                case 'ui': tone(900, 0.05, 'square', 0.08); break;
+                case 'ui': { const now = performance.now(); if (now - (AUD.lastUi || 0) < 45) return; AUD.lastUi = now; const ctx = AUD.ctx, t = ctx.currentTime, s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+                    s.buffer = AUD.noise; f.type = 'bandpass'; f.frequency.value = 3400; f.Q.value = 2.2; g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.026);   // dry mechanical click
+                    s.connect(f); f.connect(g); g.connect(AUD.master); s.start(t, Math.random() * 1.5); s.stop(t + 0.04); tone(2100, 0.028, 'triangle', 0.06, 0, 1200); break; }
                 case 'arm': tone(500, 0.12, 'square', 0.12); tone(800, 0.18, 'square', 0.12, 0.13); break;
                 case 'disarm': tone(800, 0.12, 'square', 0.12); tone(400, 0.2, 'square', 0.12, 0.13); break;
                 case 'cd': tone(700, 0.15, 'square', 0.18); break;
                 case 'go': tone(1200, 0.5, 'square', 0.2); break;
-                case 'cp': tone(880, 0.08, 'sine', 0.2); tone(1320, 0.14, 'sine', 0.2, 0.08); break;
+                case 'cp': { const ctx = AUD.ctx, t = ctx.currentTime; tone(90, 0.14, 'sine', 0.45, 0, 42);
+                    const nb = (type, f, q, g0, dur) => { const so = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), gg = ctx.createGain(); so.buffer = AUD.noise; fl.type = type; fl.frequency.value = f; fl.Q.value = q; gg.gain.setValueAtTime(g0, t); gg.gain.exponentialRampToValueAtTime(0.001, t + dur); so.connect(fl); fl.connect(gg); gg.connect(AUD.master); so.start(t, Math.random()); so.stop(t + dur + 0.02); };
+                    nb('bandpass', 900, 0.8, 0.45, 0.12); nb('highpass', 2500, 0.7, 0.3, 0.018); break; }
                 case 'lap': [660, 880, 1100].forEach((f, i) => tone(f, 0.15, 'triangle', 0.25, i * 0.1)); break;
                 case 'fin': [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.25, 'triangle', 0.28, i * 0.14)); break;
                 case 'hit': { const now = performance.now(); if (now - AUD.lastHit < 180) return; AUD.lastHit = now; const vol = Math.min(0.6, 0.15 + (v || 3) * 0.04), ctx = AUD.ctx;
@@ -2056,11 +2182,11 @@
             }
         }
         document.addEventListener('pointerdown', initAudio); document.addEventListener('keydown', initAudio);
-        document.addEventListener('click', e => { if (e.target.closest && e.target.closest('.hs-btn, .hs-tab, .pbtn')) sfx('ui'); }, true);
+        document.addEventListener('click', e => { if (e.target.closest && e.target.closest('button, .hs-btn, .hs-tab, .pbtn, .mc, .ms-seg, #wb-plus, #wb-gear, #wb-x') && !e.target.closest('#btn-motor-toggle, #btn-fullscreen-toggle')) sfx('ui'); }, true);
         function audioUpdate(dt) {
             if (!AUD.ctx) return;
             const menuOpen = inst.style.display === 'flex';
-            if (isArmed !== AUD.prevArmed) { AUD.prevArmed = isArmed; sfx(isArmed ? 'arm' : 'disarm'); }
+            if (isArmed !== AUD.prevArmed) { AUD.prevArmed = isArmed; if (performance.now() - (AUD.quietArm || 0) > 700) sfx(isArmed ? 'arm' : 'disarm'); }   // on-screen ARM button = just the UI tick
             if (AUD.prevVy < -5 && drone.position.y - groundH(drone.position.x, drone.position.z) < 0.9 && drone.velocity.y > AUD.prevVy + 3) sfx('hit', -AUD.prevVy); AUD.prevVy = drone.velocity.y;
             const thr = Math.min(1, Math.max(0, Math.abs(currentThrottle))), sp = drone.velocity.length(), on = isArmed && !menuOpen;
             AUD.eng.set(150 + thr * 520 + sp * 5, on ? 0.06 + thr * 0.09 : 0, on ? 0.01 + thr * 0.06 : 0);
@@ -2073,7 +2199,47 @@
         }
         window.audioApply();
 
+        // ================= DESKTOP DRAG-TO-SCROLL (map select, workbench, menu panels) + wheel on the workbench row =================
+        (function () {
+            let drag = null, moved = false;
+            const scrollable = n => { for (; n && n !== document.body && n !== document.documentElement; n = n.parentElement) { const cs = getComputedStyle(n);
+                const oy = /(auto|scroll)/.test(cs.overflowY) && n.scrollHeight > n.clientHeight + 2, ox = /(auto|scroll)/.test(cs.overflowX) && n.scrollWidth > n.clientWidth + 2; if (oy || ox) return { el: n, oy, ox }; } return null; };
+            document.addEventListener('pointerdown', e => {
+                if (e.pointerType !== 'mouse' || e.button !== 0 || document.pointerLockElement || !e.target.closest) return;
+                if (e.target.closest('input, textarea, select')) return;
+                const sc = scrollable(e.target); if (!sc) return;
+                drag = { el: sc.el, ox: sc.ox, oy: sc.oy, x: e.clientX, y: e.clientY, sl: sc.el.scrollLeft, st: sc.el.scrollTop }; moved = false;
+            }, true);
+            document.addEventListener('pointermove', e => {
+                if (!drag) return; if (!(e.buttons & 1)) { drag = null; return; }
+                const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+                if (!moved && Math.hypot(dx, dy) < 6) return;
+                moved = true; document.body.style.cursor = 'grabbing';
+                if (drag.ox) drag.el.scrollLeft = drag.sl - dx; if (drag.oy) drag.el.scrollTop = drag.st - dy;
+            }, true);
+            const end = () => { if (drag && moved) { const stop = ev => { ev.stopPropagation(); ev.preventDefault(); }; window.addEventListener('click', stop, { capture: true, once: true }); setTimeout(() => window.removeEventListener('click', stop, true), 60); }
+                drag = null; moved = false; document.body.style.cursor = ''; };
+            document.addEventListener('pointerup', end, true); document.addEventListener('pointercancel', end, true);
+            document.addEventListener('wheel', e => { const r = e.target.closest && e.target.closest('#wb-bp'); if (r) { r.scrollLeft += e.deltaY + e.deltaX; e.preventDefault(); } }, { passive: false });
+        })();
+
         const clock = new THREE.Clock();
+
+        // line of sight from the home antenna to the drone (copied from the reference HTML): true if a building / tree is in the way
+        function sigLOS(px, py, pz) {
+            const sx = 0, sy = 2, sz = 45, dx = px - sx, dy = py - sy, dz = pz - sz;
+            for (let i = 0; i < obstacles.length; i++) {
+                const o = obstacles[i]; if (sx >= o.minX && sx <= o.maxX && sz >= o.minZ && sz <= o.maxZ) continue;
+                let t0 = 0.04, t1 = 0.96, ok = true;
+                const ax = [[sx, dx, o.minX, o.maxX], [sy, dy, o.minY, o.maxY], [sz, dz, o.minZ, o.maxZ]];
+                for (let j = 0; j < 3; j++) {
+                    const q = ax[j]; if (Math.abs(q[1]) < 1e-6) { if (q[0] < q[2] || q[0] > q[3]) { ok = false; break; } continue; }
+                    let a = (q[2] - q[0]) / q[1], b = (q[3] - q[0]) / q[1]; if (a > b) { const c = a; a = b; b = c; } if (a > t0) t0 = a; if (b < t1) t1 = b; if (t0 > t1) { ok = false; break; }
+                }
+                if (ok) return true;
+            }
+            return false;
+        }
 
         function animate() {
             requestAnimationFrame(animate);
@@ -2085,7 +2251,7 @@
                 cinematicTime += dt * 0.5;
                 cinematicSlowdownFactor = Math.max(0.08, cinematicSlowdownFactor - 0.01 * dt);
                 
-                const edit = panelEl.style.display === 'block' && panelEl.firstChild && panelEl.firstChild.innerText === 'DJI NEO 2 EDITOR';
+                const edit = panelEl.style.display === 'block' && panelEl.firstChild && panelEl.firstChild.innerText === 'DRONE EDITOR';
                 document.body.classList.add('home-on'); homeGroup.visible = true; if (worldGroup) worldGroup.visible = false; if (!home.look) { home.look = true; setTOD('home'); }
                 home.t += dt;
                 home.off += ((edit ? 0.27 : 0.2) - home.off) * Math.min(1, dt * 4); home.r += ((edit ? 6.4 : 5.4) - home.r) * Math.min(1, dt * 3);
@@ -2097,6 +2263,7 @@
                 camera.lookAt(0.1, hy - 0.05, 45); camera.rotateZ(-0.1);
                 camera.setViewOffset(innerWidth, innerHeight, -innerWidth * home.off, 0, innerWidth, innerHeight); home.focus = camera.position.distanceTo(droneGroup.position);
 
+                setDroneParts(true); if (window._flying) { window._flying = false; document.body.classList.remove('flying'); }
                 propMeshes.forEach(prop => { prop.rotation.y = 0.45; });
 
                 cloudGroup.children.forEach(c => {
@@ -2157,7 +2324,7 @@
                     rawMouseY -= klPitch * 15;
 
                     if (modeCfg.hasAutoLevel) {
-                        drone.euler.x = THREE.MathUtils.clamp(drone.euler.x + effectivePitch, -modeCfg.maxAngle, modeCfg.maxAngle);
+                        drone.euler.x = THREE.MathUtils.clamp(drone.euler.x - effectivePitch, -modeCfg.maxAngle, modeCfg.maxAngle);
                         drone.euler.z = THREE.MathUtils.clamp(drone.euler.z - effectiveRoll, -modeCfg.maxAngle, modeCfg.maxAngle);
                         if (Math.abs(effectivePitch) < 0.001) drone.euler.x *= Math.exp(-6.0 * dt);
                         if (Math.abs(effectiveRoll) < 0.001) drone.euler.z *= Math.exp(-6.0 * dt);
@@ -2196,6 +2363,7 @@
             handleCollisions();
             droneGroup.position.copy(drone.position);
             droneGroup.quaternion.copy(drone.rotation);
+            gimbalRoll.rotation.z += (THREE.MathUtils.clamp(_gEul.setFromQuaternion(drone.rotation, 'YXZ').z, -0.8, 0.8) - gimbalRoll.rotation.z) * Math.min(1, dt * 12);
 
             if (drone.position.y - groundH(drone.position.x, drone.position.z) <= 1.0 && drone.velocity.length() > 2.0) {
                 dustSystem.visible = true;
@@ -2263,14 +2431,28 @@
             const homeDist = Math.hypot(drone.position.x, drone.position.z - 45);
             document.getElementById('osd-d').innerText = Math.round(homeDist) + 'm';
             setOsdMode(({1:'N',2:'S',3:'M'})[activeMode]);
-            const sigN = Math.max(1, 4 - Math.floor(homeDist / 220));
-            if (sigN !== window._osdSig) {
-                window._osdSig = sigN;
-                ['osd-rc','osd-hd'].forEach(id => {
+            // ---- RC / HD signal bars: your exact logic, bars only (no video freeze / filters / messages / RTH) ----
+            // RC = max(1, 4 - floor(distance / 220)).  HD = your link formula (cap 60, range 1000, x0.3 behind obstacles, 0.88-1.0 jitter every 0.25-0.7 s, smoothed), ceil(m / (cap / 3.4)) clamped 0..4.
+            const SG = window._sg || (window._sg = { v: 58, m: 58, tgt: 58, next: 0, rcN: -1, hdN: -1 });
+            if (performance.now() > SG.next) {
+                SG.next = performance.now() + 250 + Math.random() * 450;
+                let base = 60 * Math.max(0, 1 - Math.pow(homeDist / 1000, 1.3)); if (sigLOS(drone.position.x, drone.position.y, drone.position.z)) base *= 0.3;
+                SG.tgt = base > 0.5 ? Math.max(1, Math.min(60, base * (0.88 + Math.random() * 0.12))) : 0;
+            }
+            SG.v += (SG.tgt - SG.v) * Math.min(1, dt * (SG.tgt === 0 ? 6 : 3));
+            SG.m = SG.tgt > 0 ? Math.max(1, Math.round(SG.v)) : (SG.v < 0.6 ? 0 : Math.max(1, Math.round(SG.v)));
+            const rcN = Math.max(1, 4 - Math.floor(homeDist / 220)), hdN = SG.m <= 0 ? 0 : Math.max(1, Math.min(4, Math.ceil(SG.m / (60 / 3.4))));
+            if (rcN !== SG.rcN || hdN !== SG.hdN) {
+                SG.rcN = rcN; SG.hdN = hdN;
+                [['osd-rc', rcN], ['osd-hd', hdN]].forEach(([id, n]) => {
                     const el = document.getElementById(id); el.innerHTML = '';
-                    for (let i = 0; i < 4; i++) { const b = document.createElement('i'); b.style.height = (0.45 + i * 0.35) + 'em'; b.style.opacity = i < sigN ? 1 : 0.3; el.appendChild(b); }
+                    for (let i = 0; i < 4; i++) { const b = document.createElement('i'); b.style.height = (0.45 + i * 0.35) + 'em'; b.style.opacity = i < n ? 1 : 0.3; el.appendChild(b); }
                 });
             }
+
+            { const agl = drone.position.y - groundH(drone.position.x, drone.position.z) - 0.3, spd = drone.velocity.length(); let fl = !!window._flying;
+              if (!isArmed) fl = false; else if (!fl && (agl > 1.0 || spd > 3.5)) fl = true; else if (fl && agl < 0.45 && spd < 1.5) fl = false;
+              if (fl !== !!window._flying) { window._flying = fl; document.body.classList.toggle('flying', fl); } }
 
             const stickLeft = document.getElementById('stick-left');
             const stickRight = document.getElementById('stick-right');
@@ -2448,9 +2630,45 @@
     (function step(now){ const k=Math.min(1,(now-t0)/dur); p=Math.min(100,Math.round(100*(k<.5?k*k*2:1-Math.pow(-2*k+2,2)/2)*1.0)); $('lfill').style.width=p+'%'; $('lpct').textContent=p+' %';
       if(k<1) requestAnimationFrame(step); else setTimeout(()=>{ ld.style.opacity=0; setTimeout(()=>{ ld.style.display='none'; if(done)done(); },520); },250); })(t0); }
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
-  (async()=>{ const a=$('it1'),b=$('it2'),it=$('intro');
-    await wait(500); a.classList.add('on'); await wait(2400); a.classList.remove('on'); await wait(1200);
-    b.classList.add('on'); await wait(2400); b.classList.remove('on'); await wait(1200);
+  // ---- credits-style intro: dark screen, 3 big marks on top, 5x4 grid of logos, DJI logo at the bottom (no text) ----
+  // To use real logo images, put their URLs/paths here (index = slot). Empty = neutral placeholder mark.
+  const INTRO_IMG = { top: [], grid: [] };
+  const W = 'stroke="#fff" fill="none" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"';
+  const MARKS = [
+    '<circle cx="50" cy="30" r="20" ' + W + '/><circle cx="50" cy="30" r="6" fill="#fff"/>',
+    '<path d="M18 46V30M34 46V20M50 46V10M66 46V24" ' + W + ' stroke-width="9"/>',
+    '<path d="M22 14L50 30L22 46M50 14L78 30L50 46" ' + W + '/>',
+    '<polygon points="50,6 78,18 78,42 50,54 22,42 22,18" ' + W + '/>',
+    '<polygon points="50,6 80,30 50,54 20,30" ' + W + '/><polygon points="50,20 64,30 50,40 36,30" fill="#fff"/>',
+    '<polygon points="50,8 80,44 20,44" ' + W + '/><path d="M26 54H74" ' + W + '/>',
+    '<rect x="22" y="8" width="56" height="44" rx="12" ' + W + '/><circle cx="50" cy="30" r="9" fill="#fff"/>',
+    '<path d="M24 50L40 10M42 50L58 10M60 50L76 10" ' + W + ' stroke-width="8"/>',
+    '<circle cx="50" cy="30" r="22" ' + W + '/><ellipse cx="50" cy="30" rx="9" ry="22" ' + W + '/><path d="M28 30H72" ' + W + '/>',
+    '<path d="M14 30C14 12 36 12 50 30C64 48 86 48 86 30C86 12 64 12 50 30C36 48 14 48 14 30Z" ' + W + '/>',
+    '<path d="M50 6L80 16V32C80 44 66 52 50 56C34 52 20 44 20 32V16Z" ' + W + '/>',
+    '<g transform="translate(50 30)"><ellipse rx="22" ry="7" transform="rotate(-90)" fill="#fff"/><ellipse rx="22" ry="7" transform="rotate(30)" fill="#fff"/><ellipse rx="22" ry="7" transform="rotate(150)" fill="#fff"/></g>',
+    '<path d="M10 36L40 14L90 22L52 40L36 52Z" ' + W + '/>',
+    '<path d="M30 8H18V52H30M70 8H82V52H70" ' + W + '/>',
+    '<path d="M16 46A34 34 0 0 1 84 46M28 46A22 22 0 0 1 72 46M40 46A10 10 0 0 1 60 46" ' + W + '/>',
+    '<path d="M50 6L56 24L74 30L56 36L50 54L44 36L26 30L44 24Z" fill="#fff"/>',
+    '<path d="M32 10L26 50M60 10L54 50M16 24H78M12 38H74" ' + W + '/>',
+    '<path d="M14 40A18 18 0 0 1 50 40A18 18 0 0 1 86 40" ' + W + '/><path d="M14 20A18 18 0 0 0 50 20A18 18 0 0 0 86 20" ' + W + '/>',
+    '<path d="M12 40L28 18L44 40L60 18L76 40L88 24" ' + W + '/>',
+    '<circle cx="50" cy="30" r="22" ' + W + '/><path d="M50 18V42M38 30H62" ' + W + '/>'
+  ];
+  const BIG = [
+    '<svg viewBox="0 0 200 100"><g fill="#fff"><polygon points="20,10 70,10 60,50 10,50"/><polygon points="40,56 90,56 80,96 30,96"/><polygon points="100,10 190,10 180,50 90,50"/><polygon points="108,60 178,60 172,90 102,90"/></g></svg>',
+    '<svg viewBox="0 0 220 100"><circle cx="50" cy="50" r="38" ' + W + ' stroke-width="7"/><circle cx="50" cy="50" r="16" fill="#fff"/><rect x="100" y="28" width="116" height="44" rx="6" fill="#fff"/></svg>',
+    '<svg viewBox="0 0 200 130" style="max-width:100%"><rect width="200" height="65" fill="#0057b7"/><rect y="65" width="200" height="65" fill="#ffd700"/></svg>'
+  ];
+  { const top = $('in-top'), grid = $('in-grid'), dj = $('in-dj');
+    BIG.forEach((svg, i) => { const d = document.createElement('div'); const u = INTRO_IMG.top[i]; d.innerHTML = u ? '<img src="' + u + '" alt="">' : svg; top.appendChild(d); });
+    MARKS.forEach((m, i) => { const d = document.createElement('div'); const u = INTRO_IMG.grid[i]; d.innerHTML = u ? '<img src="' + u + '" alt="">' : '<svg viewBox="0 0 100 60">' + m + '</svg>'; grid.appendChild(d); });
+    const lg = document.querySelector('#hs-logo svg'); if (lg) dj.appendChild(lg.cloneNode(true)); }
+  (async()=>{ const it=$('intro');
+    await wait(500);
+    const items=[...it.querySelectorAll('.top > *, .grid > div, .dj')]; items.forEach((e,i)=>setTimeout(()=>e.classList.add('on'), i*70));
+    await wait(items.length*70 + 2800);
     ld.style.display='block'; ld.style.opacity=1; it.style.opacity=0; setTimeout(()=>it.remove(),700);
     runLoad('LOADING MENU',2800,()=>{ if(window.__menuReadyFlush) window.__menuReadyFlush(); else window.__menuReady=true; }); })();
   // loading screen when entering a game session
