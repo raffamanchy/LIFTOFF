@@ -192,6 +192,49 @@
         .mpcode { font-size: 2.4em; font-weight: 900; letter-spacing: 0.25em; color: #3f7b6d; text-align: center; padding: 0.3em 0; }
         body.no-osd #fpv-osd-left, body.no-osd #fpv-osd-right, body.no-osd #fpv-osd-icons { display: none !important; }
         body.no-sticks #rc-sticks-container { display: none !important; }
+        /* ===== PAUSE MENU (Liftoff style) ===== */
+        #pm { display: none; position: fixed; inset: 0; z-index: 60; align-items: center; justify-content: center; background: rgba(8,10,14,.38); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); font-family: "Open Sans","Segoe UI",Arial,sans-serif; color: #444; }
+        #pm.on { display: flex; }
+        .pm-card { position: relative; width: min(92vw, 440px); max-height: 94vh; overflow-y: auto; background: #fff; padding: clamp(14px,3.2vh,30px) clamp(18px,3vw,34px) clamp(14px,3vh,28px) clamp(34px,5.6vw,56px); box-shadow: 0 10px 40px rgba(0,0,0,.45); border-radius: 3px; }
+        .pm-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: clamp(14px,2.6vw,24px); background: #d3604f; }
+        .pm-h { display: flex; align-items: center; gap: 14px; margin: 0 0 clamp(8px,2vh,18px); font-weight: 700; font-size: clamp(17px,3.2vh,26px); letter-spacing: .02em; color: #333; text-transform: uppercase; }
+        .pm-h svg { width: 1.35em; height: 1.35em; stroke: #333; fill: none; stroke-width: 1.7; stroke-linecap: round; }
+        .pm-b { display: block; width: 100%; height: clamp(34px,6.6vh,56px); margin: clamp(6px,1.4vh,12px) 0; border: 0; border-radius: 5px; background: #f2f2f2; color: #555; font: inherit; font-size: clamp(13px,2.3vh,19px); cursor: pointer; }
+        .pm-b:hover, .pm-b.pri { background: #cb5f4f; color: #fff; } .pm-b.pri { font-weight: 700; }
+        .pm-sp { height: clamp(10px,3vh,30px); }
+        .pm-row2 { display: flex; gap: clamp(8px,2vw,24px); } .pm-row2 .pm-b { flex: 1; }
+        .pm-sec { display: flex; align-items: center; gap: 10px; margin: clamp(8px,1.8vh,16px) 0; font-weight: 700; font-size: clamp(13px,2.4vh,19px); letter-spacing: .03em; color: #333; cursor: pointer; text-transform: uppercase; user-select: none; }
+        .pm-sec::before { content: ""; border: 6px solid transparent; border-left: 9px solid #333; border-right: 0; } .pm-sec.open { color: #b4574a; } .pm-sec.open::before { border: 6px solid transparent; border-top: 9px solid #b4574a; border-bottom: 0; }
+        .pm-opt { display: flex; align-items: center; gap: 14px; margin: clamp(6px,1.5vh,12px) 0 clamp(6px,1.5vh,12px) 30px; font-size: clamp(12px,2.2vh,18px); color: #555; cursor: pointer; user-select: none; }
+        .pm-opt i { flex: 0 0 auto; width: 1.45em; height: 1.45em; border-radius: 50%; border: 2px solid #bbb; box-sizing: border-box; position: relative; } .pm-opt.on i::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: #a9a9a9; }
+        .pm-sl { margin: 6px 0 clamp(8px,2vh,16px) 30px; font-size: clamp(12px,2.2vh,18px); color: #666; } .pm-sl .v { display: block; text-align: center; font-size: .85em; color: #333; margin-top: 4px; } .pm-sl input { width: 100%; accent-color: #9a9a9a; }
+        .pm-seg { display: flex; gap: 6px; margin: 6px 0 10px 30px; flex-wrap: wrap; } .pm-seg button { flex: 1; min-width: 70px; height: clamp(28px,5vh,40px); border: 0; border-radius: 5px; background: #f2f2f2; color: #555; font: inherit; font-size: clamp(12px,2.1vh,17px); cursor: pointer; } .pm-seg button.on { background: #cb5f4f; color: #fff; }
+        .pm-lbl { margin: 8px 0 0 30px; font-size: clamp(12px,2.1vh,17px); color: #777; }
+        .pm-fab { position: fixed !important; right: calc(10px + env(safe-area-inset-right, 0px)); top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 26; }
+        body.home-on .pm-fab, body.is-desktop .pm-fab, body.pm-open .pm-fab { display: none !important; }
+        /* ===== NON-DJI OSD (Betaflight / Liftoff style) ===== */
+        #bf-osd { display: none; position: absolute; inset: 0; pointer-events: none; z-index: 6; font-family: "Courier New",monospace; font-weight: 700; color: #fff; text-shadow: 0 0 3px #000, 0 0 6px #000; }
+        body.bf-osd-on #bf-osd { display: block; }
+        body.bf-osd-on #fpv-osd-left, body.bf-osd-on #fpv-osd-right, body.bf-osd-on #fpv-osd-icons, body.bf-osd-on .stick-box-wrapper { display: none !important; }
+        #bf-hud { position: absolute; inset: 0; width: 100%; height: 100%; }
+        #bf-mode { position: absolute; left: 2.6vw; top: 3.4vh; border: 2px solid #fff; border-radius: 9px; padding: .05em .55em; font-size: clamp(14px,3.2vh,28px); letter-spacing: .05em; }
+        #bf-time { position: absolute; left: 50%; top: 3.2vh; transform: translateX(-50%); font-size: clamp(14px,3.2vh,28px); letter-spacing: .08em; }
+        .bf-stat { position: absolute; right: 2.6vw; display: flex; align-items: center; gap: 1.4vw; font-size: clamp(12px,2.8vh,24px); } .bf-stat span { display: flex; flex-direction: column; line-height: .9; } .bf-stat small { font-size: .55em; } .bf-stat b { font-size: 1.7em; min-width: 2.2em; text-align: right; }
+        #bf-alt { top: 6.6vh; } #bf-spd { top: 17vh; }
+        #bf-bat { position: absolute; left: 2.6vw; bottom: 6vh; font-size: clamp(12px,2.8vh,24px); }
+        #bat-warn { display: none; position: absolute; left: 50%; top: 62%; transform: translateX(-50%); z-index: 8; color: #fff; font: 700 clamp(16px,4vh,34px) "Courier New",monospace; text-shadow: 0 0 4px #000; animation: bfblink .7s steps(2) infinite; } @keyframes bfblink { 50% { opacity: 0; } }
+        #stunt-msg { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); z-index: 12; display: none; color: #fff; font-style: italic; font-weight: 900; font-size: clamp(24px,5vw,70px); text-shadow: 0 3px 12px rgba(0,0,0,.6); text-align: center; pointer-events: none; } #stunt-msg small { display: block; font-size: .3em; letter-spacing: .2em; color: #ffd23f; }
+        #cam-noise { display: none; position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: .14; mix-blend-mode: overlay; animation: camn .15s steps(1) infinite; } @keyframes camn { 0% { background-position: 0 0; } 25% { background-position: -37px 21px; } 50% { background-position: 19px -43px; } 75% { background-position: -52px -17px; } }
+        /* ===== MULTIPLAYER HUD ===== */
+        #mp-feed { position: absolute; left: 1.2vw; bottom: 16vh; z-index: 12; font-size: clamp(9px,1.5vh,14px); color: #f2a85a; line-height: 1.35; pointer-events: none; text-shadow: 0 1px 2px #000; }
+        #mp-board { display: none; position: absolute; right: 1.4vw; bottom: 3vh; z-index: 12; text-align: right; color: #fff; font-size: clamp(10px,1.8vh,16px); line-height: 1.25; pointer-events: none; text-shadow: 0 1px 3px #000; } #mp-board small { display: block; font-size: .72em; color: #cfd3d8; margin-bottom: .35em; }
+        /* ===== rounder home screen ===== */
+        .hs-btn { border-radius: 8px 0 0 8px; clip-path: polygon(0 0, 99% 0, 100% 10%, 94.4% 90%, 93.2% 100%, 0 100%); box-shadow: 0 2px 6px rgba(0,0,0,.18); }
+        .hs-btn:before { border-radius: 8px 0 0 8px; }
+        #hs-tabs .bar { border-radius: 8px 0 0 8px; clip-path: polygon(0 0, 99.4% 0, 100% 12%, 97.2% 88%, 96.6% 100%, 0 100%); }
+        #hs-panel { border-radius: 12px; clip-path: none; } .pbtn { border-radius: 7px; } .prow input[type=range] { border-radius: 8px; }
+        .bp-tag { font-style: normal; font-size: .72em; padding: 1px 9px; border-radius: 9px; margin: 2px 0; background: #2f8f6b; color: #fff; } .bp-tag.nd { background: #c0572f; }
+
 
         #map-select { display: none; position: absolute; inset: 0; z-index: 30; background: rgba(10,14,12,0.28); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #fff; font-family: "Segoe UI", Arial, sans-serif; overflow: hidden; }
         body.map-open #menu-content { visibility: hidden; }
@@ -1057,6 +1100,57 @@
         } });
         MAPINFO[MAPS.length - 1] = ['Medium', 'A stadium arena with a green pitch, red grandstands, a curved roof and blue race gates. Fly fast laps just like the Liftoff videos.'];
 
+        MAPS.push({ name: 'Underground Car Park', icon: '\ud83c\udd7f\ufe0f', desc: 'Dark concrete garage, yellow walls', tod: 'indoor', grad: ['#3b3d40', '#c9b81a'], build() {
+            heightFn = () => 0; LANDMARK = { x: 0, z: 45 };
+            const CZ = 45, HX = 92, HZ = 62, CH = 6.5, yel = 0xc9b81a;
+            const out = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000).rotateX(-Math.PI / 2), MB({ color: 0x202226 })); out.userData.flat = true; out.position.y = -0.05; scene.add(out);
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(2 * HX, 2 * HZ).rotateX(-Math.PI / 2), MB({ color: 0x5b5e62 })); floor.position.set(0, 0.02, CZ); floor.userData.flat = true; scene.add(floor);
+            box(2 * HX + 4, 1.0, 2 * HZ + 4, 0, CH + 1.0, CZ, 0x3d3f43, true);                               // ceiling slab
+            for (let k = -6; k <= 6; k++) box(0.9, 0.8, 2 * HZ, k * 14, CH - 0.4, CZ, 0x2f3134, false);        // ceiling beams
+            box(2 * HX + 4, CH + 2, 1.5, 0, (CH + 2) / 2, CZ - HZ - 0.7, 0x4a4c50, true); box(2 * HX + 4, CH + 2, 1.5, 0, (CH + 2) / 2, CZ + HZ + 0.7, 0x4a4c50, true);
+            box(1.5, CH + 2, 2 * HZ, HX + 0.7, (CH + 2) / 2, CZ, 0x4a4c50, true); box(1.5, CH + 2, 2 * HZ, -HX - 0.7, (CH + 2) / 2, CZ, 0x4a4c50, true);
+            const lightM = new THREE.MeshBasicMaterial({ color: 0xf6f6e8 }), xs = [], zs = [];
+            for (let i = 0; i < 12; i++) xs.push(-77 + 14 * i); for (let j = -3; j <= 4; j++) zs.push(37 + 16 * j);
+            xs.forEach(x => zs.forEach(z => { box(1.3, CH, 1.3, x, CH / 2, z, 0x3a3c40, true); box(1.45, 0.9, 1.45, x, 0.45, z, yel, false); }));          // columns with a yellow foot band
+            xs.forEach(x => { for (let z = -3; z <= 93; z += 16) box(3.2, 0.1, 0.28, x + 7, CH - 0.85, z, lightM, false); });                           // ceiling light strips
+            [[-70, 53], [-42, 85], [42, 21], [14, 69], [70, 37], [-28, 5]].forEach(p => box(12, CH, 1, p[0], CH / 2, p[1], yel, true));                    // yellow walls between columns
+            for (const z of [CZ - 20, CZ + 30]) { const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 2 * HX, 10), MB({ color: yel })); pipe.rotation.z = Math.PI / 2; pipe.position.set(0, CH - 0.55, z); scene.add(pipe); }
+            const carCols = [0x8a8d92, 0x1f2a44, 0x6a1f1f, 0xd8d8d8, 0x2d3a2d, 0x3a3a3e];
+            for (const z of [CZ - HZ + 4, CZ + HZ - 4]) for (let x = -80; x <= 80; x += 7) if (rnd() > 0.35) { const c = carCols[(rnd() * carCols.length) | 0]; box(2.0, 0.9, 4.4, x, 0.55, z, c, true); box(1.8, 0.6, 2.4, x, 1.3, z, 0x1a1c20, false); }
+            box(24, 5, 0.2, 0, 3.2, CZ + HZ - 0.1, new THREE.MeshBasicMaterial({ color: 0xcfe6ff }), false);                                             // bright exit
+            const R0 = [[0, 13], [28, 13], [56, 13], [56, 29], [56, 45], [56, 61], [56, 77], [28, 77], [0, 77], [-28, 77], [-56, 77], [-56, 61], [-56, 45], [-56, 29], [-56, 13], [-28, 13]];
+            setRoute(R0, (x, z) => 3.3 + 0.5 * Math.sin(x * 0.07) + 0.3 * Math.cos(z * 0.09));
+            const NG = window.TBN || 12, gm = new THREE.MeshBasicMaterial({ color: 0xff7a1a }), pm = MB({ color: 0x2b3038 });
+            for (let k = 0; k < NG; k++) { const p = curve.getPointAt(k / NG), tg = curve.getTangentAt(k / NG), g = new THREE.Group(), S = 1.8, T = 0.3;
+                g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(tg.x, tg.z);
+                [[0, S, 2 * S + T, T], [0, -S, 2 * S + T, T], [S, 0, T, 2 * S + T], [-S, 0, T, 2 * S + T]].forEach(a => { const m = new THREE.Mesh(new THREE.BoxGeometry(a[2], a[3], 0.3), gm); m.position.set(a[0], a[1], 0); g.add(m); });
+                scene.add(g); const bot = p.y - S - T / 2; if (bot > 0.5) box(0.25, bot, 0.25, p.x, bot / 2, p.z, pm, true); }
+        } });
+        MAPINFO[MAPS.length - 1] = ['Hard', 'A dark underground car park with concrete columns, yellow walls, ceiling lights and parked cars. Low ceiling, tight lines.'];
+
+        MAPS.push({ name: 'Blue Frame', icon: '\ud83d\udfe6', desc: 'Giant blue room, timber beams', tod: 'day', grad: ['#2b49ad', '#c98a3c'], build() {
+            heightFn = () => 0; LANDMARK = { x: 0, z: 45 };
+            const CZ = 45, HX = 80, HZ = 52, WH = 46, tan = 0xb98a46;
+            const gridTex = (rx, ry) => { const t = mkTex(256, 256, (g, w, h) => { g.fillStyle = '#2b49ad'; g.fillRect(0, 0, w, h); g.strokeStyle = 'rgba(255,255,255,.45)'; g.lineWidth = 2; for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(i * w / 4, 0); g.lineTo(i * w / 4, h); g.moveTo(0, i * h / 4); g.lineTo(w, i * h / 4); g.stroke(); } }); t.repeat.set(rx, ry); return t; };
+            const out = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000).rotateX(-Math.PI / 2), MB({ color: 0x8aa6d8 })); out.userData.flat = true; out.position.y = -0.05; scene.add(out);
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(2 * HX, 2 * HZ).rotateX(-Math.PI / 2), MB({ map: gridTex(8, 5) })); floor.position.set(0, 0.02, CZ); floor.userData.flat = true; scene.add(floor);
+            const wall = (w, d, x, z, rx, ry) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, WH, d), MB({ map: gridTex(rx, ry) })); m.position.set(x, WH / 2, z); scene.add(m); solid(x, z, w, d, 0, WH); };
+            wall(2 * HX + 4, 2, 0, CZ - HZ - 1, 8, 4); wall(2 * HX + 4, 2, 0, CZ + HZ + 1, 8, 4); wall(2, 2 * HZ, HX + 1, CZ, 5, 4); wall(2, 2 * HZ, -HX - 1, CZ, 5, 4);
+            const tm = MB({ color: tan });
+            const beamX = (y, z) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.25, 2 * HX, 14), tm); m.rotation.z = Math.PI / 2; m.position.set(0, y, z); scene.add(m); solid(0, z, 2 * HX, 2.5, y - 1.25, y + 1.25); };
+            const beamZ = (y, x) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.25, 2 * HZ, 14), tm); m.rotation.x = Math.PI / 2; m.position.set(x, y, CZ); scene.add(m); solid(x, CZ, 2.5, 2 * HZ, y - 1.25, y + 1.25); };
+            for (const y of [14, 30]) { beamX(y, CZ - 34); beamX(y, CZ + 34); beamZ(y, -44); beamZ(y, 44); }
+            for (const x of [-44, 44]) for (const z of [CZ - 34, CZ + 34]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, WH, 14), tm); p.position.set(x, WH / 2, z); scene.add(p); solid(x, z, 2.8, 2.8, 0, WH); }
+            box(30, 12, 2, 0, 6, CZ - 20, MB({ map: gridTex(4, 2) }), true); box(2, 16, 26, -30, 8, CZ + 12, MB({ map: gridTex(3, 2) }), true);                       // inner blue blocks
+            const route = []; for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; route.push([Math.cos(a) * 58, CZ + Math.sin(a) * 26]); }
+            setRoute(route, (x, z) => 22 + 4 * Math.sin(Math.atan2(z - CZ, x) * 2));
+            const NG = window.TBN || 12, gm = new THREE.MeshBasicMaterial({ color: 0xffa21a });
+            for (let k = 0; k < NG; k++) { const p = curve.getPointAt(k / NG), tg = curve.getTangentAt(k / NG), g = new THREE.Group(), S = 3.4, T = 0.55;
+                g.position.set(p.x, p.y, p.z); g.rotation.y = Math.atan2(tg.x, tg.z);
+                [[0, S, 2 * S + T, T], [0, -S, 2 * S + T, T], [S, 0, T, 2 * S + T], [-S, 0, T, 2 * S + T]].forEach(a => { const m = new THREE.Mesh(new THREE.BoxGeometry(a[2], a[3], 0.5), gm); m.position.set(a[0], a[1], 0); g.add(m); }); scene.add(g); }
+        } });
+        MAPINFO[MAPS.length - 1] = ['Medium', 'A giant blue room with a white grid, thick timber beams and posts. Fly between the beams and through the gates.'];
+
         // ---------- map loading ----------
         function disposeGroup(g) { g.traverse(o => { if (o.geometry) o.geometry.dispose(); const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : []; ms.forEach(m => { if (m.map) m.map.dispose(); if (m.emissiveMap) m.emissiveMap.dispose(); m.dispose(); }); }); }
         function loadMap(i) {
@@ -1175,7 +1269,7 @@
         const goproBodyMat = new THREE.MeshBasicMaterial({ color: 0x08090b });
         const goproLensMat = new THREE.MeshBasicMaterial({ color: 0x16283d });
 
-        const droneBody = new THREE.Group(); droneBody.rotation.y = Math.PI; droneBody.userData.model = 'neo'; droneGroup.add(droneBody); var fpvTilt = null;   // the drone flies towards -z, so the front of the model faces -z
+        const droneBody = new THREE.Group(); droneBody.rotation.y = Math.PI; droneBody.userData.model = 'neo'; droneGroup.add(droneBody); var fpvTilt = null; var quadTilt = null;   // the drone flies towards -z, so the front of the model faces -z
         const SM = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r === undefined ? 0.8 : r, metalness: m === undefined ? 0.0 : m }), BM = (c) => new THREE.MeshBasicMaterial({ color: c });
         const mShell = SM(0x7e8186), mDark = SM(0x7a7d82), mTop = SM(0x8c8f94, 0.85), mMetal = SM(0x4a4c50, 0.35, 0.3), tipMat = BM(0xf08a1c), ledMat = BM(0x34ff7c), mBlack = SM(0x131417, 0.32, 0.1);
         mShell.userData.role = 'body'; mDark.userData.role = 'arms'; mTop.userData.role = 'top'; mMetal.userData.role = 'metal'; tipMat.userData.role = 'tip'; ledMat.userData.role = 'led';
@@ -1205,7 +1299,7 @@
           const lr = new THREE.Mesh(new THREE.CylinderGeometry(0.145, 0.16, 0.06, 24), SM(0xa9afb8, 0.3, 0.5)); lr.rotation.x = Math.PI / 2; lr.position.z = 0.19; gimbalTilt.add(lr);
           const ln = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.105, 0.08, 24), SM(0x0a1424, 0.05, 0.6)); ln.rotation.x = Math.PI / 2; ln.position.z = 0.21; gimbalTilt.add(ln);
           const glint = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), BM(0xa8c8ff)); glint.position.set(0.04, 0.03, 0.255); gimbalTilt.add(glint); }
-        function updateGimbal() { gimbalTilt.rotation.x = -CAMERA_UPTILT * 0.5; if (fpvTilt) fpvTilt.rotation.x = -CAMERA_UPTILT; }   // axis 1: tilt
+        function updateGimbal() { gimbalTilt.rotation.x = -CAMERA_UPTILT * 0.5; if (fpvTilt) fpvTilt.rotation.x = -CAMERA_UPTILT; if (quadTilt) quadTilt.rotation.x = -CAMERA_UPTILT; }   // axis 1: tilt
         const _gEul = new THREE.Euler();   // axis 2: roll motor keeps the camera level while the drone banks (see main loop)
         for (const sx of [-1, 1]) { const sp = dBox(0.5, 0.11, 0.06, sx * 0.64, -0.06, 1.2, mBlack); sp.rotation.y = sx * 0.12; }
         dBox(0.03, 0.03, 0.02, 0.86, 0.0, 1.24, ledMat);                                   // little green light by the right sensor
@@ -1229,7 +1323,7 @@
         // --- prop guards like the real Neo 2 photo: ONE smooth oval ring per prop + thin radial spokes from the motor cap (no top cage / inner rings). Props spin underneath. ---
         const propMat = new THREE.MeshStandardMaterial({ color: 0x55585d, roughness: 0.6, transparent: true, opacity: 0.95, side: THREE.DoubleSide });
         const mSpoke = SM(0x6f7880, 0.7); mSpoke.userData.role = 'spoke';
-        const neoProps = [], fpvProps = [], propMeshes = [];   // propMeshes = props of the ACTIVE model (see useModel)
+        const neoProps = [], fpvProps = [], quadProps = [], propMeshes = [];   // propMeshes = props of the ACTIVE model (see useModel)
         const motorPositions = [{ x: 1.1, z: 0.62, y: -0.06, f: 1 }, { x: -1.1, z: 0.62, y: -0.06, f: 1 }, { x: 1.1, z: -0.74, y: 0.05, f: 0 }, { x: -1.1, z: -0.74, y: 0.05, f: 0 }];
         const GR = 0.66, GZ = 0.86;   // ring radius, front-to-back squash (oval)
         motorPositions.forEach(pos => {
@@ -1279,11 +1373,12 @@
             const g = new THREE.ExtrudeGeometry(sh, { depth: 0.018, bevelEnabled: false, curveSegments: 8 }); g.rotateX(-Math.PI / 2); return g; })();
         const bladeTipGeo = (() => { const sh = new THREE.Shape(); sh.moveTo(0.6, -0.084); sh.quadraticCurveTo(0.7, -0.08, 0.76, -0.05); sh.quadraticCurveTo(0.8, 0, 0.76, 0.05); sh.quadraticCurveTo(0.7, 0.058, 0.6, 0.063); sh.lineTo(0.6, -0.084);
             const g = new THREE.ExtrudeGeometry(sh, { depth: 0.024, bevelEnabled: false, curveSegments: 8 }); g.rotateX(-Math.PI / 2); g.translate(0, -0.003, 0); return g; })();
-        function fpvProp(pos) { const g = new THREE.Group();
+        function mkProp(pos, model, list, sc, yoff) { const g = new THREE.Group();
             for (let k = 0; k < 3; k++) { const b = new THREE.Group(); b.rotation.y = k * Math.PI * 2 / 3 + 0.2; b.add(new THREE.Mesh(bladeGeo, fpvPropMat)); b.add(new THREE.Mesh(bladeTipGeo, tipMat)); g.add(b); }
             const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.1, 0.07, 16), fBlack); hub.position.y = 0.02; g.add(hub);
             const dot = new THREE.Mesh(new THREE.CircleGeometry(0.04, 16), BM(0x4a6cff)); dot.rotation.x = -Math.PI / 2; dot.position.y = 0.06; g.add(dot);
-            g.position.set(pos.x, pos.y + 0.24, -pos.z); g.userData.baseX = pos.x; g.userData.model = 'fpv'; droneGroup.add(g); fpvProps.push(g); }
+            g.scale.set(sc, 1, sc); g.position.set(pos.x, pos.y + yoff, -pos.z); g.userData.baseX = pos.x; g.userData.model = model; droneGroup.add(g); list.push(g); }
+        const fpvProp = pos => mkProp(pos, 'fpv', fpvProps, 1, 0.24);
         [{ x: 1.25, y: 0.12, z: 1.0, f: 1 }, { x: -1.25, y: 0.12, z: 1.0, f: 1 }, { x: 1.2, y: -0.12, z: -1.0, f: 0 }, { x: -1.2, y: -0.12, z: -1.0, f: 0 }].forEach(pos => {
             const sx = Math.sign(pos.x), P = new THREE.Vector3(pos.x, pos.y - 0.02, pos.z), root = new THREE.Vector3(sx * 0.4, pos.f ? 0.0 : -0.12, pos.f ? 0.55 : -0.5);
             fTube(root, P, pos.f ? 0.105 : 0.12, fArm);
@@ -1293,6 +1388,34 @@
             if (pos.f) { const rg = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.03, 8, 24), tipMat); rg.rotation.x = Math.PI / 2; rg.position.set(pos.x, pos.y - 0.08, pos.z); fpvBody.add(rg); }
             fBox(0.06, 0.18, 0.06, pos.x, pos.y - 0.24, pos.z + (pos.f ? 0.12 : -0.12), pos.f ? fRed : ledMat);                // LED bar: red front, green rear
             fpvProp(pos); });
+
+        // ================= NON-DJI 5" FREESTYLE QUAD: carbon plates + 4 flat arms, LiPo strapped on top, FPV camera, antennas (no DJI parts) =================
+        const quadBody = new THREE.Group(); quadBody.rotation.y = Math.PI; quadBody.userData.model = 'quad'; droneGroup.add(quadBody);
+        const qFrame = SM(0xc8231c, 0.5, 0.2), qBat = SM(0x1a1a1a, 0.6, 0.1), qCarbon = SM(0x0d0d0d, 0.45, 0.25), qMetal = SM(0xd9d9d9, 0.3, 0.6), qBlack = SM(0x0b0c0e, 0.4, 0.2);
+        qFrame.userData.role = 'body'; qBat.userData.role = 'top'; qCarbon.userData.role = 'arms'; qMetal.userData.role = 'metal';
+        const qBox = (w, h, d, x, y, z, m, par) => { const q = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); q.position.set(x, y, z); (par || quadBody).add(q); return q; };
+        slab(rr(0.34, -0.8, 0.82, 0.22, 0.22), 0.06, 0.02, qCarbon, -0.14, quadBody);   // bottom plate
+        slab(rr(0.34, -0.8, 0.82, 0.22, 0.22), 0.05, 0.02, qCarbon, 0.14, quadBody);    // top plate
+        for (const sx of [-1, 1]) for (const sz of [-0.55, 0.0, 0.55]) { const so = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.34, 10), qFrame); so.position.set(sx * 0.28, 0, sz); quadBody.add(so); }   // standoffs
+        qBox(0.3, 0.06, 0.3, 0, -0.05, 0.0, SM(0x1d6a3a, 0.5)); qBox(0.3, 0.06, 0.3, 0, 0.05, 0.0, SM(0x1a4a7a, 0.5));    // flight controller stack
+        qBox(0.34, 0.22, 0.92, 0, 0.29, -0.06, qBat);                                                                       // LiPo battery
+        for (const z of [-0.3, 0.2]) qBox(0.37, 0.25, 0.07, 0, 0.29, z, qFrame);                                            // battery straps
+        const qMotors = [{ x: 0.8, y: 0.02, z: 0.78, f: 1 }, { x: -0.8, y: 0.02, z: 0.78, f: 1 }, { x: 0.8, y: 0.02, z: -0.78, f: 0 }, { x: -0.8, y: 0.02, z: -0.78, f: 0 }];
+        qMotors.forEach(pos => {
+            const sx = Math.sign(pos.x), sz = pos.f ? 1 : -1, x1 = sx * 0.1, z1 = sz * 0.1, dx = pos.x - x1, dz = pos.z - z1, len = Math.hypot(dx, dz);
+            const arm = new THREE.Mesh(new THREE.BoxGeometry(len, 0.07, 0.2), qCarbon); arm.position.set((x1 + pos.x) / 2, 0, (z1 + pos.z) / 2); arm.rotation.y = -Math.atan2(dz, dx); quadBody.add(arm);
+            const mt = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.15, 0.2, 20), qMetal); mt.position.set(pos.x, 0.08, pos.z); quadBody.add(mt);
+            const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.05, 20), qBlack); cap.position.set(pos.x, 0.2, pos.z); quadBody.add(cap);
+            const rg = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.025, 8, 20), tipMat); rg.rotation.x = Math.PI / 2; rg.position.set(pos.x, 0.0, pos.z); quadBody.add(rg);
+            mkProp(pos, 'quad', quadProps, 0.86, 0.26); });
+        // FPV camera on a tilt mount at the front
+        quadTilt = new THREE.Group(); quadTilt.position.set(0, 0.0, 0.84); quadBody.add(quadTilt);
+        { for (const sx of [-1, 1]) qBox(0.04, 0.32, 0.26, sx * 0.19, 0, 0.0, qCarbon, quadTilt);
+          qBox(0.32, 0.28, 0.3, 0, 0, 0.04, qBlack, quadTilt);
+          const lr = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.03, 10, 20), qMetal); lr.position.set(0, 0, 0.2); quadTilt.add(lr);
+          const ln = new THREE.Mesh(new THREE.CircleGeometry(0.1, 20), SM(0x0a1424, 0.05, 0.6)); ln.position.set(0, 0, 0.205); quadTilt.add(ln); }
+        for (const sx of [-1, 1]) { const an = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.016, 0.7, 6), qBlack); an.position.set(sx * 0.16, 0.12, -0.95); an.rotation.set(0.9, 0, -sx * 0.5); quadBody.add(an); }   // rear antennas
+        qBox(0.14, 0.05, 0.05, 0, -0.1, -0.84, ledMat);   // status LED
         scene.add(droneGroup);
 
         const drone = {
@@ -1314,6 +1437,7 @@
         let cinematicTime = 0;
         let cinematicSlowdownFactor = 1.0;
         let tumbleRotationVelocity = new THREE.Vector3(0, 0, 0);
+        const BAT = { pct: 100 }, ST = { q: null, pitch: 0, roll: 0, count: 0 }, _pwQ = new THREE.Quaternion(), _pwE = new THREE.Euler(), _stDq = new THREE.Quaternion();
 
         let keys = { w: false, s: false, a: false, d: false, i: false, j: false, k: false, l: false, ' ': false };
         let mousePitch = 0, mouseRoll = 0;
@@ -1410,18 +1534,14 @@
         document.addEventListener('pointerlockchange', () => { 
             if (!isMobile && gameStarted) {
                 const isLocked = (document.pointerLockElement === container);
-                if (!isLocked) {
-                    inst.style.display = 'flex';
-                    inst.style.opacity = '1';
-                    rawMouseX = 0; 
-                    rawMouseY = 0;
-                }
+                if (!isLocked) { rawMouseX = 0; rawMouseY = 0; if (!PM_OPEN) pmOpen(); }   // Esc opens the pause menu
             }
         });
 
         document.addEventListener('keydown', (e) => {
             const k = e.key.toLowerCase();
             if (!gameStarted) return;
+            if (PM_OPEN) return;
             if (k === 'm') { toggleMotors(); return; }
             if (['1','2','3'].includes(k)) { 
                 activeMode = parseInt(k); 
@@ -1526,16 +1646,11 @@
 
         document.getElementById('btn-switch-view').addEventListener('click', (e) => { e.stopPropagation(); if(gameStarted) cameraMode = (cameraMode === "FPV") ? "TPV" : "FPV"; });
         document.getElementById('btn-retry').addEventListener('click', (e) => { e.stopPropagation(); resetDrone(); });
-        document.getElementById('btn-pause').addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (!isMobile) document.exitPointerLock();
-            inst.style.display = 'flex';
-            inst.style.opacity = '1';
-        });
+        document.getElementById('btn-pause').addEventListener('click', (e) => { e.stopPropagation(); pmOpen(); });
 
         function resetDrone() {
             drone.position.set(window.__spawnX || 0, 0.3, 45); drone.velocity.set(0, 0, 0); drone.rotation.set(0, 0, 0, 1); drone.euler.set(0, 0, 0);
-            currentThrottle = 0; stickyThrottleValue = 0; tumbleRotationVelocity.set(0, 0, 0);
+            currentThrottle = 0; stickyThrottleValue = 0; tumbleRotationVelocity.set(0, 0, 0); BAT.pct = 100; ST.pitch = ST.roll = 0; ST.q = null;
             rawMouseX = 0; rawMouseY = 0; touchLeftValX = 0; touchLeftValY = 1.0; touchRightValX = 0; touchRightValY = 0;
 
             const leftKnob = document.getElementById('touch-left-knob');
@@ -1567,11 +1682,11 @@
                             drone.velocity.z *= -0.4;
                         }
                         if (speedH > 4.5) {
-                            tumbleRotationVelocity.set((Math.random() - 0.5) * 60.0, (Math.random() - 0.5) * 40.0, (Math.random() - 0.5) * 60.0);
+                            if (!SET.god) tumbleRotationVelocity.set((Math.random() - 0.5) * 60.0, (Math.random() - 0.5) * 40.0, (Math.random() - 0.5) * 60.0);   // god mode: no tumbling
                             drone.velocity.y = speedH * 0.45 + 2.5; 
                         } else {
                             drone.velocity.y = 2.8; 
-                            tumbleRotationVelocity.set((Math.random()-0.5)*9, (Math.random()-0.5)*9, (Math.random()-0.5)*9);
+                            if (!SET.god) tumbleRotationVelocity.set((Math.random()-0.5)*9, (Math.random()-0.5)*9, (Math.random()-0.5)*9);
                         }
                     }
                 }
@@ -1666,7 +1781,7 @@
 
         // ================= MENU FEATURES: options, tools, race, tutorial =================
         const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
-        const SET = Object.assign({ preset: 'High', res: 100, shadows: true, post: true, fov: 130, tilt: 30, osd: true, sticks: true, tod: 'day', sound: true, vol: 70, map: 0, askMap: true }, store.get('liftoff_settings2', {}));
+        const SET = Object.assign({ preset: 'High', res: 100, shadows: true, post: true, fov: 130, tilt: 30, osd: true, sticks: true, tod: 'day', sound: true, vol: 70, map: 0, askMap: true, god: false, fpvProps: false, camNoise: false, battery: false, stunts: false, propwash: false, pwInt: 42, windOn: false, windSpd: 30, windDir: 90, windGust: 40, osdStyle: 'Auto', units: 'km/h' }, store.get('liftoff_settings2', {}));
         const PRESETS = { Low: { res: 60, shadows: false, post: false, cap: 1 }, Medium: { res: 80, shadows: true, post: false, cap: 1.25 }, High: { res: 100, shadows: true, post: true, cap: 1.75 }, Ultra: { res: 100, shadows: true, post: true, cap: 2 } };
         const TOD = {
             sunset: { sky: ['#5f93cf', '#9dbbd9', '#e9d3b0', '#f3b974', '#8a9a6a'], fog: 0xd9cdbd, fd: 0.0011, sun: 0xffd9a6, si: 0.85, off: [120, 80, -90], hemi: 0.62 },
@@ -1800,16 +1915,17 @@
         // ---- drone editor: colors, size and flight stats ----
         const NEO_COL = { model: 'neo', body: '#9aa3ad', top: '#aab4c0', arms: '#a3abb2', spoke: '#6f7880', metal: '#4a4c50', tip: '#6a2f36', prot: '#ffd60a', led: '#34ff7c' };
         const DRONE_BASE = { preset: 'DJI FPV', model: 'fpv', body: '#26282c', top: '#303338', arms: '#3a3d42', spoke: '#6f7880', metal: '#8e9197', tip: '#d8262b', prot: '#ffd60a', led: '#34ff7c', size: 100, power: 100, agility: 100, drag: 100 };
-        const DRONE_PRESETS = {
+        const DRONE_PRESETS = {   // DJI: FPV, Neo 2.  NON-DJI 5" quads: Racer, Freestyle, Stealth
             'DJI FPV': {},
             'DJI Neo 2': NEO_COL,
-            'Racer': { body: '#c8231c', top: '#1a1a1a', arms: '#0d0d0d', metal: '#d9d9d9', tip: '#ffd23f', led: '#ff3b30', size: 85, power: 125, agility: 125, drag: 85 },
-            'Freestyle': { body: '#1d3b8a', top: '#222a44', arms: '#101420', metal: '#b9c4d8', tip: '#2ff0ff', led: '#2ff0ff', size: 105, power: 110, agility: 115, drag: 95 },
-            'Stealth': { body: '#101112', top: '#1b1c1e', arms: '#08090a', metal: '#4a4d52', tip: '#3a3d42', led: '#222628', size: 95, power: 100, agility: 105, drag: 90 }
+            'Racer': { model: 'quad', body: '#c8231c', top: '#1a1a1a', arms: '#0d0d0d', metal: '#d9d9d9', tip: '#ffd23f', led: '#ff3b30', size: 85, power: 125, agility: 125, drag: 85 },
+            'Freestyle': { model: 'quad', body: '#1d3b8a', top: '#222a44', arms: '#101420', metal: '#b9c4d8', tip: '#2ff0ff', led: '#2ff0ff', size: 105, power: 110, agility: 115, drag: 95 },
+            'Stealth': { model: 'quad', body: '#222426', top: '#1b1c1e', arms: '#08090a', metal: '#4a4d52', tip: '#3a3d42', led: '#9affb0', size: 95, power: 100, agility: 105, drag: 90 }
         };
+        const isDJIst = st => st.model !== 'quad';
         const DRONE = Object.assign({}, DRONE_BASE, store.get('liftoff_drone6', {}));
-        function useModel(m) { propMeshes.length = 0; (m === 'neo' ? neoProps : fpvProps).forEach(p => propMeshes.push(p)); }   // spin / animate the props of the active model
-        function showModel(root, m) { if (GLB.active) return; const am = m === 'neo' ? 'neo' : 'fpv'; root.children.forEach(c => { const cm = c.userData && c.userData.model; if (cm) c.visible = (cm === am); }); }
+        function useModel(m) { propMeshes.length = 0; (m === 'neo' ? neoProps : m === 'quad' ? quadProps : fpvProps).forEach(p => propMeshes.push(p)); }   // spin / animate the props of the active model
+        function showModel(root, m) { if (GLB.active) return; const am = (m === 'neo' || m === 'quad') ? m : 'fpv'; root.children.forEach(c => { const cm = c.userData && c.userData.model; if (cm) c.visible = (cm === am); }); }
         useModel(DRONE.model);
         const styleOf = () => ({ model: DRONE.model, body: DRONE.body, top: DRONE.top, arms: DRONE.arms, spoke: DRONE.spoke, metal: DRONE.metal, tip: DRONE.tip, prot: DRONE.prot, led: DRONE.led, size: DRONE.size });
         function applyDroneStyle(root, st) {
@@ -1821,7 +1937,7 @@
         function droneBuild(b, btn) {
             seg(b, 'Preset', Object.keys(DRONE_PRESETS), DRONE.preset, v => { Object.assign(DRONE, DRONE_BASE, DRONE_PRESETS[v], { preset: v }); applyMyStyle(); btn.click(); });
             const cRow = (label, key) => { const r = row(b, label), i = el('input'); i.type = 'color'; i.value = DRONE[key]; i.style.cssText = 'width:4em;height:2em;border:0;background:none;cursor:pointer'; i.oninput = () => { DRONE[key] = i.value; DRONE.preset = 'Custom'; applyMyStyle(); }; r.appendChild(i); };
-            cRow('Body color', 'body'); cRow('Top cover', 'top'); cRow('Arms and motors', 'arms'); cRow('Motor bells', 'metal');
+            const QD = DRONE.model === 'quad'; cRow(QD ? 'Frame color' : 'Body color', 'body'); cRow(QD ? 'Battery' : 'Top cover', 'top'); cRow(QD ? 'Carbon arms' : 'Arms and motors', 'arms'); cRow(QD ? 'Motors' : 'Motor bells', 'metal');
             if (DRONE.model === 'neo') { cRow('Motor ring', 'tip'); cRow('Guard spokes', 'spoke'); cRow('Antenna protectors', 'prot'); } else cRow('Propeller tips', 'tip');
             cRow('LED light', 'led');
             rng(b, 'Size', 60, 150, 5, DRONE.size, '%', v => { DRONE.size = v; applyMyStyle(); });
@@ -1838,7 +1954,7 @@
         const GLB = { active: false, rot: store.get('liftoff_glbrot', 0) };
         const droneModel = new THREE.Group(); droneModel.userData.isModel = true; droneModel.visible = false; droneGroup.add(droneModel);
         const modelPivot = new THREE.Group(); droneModel.add(modelPivot);
-        function setDroneParts(vis) { const am = DRONE.model === 'neo' ? 'neo' : 'fpv', useG = GLB.active && am === 'neo'; droneGroup.children.forEach(p => { const m = p.userData && p.userData.model; p.visible = (p === droneModel) ? (vis && useG) : (vis && !useG && (!m || m === am)); }); }
+        function setDroneParts(vis) { const am = (DRONE.model === 'neo' || DRONE.model === 'quad') ? DRONE.model : 'fpv', useG = GLB.active && am === 'neo'; droneGroup.children.forEach(p => { const m = p.userData && p.userData.model; p.visible = (p === droneModel) ? (vis && useG) : (vis && !useG && (!m || m === am)); }); }
         function useGLB(buf) {
             return new Promise(res => {
                 if (!THREE.GLTFLoader) { toast('GLB loader missing (needs internet once)'); return res(false); }
@@ -1990,10 +2106,16 @@
         { const sv = document.querySelector('#loading svg.ldrone'); if (sv) wb.insertBefore(sv.cloneNode(true), wb.firstChild); }
         const $w = id => wb.querySelector('#' + id), WD = d => Object.assign({}, DRONE_BASE, d);
         let fleet = store.get('liftoff_fleet3', null), fIdx = 0, fAct = store.get('liftoff_fleetsel', 0), wbView = 'fleet', editing = false;
-        if (!Array.isArray(fleet) || !fleet.length) { fleet = [{ name: 'DJI FPV', d: WD({ preset: 'DJI FPV' }) }, { name: 'DJI Neo 2', d: WD(Object.assign({}, NEO_COL, { preset: 'DJI Neo 2' })) }]; fAct = 0; }
+        if (!Array.isArray(fleet) || !fleet.length) { fleet = [{ name: 'DJI FPV', d: WD({ preset: 'DJI FPV' }) }, { name: 'DJI Neo 2', d: WD(Object.assign({}, NEO_COL, { preset: 'DJI Neo 2' })) }, { name: 'Freestyle 5"', d: WD(Object.assign({}, DRONE_PRESETS['Freestyle'], { preset: 'Freestyle' })) }]; fAct = 0; }
         fIdx = fAct = Math.min(fAct, fleet.length - 1);
         const saveFleet = () => { store.set('liftoff_fleet3', fleet); store.set('liftoff_fleetsel', fAct); };
         function droneSVG(st) {
+            if (st.model === 'quad') {   // non-DJI 5" quad: X frame, flat arms, battery, camera, tri-blade props
+                const pr = (cx, cy) => { let o = ''; for (let k = 0; k < 3; k++) o += '<g transform="translate(' + cx + ' ' + cy + ') rotate(' + (k * 120 + 20) + ')"><path d="M4 -3 Q18 -8 36 -2.2 Q39 0 36 2.2 Q18 4.5 4 3.5Z" fill="#2b2d31"/><path d="M28 -4.2 Q33 -3.4 36 -2.2 Q39 0 36 2.2 Q32 3.5 28 3.4Z" fill="' + st.tip + '"/></g>'; return o + '<circle cx="' + cx + '" cy="' + cy + '" r="8" fill="' + st.metal + '"/><circle cx="' + cx + '" cy="' + cy + '" r="4.5" fill="#0b0c0e"/>'; };
+                return '<svg viewBox="0 0 300 200"><g transform="translate(150 102) rotate(-6)"><path d="M-14 -14L-72 -52M14 -14L72 -52M-14 14L-72 52M14 14L72 52" stroke="' + st.arms + '" stroke-width="12" stroke-linecap="round"/>'
+                    + pr(-72, -52) + pr(72, -52) + pr(-72, 52) + pr(72, 52)
+                    + '<rect x="-22" y="-44" width="44" height="88" rx="14" fill="' + st.arms + '"/><rect x="-15" y="-30" width="30" height="62" rx="5" fill="' + st.top + '"/><rect x="-17" y="-12" width="34" height="5" fill="' + st.body + '"/><rect x="-17" y="10" width="34" height="5" fill="' + st.body + '"/>'
+                    + '<rect x="-14" y="-58" width="28" height="18" rx="4" fill="#0b0c0e"/><circle cx="0" cy="-58" r="7" fill="' + st.metal + '"/><circle cx="0" cy="-58" r="4" fill="#0a1424"/><path d="M-9 46L-16 66M9 46L16 66" stroke="#111" stroke-width="3" stroke-linecap="round"/></g></svg>'; }
             if (st.model === 'neo') {   // DJI Neo 2: oval guards with spokes, yellow antenna protectors at the back
                 let o = '<svg viewBox="0 0 300 200"><g transform="translate(150 100) rotate(-8)">';
                 [[-78, -38], [78, -38], [-78, 42], [78, 42]].forEach(p => { o += '<ellipse cx="' + p[0] + '" cy="' + p[1] + '" rx="46" ry="37" fill="rgba(0,0,0,.14)" stroke="' + st.arms + '" stroke-width="7"/>';
@@ -2009,12 +2131,12 @@
                 + '<rect x="-14" y="-62" width="28" height="22" rx="6" fill="#0c0d0f"/><circle cx="0" cy="-62" r="9" fill="#9aa0a8"/><circle cx="0" cy="-62" r="5.5" fill="#0a1424"/>'
                 + '<circle cx="-84" cy="58" r="3.5" fill="' + st.led + '"/><circle cx="84" cy="58" r="3.5" fill="' + st.led + '"/></g></svg>'; }
         function renderWB() { const f = fleet[fIdx];
-            $w('wb-in').value = f.name; $w('wb-act').textContent = fIdx === fAct ? 'ACTIVE DRONE' : ''; $w('wb-t1').className = 'ms-seg' + (wbView === 'fleet' ? '' : ' grey'); $w('wb-t2').className = 'ms-seg' + (wbView === 'bp' ? '' : ' grey');
+            $w('wb-in').value = f.name; $w('wb-act').textContent = (fIdx === fAct ? 'ACTIVE DRONE  \u00b7  ' : '') + (isDJIst(WD(f.d)) ? 'DJI' : 'NON-DJI'); $w('wb-t1').className = 'ms-seg' + (wbView === 'fleet' ? '' : ' grey'); $w('wb-t2').className = 'ms-seg' + (wbView === 'bp' ? '' : ' grey');
             $w('wb-stage').style.display = wbView === 'fleet' ? 'block' : 'none'; $w('wb-name').style.display = wbView === 'fleet' ? 'block' : 'none'; $w('wb-btns').style.display = wbView === 'fleet' ? 'flex' : 'none'; $w('wb-bp').style.display = wbView === 'bp' ? 'flex' : 'none';
             const st = $w('wb-stage'); st.innerHTML = '<div id="wb-plus" title="New drone">+</div>';
             [['l', fIdx - 1], ['c', fIdx], ['r', fIdx + 1]].forEach(([c, i]) => { if (!fleet[i]) return; const d = el('div', 'wb-d ' + c, droneSVG(WD(fleet[i].d))); if (c !== 'c') d.onclick = () => { fIdx = i; renderWB(); }; st.appendChild(d); });
             st.querySelector('#wb-plus').onclick = () => { fleet.push({ name: 'New Drone', d: WD({}) }); fIdx = fleet.length - 1; saveFleet(); renderWB(); };
-            const bp = $w('wb-bp'); bp.innerHTML = ''; Object.keys(DRONE_PRESETS).forEach(k => { const c = el('div', 'bp', '<div style="width:100%">' + droneSVG(WD(DRONE_PRESETS[k])) + '</div><b>' + k + '</b><i>ADD TO FLEET</i>'); c.onclick = () => { fleet.push({ name: k, d: WD(Object.assign({}, DRONE_PRESETS[k], { preset: k })) }); fIdx = fleet.length - 1; wbView = 'fleet'; saveFleet(); renderWB(); toast(k + ' added to fleet'); }; bp.appendChild(c); }); }
+            const bp = $w('wb-bp'); bp.innerHTML = ''; Object.keys(DRONE_PRESETS).forEach(k => { const c = el('div', 'bp', '<div style="width:100%">' + droneSVG(WD(DRONE_PRESETS[k])) + '</div><b>' + k + '</b><em class="bp-tag ' + (isDJIst(WD(DRONE_PRESETS[k])) ? 'dj' : 'nd') + '">' + (isDJIst(WD(DRONE_PRESETS[k])) ? 'DJI' : 'NON-DJI') + '</em><i>ADD TO FLEET</i>'); c.onclick = () => { fleet.push({ name: k, d: WD(Object.assign({}, DRONE_PRESETS[k], { preset: k })) }); fIdx = fleet.length - 1; wbView = 'fleet'; saveFleet(); renderWB(); toast(k + ' added to fleet'); }; bp.appendChild(c); }); }
         const syncFleet = () => { if (editing) { fleet[fAct].d = WD(DRONE); fleet[fAct].d.preset = DRONE.preset; saveFleet(); } };
         function selectDrone() { fAct = fIdx; Object.assign(DRONE, DRONE_BASE, fleet[fIdx].d); applyMyStyle(); saveFleet(); renderWB(); toast(fleet[fIdx].name + ' selected'); }
         function closeEdit() { syncFleet(); editing = false; $w('wb-edit').style.display = 'none'; renderWB(); }
@@ -2040,6 +2162,129 @@
         wb.addEventListener('click', e => { if (editing && !e.target.closest('#wb-edit, #wb-btns, #wb-bar, #wb-gear, #wb-name, .wb-d, #wb-plus')) closeEdit(); });
         setInterval(() => { if (editing && wb.style.display === 'block') { syncFleet(); const c = wb.querySelector('.wb-d.c'); if (c) c.innerHTML = droneSVG(WD(fleet[fAct].d)); } }, 500);
 
+
+        // ================= NON-DJI OSD, battery / stunts / camera-noise helpers =================
+        const bfEl = document.createElement('div'); bfEl.id = 'bf-osd';
+        bfEl.innerHTML = '<canvas id="bf-hud"></canvas><div id="bf-mode">ACRO</div><div id="bf-time">00:00:00</div><div class="bf-stat" id="bf-alt"><span>ALT<small>m</small></span><b id="bf-alt-v">0</b></div><div class="bf-stat" id="bf-spd"><span>SPD<small id="bf-spd-u">km/h</small></span><b id="bf-spd-v">0</b></div><div id="bf-bat"></div>';
+        container.appendChild(bfEl);
+        const batWarn = el('div'); batWarn.id = 'bat-warn'; batWarn.textContent = 'LOW BATTERY'; container.appendChild(batWarn);
+        const stuntEl = el('div'); stuntEl.id = 'stunt-msg'; container.appendChild(stuntEl); let stuntT = 0;
+        const camNoiseEl = el('div'); camNoiseEl.id = 'cam-noise'; container.appendChild(camNoiseEl);
+        { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'), id = g.createImageData(128, 128); for (let i = 0; i < id.data.length; i += 4) { const v = Math.random() * 255; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; } g.putImageData(id, 0, 0); camNoiseEl.style.backgroundImage = 'url(' + c.toDataURL() + ')'; }
+        const osdBat = el('div'); osdBat.id = 'osd-bat'; osdBat.style.cssText = 'display:none;color:#f2f2f2;font-size:.95em;margin-top:.3em;text-shadow:0 1px 3px #000'; { const r = document.getElementById('fpv-osd-right'); if (r) r.appendChild(osdBat); }
+        const bfc = bfEl.querySelector('#bf-hud'), bfg = bfc.getContext('2d'), bfMode = bfEl.querySelector('#bf-mode'), bfTime = bfEl.querySelector('#bf-time'), bfAltV = bfEl.querySelector('#bf-alt-v'), bfSpdV = bfEl.querySelector('#bf-spd-v'), bfSpdU = bfEl.querySelector('#bf-spd-u'), bfBat = bfEl.querySelector('#bf-bat');
+        const _bfE = new THREE.Euler(), _bfF = new THREE.Vector3(); let bfFlyT = 0, bfLW = 0, bfLH = 0, bfWant = false, bfNoise = false, bfLow = false;
+        function stuntMsg(name) { ST.count++; stuntEl.innerHTML = '<small>STUNT</small>' + name + ' +100'; stuntEl.style.display = 'block'; stuntT = performance.now() + 1600; sfx('cp'); }
+        function stuntUpdate(dt) {
+            if (stuntT && performance.now() > stuntT) { stuntT = 0; stuntEl.style.display = 'none'; }
+            if (!SET.stunts || !gameStarted) { ST.q = null; return; }
+            const agl = drone.position.y - groundH(drone.position.x, drone.position.z) - 0.3;
+            if (agl < 0.5) { ST.pitch = ST.roll = 0; ST.q = (ST.q || new THREE.Quaternion()).copy(drone.rotation); return; }
+            if (ST.q) { _stDq.copy(ST.q).invert().multiply(drone.rotation); if (_stDq.w < 0) { _stDq.x *= -1; _stDq.y *= -1; _stDq.z *= -1; _stDq.w *= -1; }
+                const w = Math.min(1, _stDq.w), ang = 2 * Math.acos(w), sn = Math.sqrt(1 - w * w); if (sn > 1e-5) { ST.pitch += ang * _stDq.x / sn; ST.roll += ang * _stDq.z / sn; } }
+            ST.q = (ST.q || new THREE.Quaternion()).copy(drone.rotation);
+            const dec = Math.exp(-0.3 * dt); ST.pitch *= dec; ST.roll *= dec;
+            if (Math.abs(ST.pitch) > 5.6) { stuntMsg(ST.pitch > 0 ? 'BACKFLIP' : 'FRONTFLIP'); ST.pitch = 0; }
+            if (Math.abs(ST.roll) > 5.6) { stuntMsg('ROLL'); ST.roll = 0; }
+        }
+        function bfUpdate(dt) {
+            const bfStyle = SET.osdStyle === 'Betaflight' || (SET.osdStyle !== 'DJI' && DRONE.model === 'quad');
+            const want = gameStarted && SET.osd && cameraMode === 'FPV' && bfStyle && !PM_OPEN;
+            if (want !== bfWant) { bfWant = want; document.body.classList.toggle('bf-osd-on', want); }
+            const wn = gameStarted && SET.camNoise && cameraMode === 'FPV' && !PM_OPEN; if (wn !== bfNoise) { bfNoise = wn; camNoiseEl.style.display = wn ? 'block' : 'none'; }
+            const lowB = gameStarted && SET.battery && BAT.pct < 15 && !PM_OPEN; if (lowB !== bfLow) { bfLow = lowB; batWarn.style.display = lowB ? 'block' : 'none'; }
+            { const sb = gameStarted && SET.battery && !want; osdBat.style.display = sb ? 'block' : 'none'; if (sb) osdBat.textContent = 'BAT ' + Math.round(BAT.pct) + '%'; }
+            if (!want) return;
+            const W = innerWidth, H = innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            if (W !== bfLW || H !== bfLH) { bfLW = W; bfLH = H; bfc.width = Math.round(W * dpr); bfc.height = Math.round(H * dpr); bfg.setTransform(dpr, 0, 0, dpr, 0, 0); }
+            const g = bfg; g.clearRect(0, 0, W, H);
+            const e = _bfE.setFromQuaternion(drone.rotation, 'YXZ'), pitch = e.x, roll = e.z, cx = W / 2, cy = H / 2;
+            _bfF.set(0, 0, -1).applyQuaternion(drone.rotation); const hd = ((Math.atan2(_bfF.x, -_bfF.z) * 180 / Math.PI) + 360) % 360;
+            g.fillStyle = '#fff'; g.strokeStyle = '#fff'; g.shadowColor = '#000'; g.shadowBlur = 3; g.lineWidth = 2;
+            { const tw = W * 0.22, ty = H * 0.165, fs = Math.max(13, H * 0.034); g.font = 'bold ' + fs + 'px "Courier New",monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';   // compass tape: S ' W ' N ' E ' S
+                for (let a = 0; a < 360; a += 45) { const d = ((a - hd + 540) % 360) - 180, x = cx + d * tw / 360; if (a % 90 === 0) g.fillText(['N', 'E', 'S', 'W'][a / 90], x, ty); else g.fillRect(x - 1, ty - fs * 0.28, 2, fs * 0.56); } }
+            const lx = W * 0.335, rx = W * 0.655, y0 = H * 0.25, y1 = H * 0.746;
+            for (let i = 0; i <= 12; i++) { const y = y0 + (y1 - y0) * i / 12, big = i % 2 === 0, sz = big ? Math.max(4, H * 0.011) : Math.max(2, H * 0.005); g.fillRect(lx - sz / 2, y - sz / 2, sz, sz * (big ? 1.5 : 1)); g.fillRect(rx - sz / 2, y - sz / 2, sz, sz * (big ? 1.5 : 1)); }
+            g.fillRect(lx - 8, y0 - 1, 16, 2); g.fillRect(rx - 8, y0 - 1, 16, 2); g.fillRect(lx - 8, y1 - 1, 16, 2); g.fillRect(rx - 8, y1 - 1, 16, 2);
+            g.save(); g.beginPath(); g.rect(lx, y0 - 6, rx - lx, y1 - y0 + 12); g.clip(); g.translate(cx, cy); g.rotate(roll);   // dotted horizon + pitch ladder (rolls with the drone)
+            { const ppr = H / (camera.fov * Math.PI / 180), step = W * 0.0105;
+              for (const deg of [-20, -10, 0, 10, 20]) { const yy = (pitch - deg * Math.PI / 180) * ppr, gap = W * 0.04, len = deg === 0 ? W * 0.13 : W * 0.07;
+                  for (const sd of [-1, 1]) for (let d = gap; d <= gap + len; d += step) g.fillRect(sd * d - 1.5, yy - 1.5, 3, 3); } }
+            g.restore();
+            g.beginPath(); g.arc(cx, cy, H * 0.018, 0, 6.283); g.stroke(); g.fillRect(cx - H * 0.032, cy - 1, H * 0.012, 2); g.fillRect(cx + H * 0.02, cy - 1, H * 0.012, 2); g.fillRect(cx - 1, cy - H * 0.032, 2, H * 0.012);
+            if (SET.sticks) { const sb = H * 0.115, by = H - sb * 1.15, st = window.__stk || [0, 0, 0, 0];
+                [[cx - sb * 1.12, st[0], st[1], true], [cx + sb * 0.12, st[2], st[3], false]].forEach(a => { const bx = a[0]; g.fillStyle = 'rgba(25,25,25,.5)'; g.fillRect(bx, by, sb, sb); g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.setLineDash([6, 5]);
+                    g.beginPath(); g.moveTo(bx + sb / 2, by - 4); g.lineTo(bx + sb / 2, by + sb + 4); g.moveTo(bx - 4, by + sb / 2); g.lineTo(bx + sb + 4, by + sb / 2); g.stroke(); g.setLineDash([]);
+                    const px = bx + sb / 2 + Math.max(-1, Math.min(1, a[1])) * sb * 0.4, py = by + sb / 2 + Math.max(-1, Math.min(1, a[2])) * sb * 0.4; g.fillStyle = '#fff'; g.beginPath(); g.arc(px, py, sb * 0.055, 0, 6.283); a[3] ? g.stroke() : g.fill(); }); }
+            bfMode.textContent = activeMode === 3 ? 'ACRO' : activeMode === 2 ? 'HORIZON' : 'ANGLE';
+            bfFlyT = isArmed ? bfFlyT + dt : 0; const t = bfFlyT; bfTime.textContent = String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ':' + String(Math.floor((t % 1) * 100)).padStart(2, '0');
+            const agl = Math.max(0, drone.position.y - groundH(drone.position.x, drone.position.z) - 0.3), spd = drone.velocity.length(), u = SET.units;
+            bfAltV.textContent = Math.round(agl); bfSpdV.textContent = Math.round(u === 'mph' ? spd * 2.237 : u === 'm/s' ? spd : spd * 3.6); bfSpdU.textContent = u;
+            bfBat.textContent = 'BAT ' + (19.8 + 5.4 * BAT.pct / 100).toFixed(1) + 'V';
+        }
+
+        // ================= MULTIPLAYER HUD (join/leave feed + leaderboard) =================
+        const mpFeedEl = el('div'); mpFeedEl.id = 'mp-feed'; container.appendChild(mpFeedEl);
+        function mpFeed(msg) { const d = el('div', '', msg); mpFeedEl.appendChild(d); while (mpFeedEl.children.length > 4) mpFeedEl.firstChild.remove(); setTimeout(() => d.remove(), 6500); }
+        const mpBoardEl = el('div'); mpBoardEl.id = 'mp-board'; container.appendChild(mpBoardEl);
+        setInterval(() => { if (!MP.connected || !gameStarted || PM_OPEN) { mpBoardEl.style.display = 'none'; return; }
+            const mine = R.lapTimes && R.lapTimes.length ? Math.min.apply(null, R.lapTimes) : null, nm = x => x.toString().slice(0, 12);
+            mpBoardEl.innerHTML = nm(myName()) + ' - ' + (mine != null ? fmt(mine) : '--:--.--') + '<small>Personal best - ' + (mine != null ? fmt(mine) : '--:--.--') + '</small>'
+                + nm(MP.oppName) + ' - ' + (MP.opp.fin != null ? fmt(MP.opp.fin) : 'L' + MP.opp.lap + ' CP' + MP.opp.cp) + '<small>' + (MP.opp.fin != null ? 'Finished' : 'Racing') + '</small>'; mpBoardEl.style.display = 'block'; }, 400);
+
+        // ================= PAUSE MENU (Esc / pause button) =================
+        var PAUSED = false, PM_OPEN = false;
+        const pmEl = document.createElement('div'); pmEl.id = 'pm'; pmEl.innerHTML = '<div class="pm-card"><div id="pm-body"></div></div>'; document.body.appendChild(pmEl);
+        const pmBody = pmEl.querySelector('#pm-body'), BTN_START_TXT = document.getElementById('btn-start-game').innerText; let pmPage = 'main', pmT0 = 0; const pmSecs = { play: true };
+        { const pb = document.getElementById('btn-pause'); if (pb) { pb.classList.add('pm-fab'); document.body.appendChild(pb); } }
+        const GEARI = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.6v3M12 18.4v3M2.6 12h3M18.4 12h3M5.4 5.4l2.1 2.1M16.5 16.5l2.1 2.1M18.6 5.4l-2.1 2.1M7.5 16.5l-2.1 2.1"/><circle cx="12" cy="12" r="6.6"/></svg>';
+        const pmB = (txt, fn, cls) => { const b = el('button', 'pm-b' + (cls ? ' ' + cls : ''), txt); b.onclick = e => { e.stopPropagation(); fn(); }; return b; };
+        const pmHead = t => el('div', 'pm-h', GEARI + '<span>' + t + '</span>');
+        function pmOpt(label, cur, cb) { const d = el('div', 'pm-opt' + (cur ? ' on' : ''), '<i></i><span>' + label + '</span>'); d.onclick = () => { cur = !cur; d.classList.toggle('on', cur); cb(cur); }; return d; }
+        function pmSl(label, min, max, step, cur, unit, cb) { const d = el('div', 'pm-sl'), i = el('input'), v = el('span', 'v', cur + unit); d.appendChild(el('div', '', label)); d.appendChild(v); i.type = 'range'; i.min = min; i.max = max; i.step = step; i.value = cur; i.oninput = () => { v.textContent = i.value + unit; }; i.onchange = () => cb(parseFloat(i.value)); d.appendChild(i); return d; }
+        function pmSeg(opts, cur, cb) { const w = el('div', 'pm-seg'); opts.forEach(o => { const lab = Array.isArray(o) ? o[0] : o, val = Array.isArray(o) ? o[1] : o, b = el('button', val === cur ? 'on' : '', lab); b.onclick = () => { w.querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on'); cb(val); }; w.appendChild(b); }); return w; }
+        const REC = { mr: null, on: false, chunks: [] };
+        function recStop() { if (REC.mr && REC.on) { try { REC.mr.stop(); } catch (e) {} } REC.on = false; REC.mr = null; }
+        function recToggle() {
+            if (REC.on) { recStop(); pmRender('main'); return; }
+            try { const cv = renderer.domElement; if (!window.MediaRecorder || !cv.captureStream) { toast('Recording is not supported in this browser'); return; }
+                const mt = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4'].find(t => MediaRecorder.isTypeSupported(t)), mr = new MediaRecorder(cv.captureStream(30), mt ? { mimeType: mt, videoBitsPerSecond: 6e6 } : undefined);
+                REC.chunks = []; mr.ondataavailable = ev => { if (ev.data && ev.data.size) REC.chunks.push(ev.data); };
+                mr.onstop = () => { const blob = new Blob(REC.chunks, { type: mr.mimeType || 'video/webm' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'liftoff-recording-' + Date.now() + (blob.type.indexOf('mp4') >= 0 ? '.mp4' : '.webm'); document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); toast('Recording saved'); };
+                mr.start(1000); REC.mr = mr; REC.on = true; toast('Recording started - open Save recording again to stop and save'); } catch (e) { toast('Could not start recording'); }
+            pmRender('main'); }
+        const PM_BACK = { options: 'main', fc: 'main', drone: 'main', level: 'main', game: 'options', graphics: 'options', audio: 'options' };
+        function pmRender(page) {
+            pmPage = page; pmBody.innerHTML = ''; const B = pmBody, back = to => pmB('Back', () => pmRender(to || PM_BACK[page] || 'main'));
+            if (page === 'main') { B.append(pmHead('Pause menu'), pmB('Resume', pmClose, 'pri'), pmB('Reset', () => { resetDrone(); pmClose(); }), pmB(REC.on ? 'Stop and save recording' : 'Save recording', recToggle), el('div', 'pm-sp'),
+                pmB('Options', () => pmRender('options')), pmB('Flight Controller Settings', () => pmRender('fc')), pmB('Drone Selection', () => pmRender('drone')), pmB('Level Selection', () => pmRender('level')), el('div', 'pm-sp'), pmB('Quit', pmQuit)); }
+            else if (page === 'options') { B.append(pmHead('Options'), pmB('Game options', () => pmRender('game'), 'pri'), pmB('Graphics options', () => pmRender('graphics')), pmB('Audio options', () => pmRender('audio')), el('div', 'pm-sp'), back('main')); }
+            else if (page === 'graphics') { B.append(pmHead('Graphics'), el('div', 'pm-lbl', 'Quality preset'), pmSeg(Object.keys(PRESETS), SET.preset, v => { SET.preset = v; Object.assign(SET, { res: PRESETS[v].res, shadows: PRESETS[v].shadows, post: PRESETS[v].post }); applySettings(); pmRender('graphics'); }),
+                pmSl('Resolution scale', 40, 100, 5, SET.res, '%', v => { SET.res = v; applySettings(); }), pmOpt('Shadows', SET.shadows, v => { SET.shadows = v; applySettings(); }), pmOpt('Post-processing', SET.post, v => { SET.post = v; applySettings(); }),
+                pmSl('Field of view', 90, 150, 5, SET.fov, '\u00b0', v => { SET.fov = v; applySettings(); }), back('options')); }
+            else if (page === 'audio') { B.append(pmHead('Audio'), pmOpt('Sound', SET.sound, v => { SET.sound = v; applySettings(); sfx('ui'); }), pmSl('Volume', 0, 100, 5, SET.vol, '%', v => { SET.vol = v; applySettings(); sfx('ui'); }), back('options')); }
+            else if (page === 'fc') { B.append(pmHead('Flight controller'), el('div', 'pm-lbl', 'Flight mode'), pmSeg([['Normal', 1], ['Sport', 2], ['Manual', 3]], activeMode, v => { activeMode = v; }),
+                pmSl('Camera tilt', 0, 60, 5, SET.tilt, '\u00b0', v => { SET.tilt = v; applySettings(); }), pmSl('Control sensitivity', 50, 150, 5, DRONE.agility, '%', v => { DRONE.agility = v; applyMyStyle(); }), back('main')); }
+            else if (page === 'drone') { B.append(pmHead('Drone selection')); fleet.forEach((f, i) => { const dj = isDJIst(WD(f.d)); B.appendChild(pmB(f.name + (dj ? '  \u00b7  DJI' : '  \u00b7  NON-DJI'), () => { fIdx = i; selectDrone(); pmRender('drone'); }, i === fAct ? 'pri' : '')); }); B.append(el('div', 'pm-sp'), back('main')); }
+            else if (page === 'level') { B.append(pmHead('Level selection')); MAPS.forEach((m, i) => { B.appendChild(pmB((m.icon || '') + '  ' + m.name, () => { if (i !== SET.map) { loadMap(i); if (MP.connected) mpSend({ t: 'map', m: i }); } store.set('liftoff_settings2', SET); pmClose(); }, i === SET.map ? 'pri' : '')); }); B.append(el('div', 'pm-sp'), back('main')); }
+            else if (page === 'game') { B.appendChild(pmHead('Game'));
+                const sec = (key, title, build) => { const h = el('div', 'pm-sec' + (pmSecs[key] ? ' open' : ''), title); h.onclick = () => { pmSecs[key] = !pmSecs[key]; pmRender('game'); }; B.appendChild(h); if (pmSecs[key]) build(); };
+                sec('gen', 'General', () => { B.append(pmOpt('Sound', SET.sound, v => { SET.sound = v; applySettings(); }), pmSl('Volume', 0, 100, 5, SET.vol, '%', v => { SET.vol = v; applySettings(); }), pmOpt('Ask for map before flying', SET.askMap, v => { SET.askMap = v; applySettings(); })); });
+                sec('play', 'Gameplay', () => { B.append(pmOpt('Enable god mode', SET.god, v => { SET.god = v; applySettings(); }), pmOpt('Show propellers in first-person view', SET.fpvProps, v => { SET.fpvProps = v; applySettings(); }), pmOpt('Start with camera noise', SET.camNoise, v => { SET.camNoise = v; applySettings(); }),
+                    pmOpt('Battery simulation', SET.battery, v => { SET.battery = v; BAT.pct = 100; applySettings(); }), pmOpt('Always detect stunts', SET.stunts, v => { SET.stunts = v; applySettings(); }), pmOpt('Enable propwash', SET.propwash, v => { SET.propwash = v; applySettings(); pmRender('game'); }));
+                    if (SET.propwash) B.appendChild(pmSl('Propwash intensity', 0, 100, 1, SET.pwInt, '%', v => { SET.pwInt = v; applySettings(); })); });
+                sec('race', 'Race', () => { B.append(pmSl('Laps', 1, 10, 1, R.laps, '', v => { R.laps = +v; }), pmSl('Gates per lap', 6, 30, 1, window.TBN, '', v => { window.TBN = +v; store.set('liftoff_tbn', +v); R.cps = []; while (raceG.children.length) raceG.remove(raceG.children[0]); })); });
+                sec('osd', 'On-screen display', () => { B.append(pmOpt('Show OSD', SET.osd, v => { SET.osd = v; applySettings(); }), pmOpt('Show RC sticks', SET.sticks, v => { SET.sticks = v; applySettings(); }), el('div', 'pm-lbl', 'OSD style (Auto: DJI drones = DJI, others = Betaflight)'),
+                    pmSeg(['Auto', 'DJI', 'Betaflight'], SET.osdStyle, v => { SET.osdStyle = v; applySettings(); }), el('div', 'pm-lbl', 'Speed unit (Betaflight OSD)'), pmSeg(['km/h', 'mph', 'm/s'], SET.units, v => { SET.units = v; applySettings(); })); });
+                sec('wind', 'Wind', () => { B.append(pmOpt('Enable wind', SET.windOn, v => { SET.windOn = v; applySettings(); }), pmSl('Wind speed', 0, 100, 5, SET.windSpd, '%', v => { SET.windSpd = v; applySettings(); }), pmSl('Wind direction', 0, 355, 5, SET.windDir, '\u00b0', v => { SET.windDir = v; applySettings(); }), pmSl('Gusts', 0, 100, 5, SET.windGust, '%', v => { SET.windGust = v; applySettings(); })); });
+                B.appendChild(el('div', 'pm-sp')); const r = el('div', 'pm-row2'); r.append(back('options'), pmB('Resume', pmClose)); B.appendChild(r); }
+            pmBody.scrollTop = 0; pmEl.querySelector('.pm-card').scrollTop = 0; }
+        function pmOpen() { if (!gameStarted || PM_OPEN) return; PM_OPEN = PAUSED = true; pmT0 = performance.now(); pmEl.classList.add('on'); document.body.classList.add('pm-open'); pmRender('main'); if (!isMobile && document.pointerLockElement) document.exitPointerLock(); }
+        function pmClose() { if (!PM_OPEN) return; PM_OPEN = PAUSED = false; pmEl.classList.remove('on'); document.body.classList.remove('pm-open'); const d = performance.now() - pmT0; if (R.active) { R.t0 += d; R.lapT0 += d; } if (!isMobile) container.requestPointerLock(); }
+        function pmQuit() { PM_OPEN = PAUSED = false; pmEl.classList.remove('on'); document.body.classList.remove('pm-open', 'flying', 'bf-osd-on'); window._flying = false; endRace(); if (isArmed) toggleMotors(); recStop(); resetDrone(); gameStarted = false; home.look = false; inst.style.display = 'flex'; inst.style.opacity = '1'; document.getElementById('btn-start-game').innerText = BTN_START_TXT; }
+        window.addEventListener('keydown', e => { if (e.key === 'Escape' && PM_OPEN) { e.preventDefault(); if (pmPage === 'main') pmClose(); else pmRender(PM_BACK[pmPage] || 'main'); } });
+        pmEl.addEventListener('click', e => { if (e.target === pmEl && pmPage === 'main') pmClose(); });
+
         // ================= MULTIPLAYER (peer-to-peer via PeerJS room codes) =================
         const MP = { peer: null, conn: null, code: '', host: false, connected: false, remote: null, label: null, tp: new THREE.Vector3(), tq: new THREE.Quaternion(), armed: false,
                      acc: 0, got: false, opp: { lap: 0, cp: 0, fin: null }, oppName: 'FRIEND', myFin: null, btn: null, busy: false };
@@ -2056,6 +2301,7 @@
         }
         function mpBadge() { const b = document.getElementById('mp-badge'); b.style.display = MP.connected ? 'block' : 'none'; b.innerText = '● ONLINE · ' + MP.oppName; }
         function mpLeave(msg) {
+            if (MP.connected) mpFeed('Player ' + MP.oppName + ' has left the game.');
             if (MP.conn) { try { MP.conn.close(); } catch (e) {} } if (MP.peer) { try { MP.peer.destroy(); } catch (e) {} }
             MP.conn = MP.peer = null; MP.connected = false; MP.code = ''; MP.host = false; MP.busy = false; window.__spawnX = 0;
             if (MP.remote) { scene.remove(MP.remote); MP.remote = null; } mpBadge(); if (msg) toast(msg); if (panelEl.style.display === 'block' && MP.btn && panelEl.firstChild && panelEl.firstChild.innerText === 'MULTIPLAYER') renderMP();
@@ -2065,7 +2311,7 @@
                 if (MP.remote && !MP.got) { MP.got = true; MP.remote.position.copy(MP.tp); MP.remote.quaternion.copy(MP.tq); MP.remote.visible = true; }
                 if (d.fin != null && MP.opp.fin == null) { MP.opp.fin = d.fin; toast(MP.oppName + ' finished in ' + fmt(d.fin)); } }
             else if (d.t === 'style') { MP.oppStyle = d.st; if (MP.remote) applyDroneStyle(MP.remote, d.st); }
-            else if (d.t === 'hello') { if (d.st) { MP.oppStyle = d.st; if (MP.remote) applyDroneStyle(MP.remote, d.st); } if (d.m != null && !MP.host && d.m !== SET.map) loadMap(d.m); MP.oppName = (d.n || 'FRIEND').toString().slice(0, 12).toUpperCase(); if (MP.label) { MP.remote.remove(MP.label); MP.label = mkLabel(MP.oppName); MP.remote.add(MP.label); } mpBadge(); }
+            else if (d.t === 'hello') { mpFeed('Player ' + (d.n || 'FRIEND') + ' has joined the game.'); if (d.st) { MP.oppStyle = d.st; if (MP.remote) applyDroneStyle(MP.remote, d.st); } if (d.m != null && !MP.host && d.m !== SET.map) loadMap(d.m); MP.oppName = (d.n || 'FRIEND').toString().slice(0, 12).toUpperCase(); if (MP.label) { MP.remote.remove(MP.label); MP.label = mkLabel(MP.oppName); MP.remote.add(MP.label); } mpBadge(); }
             else if (d.t === 'map') { if (d.m !== SET.map) loadMap(d.m); toast('Map: ' + MAPS[SET.map].name); }
             else if (d.t === 'race') { if (d.m != null && d.m !== SET.map) loadMap(d.m); MP.opp.fin = null; MP.myFin = null; startRace(); toast('Race started by ' + MP.oppName); }
         }
@@ -2185,7 +2431,7 @@
         document.addEventListener('click', e => { if (e.target.closest && e.target.closest('button, .hs-btn, .hs-tab, .pbtn, .mc, .ms-seg, #wb-plus, #wb-gear, #wb-x') && !e.target.closest('#btn-motor-toggle, #btn-fullscreen-toggle')) sfx('ui'); }, true);
         function audioUpdate(dt) {
             if (!AUD.ctx) return;
-            const menuOpen = inst.style.display === 'flex';
+            const menuOpen = inst.style.display === 'flex' || PAUSED;
             if (isArmed !== AUD.prevArmed) { AUD.prevArmed = isArmed; if (performance.now() - (AUD.quietArm || 0) > 700) sfx(isArmed ? 'arm' : 'disarm'); }   // on-screen ARM button = just the UI tick
             if (AUD.prevVy < -5 && drone.position.y - groundH(drone.position.x, drone.position.z) < 0.9 && drone.velocity.y > AUD.prevVy + 3) sfx('hit', -AUD.prevVy); AUD.prevVy = drone.velocity.y;
             const thr = Math.min(1, Math.max(0, Math.abs(currentThrottle))), sp = drone.velocity.length(), on = isArmed && !menuOpen;
@@ -2244,7 +2490,7 @@
         function animate() {
             requestAnimationFrame(animate);
             adaptQuality();
-            let dt = clock.getDelta(); if (dt > 0.1) dt = 0.1;
+            let dt = clock.getDelta(); if (dt > 0.1) dt = 0.1; if (PAUSED) dt = 0.00001;   // pause menu freezes the simulation
             const modeCfg = MODES[activeMode];
 
             if (!gameStarted) {
@@ -2339,6 +2585,9 @@
                 }
             }
 
+            if (SET.propwash && isArmed && drone.position.y - groundH(drone.position.x, drone.position.z) > 0.8) {   // turbulence shake (scaled by intensity)
+                const kk = SET.pwInt / 100, pw = kk * (0.15 + Math.min(1, Math.abs(currentThrottle)) * 0.35 + Math.max(0, -drone.velocity.y) / 7 * 0.9), n1 = (Math.random() - 0.5) * 0.03 * pw, n2 = (Math.random() - 0.5) * 0.03 * pw;
+                drone.rotation.multiply(_pwQ.setFromEuler(_pwE.set(n1, 0, n2, 'YXZ'))).normalize(); }
             if (tumbleRotationVelocity.lengthSq() > 0.001) {
                 const tumbleQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(tumbleRotationVelocity.z * dt, tumbleRotationVelocity.y * dt, tumbleRotationVelocity.x * dt, 'YXZ'));
                 drone.rotation.multiply(tumbleQuaternion).normalize();
@@ -2347,10 +2596,13 @@
             }
 
             const localUp = new THREE.Vector3(0, 1, 0).applyQuaternion(drone.rotation);
-            const accel = new THREE.Vector3().addVectors(localUp.multiplyScalar(currentThrottle * modeCfg.maxThrust * (DRONE.power / 100)), new THREE.Vector3(0, -GRAVITY, 0));
+            const batK = (SET.battery && BAT.pct < 12) ? Math.max(0, BAT.pct / 12) : 1;   // empty battery = no thrust
+            const accel = new THREE.Vector3().addVectors(localUp.multiplyScalar(currentThrottle * modeCfg.maxThrust * (DRONE.power / 100) * batK), new THREE.Vector3(0, -GRAVITY, 0));
             drone.velocity.addScaledVector(drone.velocity, -modeCfg.drag * (DRONE.drag / 100));
             drone.velocity.addScaledVector(accel, dt);
+            if (SET.windOn) { const aglW = drone.position.y - groundH(drone.position.x, drone.position.z) - 0.3; if (aglW > 0.3) { const tw = performance.now() / 1000, gust = 1 + (SET.windGust / 100) * (0.6 * Math.sin(tw * 0.9) + 0.4 * Math.sin(tw * 2.7 + 1.3)), A = 3.5 * (SET.windSpd / 100) * Math.max(0.2, gust), ang = SET.windDir * Math.PI / 180; drone.velocity.x += Math.sin(ang) * A * dt; drone.velocity.z -= Math.cos(ang) * A * dt; } }
             drone.position.addScaledVector(drone.velocity, dt);
+            if (SET.battery && isArmed) BAT.pct = Math.max(0, BAT.pct - dt * (0.07 + Math.min(1, Math.abs(currentThrottle)) * 0.24));
 
             const gyT = groundH(drone.position.x, drone.position.z) + 0.3;
             if (drone.position.y <= gyT) {
@@ -2363,6 +2615,7 @@
             handleCollisions();
             droneGroup.position.copy(drone.position);
             droneGroup.quaternion.copy(drone.rotation);
+            stuntUpdate(dt);
             gimbalRoll.rotation.z += (THREE.MathUtils.clamp(_gEul.setFromQuaternion(drone.rotation, 'YXZ').z, -0.8, 0.8) - gimbalRoll.rotation.z) * Math.min(1, dt * 12);
 
             if (drone.position.y - groundH(drone.position.x, drone.position.z) <= 1.0 && drone.velocity.length() > 2.0) {
@@ -2405,10 +2658,10 @@
                 camRot.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), CAMERA_UPTILT));
                 camera.quaternion.copy(camRot);
                 propMeshes.forEach(prop => {
-                    prop.position.x = prop.userData.baseX + Math.sign(prop.userData.baseX) * 1.2;
+                    prop.position.x = SET.fpvProps ? prop.userData.baseX : prop.userData.baseX + Math.sign(prop.userData.baseX) * 1.2;
                 });
                 droneGroup.visible = true;
-                setDroneParts(false);
+                setDroneParts(false); if (SET.fpvProps) propMeshes.forEach(prop => { prop.visible = true; });   // option: show propellers in first-person view
             } else {
                 droneGroup.visible = true;
                 propMeshes.forEach(prop => { prop.position.x = prop.userData.baseX; });
@@ -2475,8 +2728,9 @@
 
             stickLeft.style.transform = `translate(calc(-50% + ${leftX}px), calc(-50% + ${leftY}px))`;
             stickRight.style.transform = `translate(calc(-50% + ${rightX}px), calc(-50% + ${rightY}px))`;
+            window.__stk = [leftX / maxPixelOffset, leftY / maxPixelOffset, rightX / maxPixelOffset, rightY / maxPixelOffset];
 
-            raceUpdate(dt); tutUpdate(); mpUpdate(dt); audioUpdate(dt);
+            raceUpdate(dt); tutUpdate(); mpUpdate(dt); audioUpdate(dt); bfUpdate(dt);
             renderScene();
         }
 
