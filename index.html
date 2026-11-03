@@ -215,7 +215,7 @@
         /* ===== NON-DJI OSD (Betaflight / Liftoff style) ===== */
         #bf-osd { display: none; position: absolute; inset: 0; pointer-events: none; z-index: 6; font-family: "Courier New",monospace; font-weight: 700; color: #fff; text-shadow: 0 0 3px #000, 0 0 6px #000; }
         body.bf-osd-on #bf-osd { display: block; }
-        body.bf-osd-on #fpv-osd-left, body.bf-osd-on #fpv-osd-right, body.bf-osd-on #fpv-osd-icons, body.bf-osd-on .stick-box-wrapper { display: none !important; }
+        body.bf-osd-on #fpv-osd-left, body.bf-osd-on #fpv-osd-right, body.bf-osd-on #fpv-osd-icons { display: none !important; }
         #bf-hud { position: absolute; inset: 0; width: 100%; height: 100%; }
         #bf-mode { position: absolute; left: 2.6vw; top: 3.4vh; border: 2px solid #fff; border-radius: 9px; padding: .05em .55em; font-size: clamp(14px,3.2vh,28px); letter-spacing: .05em; }
         #bf-time { position: absolute; left: 50%; top: 3.2vh; transform: translateX(-50%); font-size: clamp(14px,3.2vh,28px); letter-spacing: .08em; }
@@ -225,6 +225,14 @@
         #bat-warn { display: none; position: absolute; left: 50%; top: 62%; transform: translateX(-50%); z-index: 8; color: #fff; font: 700 clamp(16px,4vh,34px) "Courier New",monospace; text-shadow: 0 0 4px #000; animation: bfblink .7s steps(2) infinite; } @keyframes bfblink { 50% { opacity: 0; } }
         #stunt-msg { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); z-index: 12; display: none; color: #fff; font-style: italic; font-weight: 900; font-size: clamp(24px,5vw,70px); text-shadow: 0 3px 12px rgba(0,0,0,.6); text-align: center; pointer-events: none; } #stunt-msg small { display: block; font-size: .3em; letter-spacing: .2em; color: #ffd23f; }
         #cam-noise { display: none; position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: .14; mix-blend-mode: overlay; animation: camn .15s steps(1) infinite; } @keyframes camn { 0% { background-position: 0 0; } 25% { background-position: -37px 21px; } 50% { background-position: 19px -43px; } 75% { background-position: -52px -17px; } }
+        /* ===== PERFORMANCE OVERLAY (top centre) ===== */
+        #perf { display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 9999; width: min(97vw, 1180px); background: rgba(30,30,30,.86); border-radius: 0 0 8px 8px; box-shadow: 0 2px 10px rgba(0,0,0,.35); font-family: "Segoe UI",Arial,sans-serif; color: #fff; pointer-events: none; }
+        body.perf-on #perf { display: flex; }   /* shown everywhere: intro, loading, home, menus, in-game */
+        #perf .pt { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: clamp(4px,1vh,10px) clamp(6px,1.2vw,14px); border-right: 1px solid rgba(255,255,255,.08); min-width: 0; } #perf .pt:last-child { border-right: 0; }
+        #perf .pl { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; } #perf .pl b { font-size: clamp(9px,2vh,16px); font-weight: 700; letter-spacing: .01em; } #perf .pl span { font-size: clamp(8px,1.7vh,14px); color: #d4d4d4; white-space: nowrap; }
+        #perf canvas { width: clamp(30px,4.6vw,66px); height: clamp(14px,3.4vh,30px); flex: 0 0 auto; }
+        @media (max-width: 760px) { #perf canvas { display: none; } #perf .pt { padding: 4px 5px; } }
+        body.perf-on #bf-time { top: 9vh; } body.perf-on #race-hud { top: 9vh; } body.perf-on #mp-badge { top: 14vh; }
         /* ===== MULTIPLAYER HUD ===== */
         #mp-feed { position: absolute; left: 1.2vw; bottom: 16vh; z-index: 12; font-size: clamp(9px,1.5vh,14px); color: #f2a85a; line-height: 1.35; pointer-events: none; text-shadow: 0 1px 2px #000; }
         #mp-board { display: none; position: absolute; right: 1.4vw; bottom: 3vh; z-index: 12; text-align: right; color: #fff; font-size: clamp(10px,1.8vh,16px); line-height: 1.25; pointer-events: none; text-shadow: 0 1px 3px #000; } #mp-board small { display: block; font-size: .72em; color: #cfd3d8; margin-bottom: .35em; }
@@ -1781,7 +1789,7 @@
 
         // ================= MENU FEATURES: options, tools, race, tutorial =================
         const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
-        const SET = Object.assign({ preset: 'High', res: 100, shadows: true, post: true, fov: 130, tilt: 30, osd: true, sticks: true, tod: 'day', sound: true, vol: 70, map: 0, askMap: true, god: false, fpvProps: false, camNoise: false, battery: false, stunts: false, propwash: false, pwInt: 42, windOn: false, windSpd: 30, windDir: 90, windGust: 40, osdStyle: 'Auto', units: 'km/h' }, store.get('liftoff_settings2', {}));
+        const SET = Object.assign({ preset: 'High', res: 100, shadows: true, post: true, fov: 130, tilt: 30, osd: true, sticks: true, tod: 'day', sound: true, vol: 70, map: 0, askMap: true, god: false, fpvProps: false, camNoise: false, battery: false, stunts: false, propwash: false, pwInt: 42, windOn: false, windSpd: 30, windDir: 90, windGust: 40, osdStyle: 'Auto', units: 'km/h', perf: true }, store.get('liftoff_settings2', {}));
         const PRESETS = { Low: { res: 60, shadows: false, post: false, cap: 1 }, Medium: { res: 80, shadows: true, post: false, cap: 1.25 }, High: { res: 100, shadows: true, post: true, cap: 1.75 }, Ultra: { res: 100, shadows: true, post: true, cap: 2 } };
         const TOD = {
             sunset: { sky: ['#5f93cf', '#9dbbd9', '#e9d3b0', '#f3b974', '#8a9a6a'], fog: 0xd9cdbd, fd: 0.0011, sun: 0xffd9a6, si: 0.85, off: [120, 80, -90], hemi: 0.62 },
@@ -1837,6 +1845,7 @@
                 rng(b, 'Camera tilt', 0, 60, 5, SET.tilt, '°', v => { SET.tilt = v; applySettings(); });
                 tog(b, 'Show OSD', SET.osd, v => { SET.osd = v; applySettings(); });
                 tog(b, 'Show RC sticks', SET.sticks, v => { SET.sticks = v; applySettings(); });
+                tog(b, 'Performance stats (F3)', SET.perf, v => { SET.perf = v; applySettings(); });
                 tog(b, 'Ask for map before flying', SET.askMap, v => { SET.askMap = v; applySettings(); });
                 tog(b, 'Sound', SET.sound, v => { SET.sound = v; applySettings(); sfx('ui'); });
                 rng(b, 'Volume', 0, 100, 5, SET.vol, '%', v => { SET.vol = v; applySettings(); sfx('ui'); });
@@ -2212,10 +2221,6 @@
                   for (const sd of [-1, 1]) for (let d = gap; d <= gap + len; d += step) g.fillRect(sd * d - 1.5, yy - 1.5, 3, 3); } }
             g.restore();
             g.beginPath(); g.arc(cx, cy, H * 0.018, 0, 6.283); g.stroke(); g.fillRect(cx - H * 0.032, cy - 1, H * 0.012, 2); g.fillRect(cx + H * 0.02, cy - 1, H * 0.012, 2); g.fillRect(cx - 1, cy - H * 0.032, 2, H * 0.012);
-            if (SET.sticks) { const sb = H * 0.115, by = H - sb * 1.15, st = window.__stk || [0, 0, 0, 0];
-                [[cx - sb * 1.12, st[0], st[1], true], [cx + sb * 0.12, st[2], st[3], false]].forEach(a => { const bx = a[0]; g.fillStyle = 'rgba(25,25,25,.5)'; g.fillRect(bx, by, sb, sb); g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.setLineDash([6, 5]);
-                    g.beginPath(); g.moveTo(bx + sb / 2, by - 4); g.lineTo(bx + sb / 2, by + sb + 4); g.moveTo(bx - 4, by + sb / 2); g.lineTo(bx + sb + 4, by + sb / 2); g.stroke(); g.setLineDash([]);
-                    const px = bx + sb / 2 + Math.max(-1, Math.min(1, a[1])) * sb * 0.4, py = by + sb / 2 + Math.max(-1, Math.min(1, a[2])) * sb * 0.4; g.fillStyle = '#fff'; g.beginPath(); g.arc(px, py, sb * 0.055, 0, 6.283); a[3] ? g.stroke() : g.fill(); }); }
             bfMode.textContent = activeMode === 3 ? 'ACRO' : activeMode === 2 ? 'HORIZON' : 'ANGLE';
             bfFlyT = isArmed ? bfFlyT + dt : 0; const t = bfFlyT; bfTime.textContent = String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(Math.floor(t % 60)).padStart(2, '0') + ':' + String(Math.floor((t % 1) * 100)).padStart(2, '0');
             const agl = Math.max(0, drone.position.y - groundH(drone.position.x, drone.position.z) - 0.3), spd = drone.velocity.length(), u = SET.units;
@@ -2223,6 +2228,38 @@
             bfBat.textContent = 'BAT ' + (19.8 + 5.4 * BAT.pct / 100).toFixed(1) + 'V';
         }
 
+
+        // ================= PERFORMANCE STATS (top centre, works on intro / home / menus / in-game) =================
+        renderer.info.autoReset = false;
+        const PT = [['FPS', 'fps'], ['Mem', 'mem'], ['CPU', 'cpu'], ['GPU', 'gpu'], ['Draws', 'dr'], ['Tris', 'tr'], ['Sent', 'sent'], ['Recv', 'recv'], ['NetworkPing', 'ping']];
+        const PMAX = { fps: 90, mem: 1500, cpu: 33, gpu: 33, dr: 400, tr: 3e6, sent: 30, recv: 200, ping: 300 }, PBAD = { fps: 45, mem: 1e9, cpu: 20, gpu: 20, dr: 1e9, tr: 1e12, sent: 1e9, recv: 1e9, ping: 150 };
+        const perfEl = document.createElement('div'); perfEl.id = 'perf';
+        perfEl.innerHTML = PT.map(t => '<div class="pt" id="pt-' + t[1] + '"><div class="pl"><b>' + t[0] + '</b><span id="pv-' + t[1] + '">-</span></div><canvas id="pc-' + t[1] + '" width="70" height="30"></canvas></div>').join('');
+        document.body.appendChild(perfEl);
+        const PERF = { frames: 0, last: performance.now(), cpuSum: 0, cpuN: 0, gpuMs: 0, sent: 0, recv: 0, netPing: 0, hist: {}, gl: null, tq: null, qPend: null, sampleGpu: false }; PT.forEach(t => { PERF.hist[t[1]] = []; });
+        (function perfLoop() { PERF.frames++; requestAnimationFrame(perfLoop); })();   // real display frame rate: own loop, so it also runs when the game loop is idle (intro, home)
+        try { PERF.gl = renderer.getContext(); PERF.tq = PERF.gl.getExtension('EXT_disjoint_timer_query_webgl2'); } catch (e) {}
+        try { new PerformanceObserver(l => l.getEntries().forEach(e => { PERF.recv += e.transferSize || e.encodedBodySize || 0; })).observe({ type: 'resource' }); } catch (e) {}   // downloaded bytes
+        const PING_URLS = ['https://www.gstatic.com/generate_204', 'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/package.json'];
+        function netPing(i) { i = i || 0; if (i >= PING_URLS.length || !navigator.onLine) { if (i >= PING_URLS.length || !navigator.onLine) PERF.netPing = 0; return; } const t = performance.now(); fetch(PING_URLS[i] + '?_=' + Date.now(), { mode: 'no-cors', cache: 'no-store' }).then(() => { PERF.netPing = Math.max(1, Math.round(performance.now() - t)); }).catch(() => netPing(i + 1)); }
+        netPing(0); setInterval(() => netPing(0), 2500);
+        function perfDraw(id, arr) { const c = document.getElementById('pc-' + id), g = c.getContext('2d'), max = PMAX[id], bad = PBAD[id], low = id === 'fps'; g.clearRect(0, 0, 70, 30); const w = 70 / 30; g.fillStyle = '#8fd13f'; g.fillRect(0, 28, 70, 2);
+            arr.forEach((v, i) => { const h = Math.max(1.5, Math.min(1, v / max) * 28); g.fillStyle = (low ? v < bad : v > bad) ? '#d9622b' : (id === 'mem' ? '#c8d23a' : '#8fd13f'); g.fillRect(i * w, 30 - h, w - 0.6, h); }); }
+        setInterval(() => {
+            const on = !!SET.perf; document.body.classList.toggle('perf-on', on); PERF.sampleGpu = on; if (!on) return;
+            const now = performance.now(), dtS = Math.max(0.001, (now - PERF.last) / 1000), fps = PERF.frames / dtS, cpu = PERF.cpuN ? PERF.cpuSum / PERF.cpuN : 0, sent = PERF.sent / 1024 / dtS, recv = PERF.recv / 1024 / dtS;
+            PERF.frames = 0; PERF.cpuSum = 0; PERF.cpuN = 0; PERF.sent = 0; PERF.recv = 0; PERF.last = now;
+            const memReal = !!performance.memory, mem = memReal ? performance.memory.usedJSHeapSize / 1048576 : 0;   // real JS heap only (Chrome-based browsers)
+            const mp = MP && MP.connected && MP.ping ? MP.ping : PERF.netPing;
+            const inf = renderer.info.render, V = { fps: fps, mem: mem, cpu: cpu, gpu: PERF.gpuMs, dr: inf.calls, tr: inf.triangles, sent: sent, recv: recv, ping: mp };
+            PT.forEach(t => { const h = PERF.hist[t[1]]; h.push(V[t[1]]); if (h.length > 30) h.shift(); });
+            const set = (id, txt) => { document.getElementById('pv-' + id).textContent = txt; };
+            set('fps', Math.round(fps)); set('mem', mem.toFixed(2) + ' MB'); set('cpu', cpu.toFixed(2) + ' ms'); set('gpu', PERF.gpuMs.toFixed(2) + ' ms'); set('dr', inf.calls); set('tr', inf.triangles >= 1e6 ? (inf.triangles / 1e6).toFixed(2) + ' M' : inf.triangles >= 1e3 ? (inf.triangles / 1e3).toFixed(1) + ' K' : inf.triangles); set('sent', sent.toFixed(2) + ' KB/s'); set('recv', recv.toFixed(2) + ' KB/s'); set('ping', mp ? mp + ' ms' : '--');
+            const AV = { mem: memReal, gpu: !!PERF.tq && PERF.gpuMs > 0 };   // Mem / GPU only when the browser can measure them for real; NetworkPing is always shown
+            PT.forEach(t => { const ok = AV[t[1]] !== false; document.getElementById('pt-' + t[1]).style.display = ok ? '' : 'none'; if (ok) perfDraw(t[1], PERF.hist[t[1]]); });
+            if (MP && MP.connected && MP.conn && MP.conn.open) mpSend({ t: 'ping', ts: performance.now() });
+        }, 500);
+        window.addEventListener('keydown', e => { if (e.key === 'F3') { e.preventDefault(); SET.perf = !SET.perf; applySettings(); toast('Performance stats ' + (SET.perf ? 'on' : 'off')); } });
         // ================= MULTIPLAYER HUD (join/leave feed + leaderboard) =================
         const mpFeedEl = el('div'); mpFeedEl.id = 'mp-feed'; container.appendChild(mpFeedEl);
         function mpFeed(msg) { const d = el('div', '', msg); mpFeedEl.appendChild(d); while (mpFeedEl.children.length > 4) mpFeedEl.firstChild.remove(); setTimeout(() => d.remove(), 6500); }
@@ -2274,7 +2311,7 @@
                     pmOpt('Battery simulation', SET.battery, v => { SET.battery = v; BAT.pct = 100; applySettings(); }), pmOpt('Always detect stunts', SET.stunts, v => { SET.stunts = v; applySettings(); }), pmOpt('Enable propwash', SET.propwash, v => { SET.propwash = v; applySettings(); pmRender('game'); }));
                     if (SET.propwash) B.appendChild(pmSl('Propwash intensity', 0, 100, 1, SET.pwInt, '%', v => { SET.pwInt = v; applySettings(); })); });
                 sec('race', 'Race', () => { B.append(pmSl('Laps', 1, 10, 1, R.laps, '', v => { R.laps = +v; }), pmSl('Gates per lap', 6, 30, 1, window.TBN, '', v => { window.TBN = +v; store.set('liftoff_tbn', +v); R.cps = []; while (raceG.children.length) raceG.remove(raceG.children[0]); })); });
-                sec('osd', 'On-screen display', () => { B.append(pmOpt('Show OSD', SET.osd, v => { SET.osd = v; applySettings(); }), pmOpt('Show RC sticks', SET.sticks, v => { SET.sticks = v; applySettings(); }), el('div', 'pm-lbl', 'OSD style (Auto: DJI drones = DJI, others = Betaflight)'),
+                sec('osd', 'On-screen display', () => { B.append(pmOpt('Show OSD', SET.osd, v => { SET.osd = v; applySettings(); }), pmOpt('Show RC sticks', SET.sticks, v => { SET.sticks = v; applySettings(); }), pmOpt('Performance stats (F3)', SET.perf, v => { SET.perf = v; applySettings(); }), el('div', 'pm-lbl', 'OSD style (Auto: DJI drones = DJI, others = Betaflight)'),
                     pmSeg(['Auto', 'DJI', 'Betaflight'], SET.osdStyle, v => { SET.osdStyle = v; applySettings(); }), el('div', 'pm-lbl', 'Speed unit (Betaflight OSD)'), pmSeg(['km/h', 'mph', 'm/s'], SET.units, v => { SET.units = v; applySettings(); })); });
                 sec('wind', 'Wind', () => { B.append(pmOpt('Enable wind', SET.windOn, v => { SET.windOn = v; applySettings(); }), pmSl('Wind speed', 0, 100, 5, SET.windSpd, '%', v => { SET.windSpd = v; applySettings(); }), pmSl('Wind direction', 0, 355, 5, SET.windDir, '\u00b0', v => { SET.windDir = v; applySettings(); }), pmSl('Gusts', 0, 100, 5, SET.windGust, '%', v => { SET.windGust = v; applySettings(); })); });
                 B.appendChild(el('div', 'pm-sp')); const r = el('div', 'pm-row2'); r.append(back('options'), pmB('Resume', pmClose)); B.appendChild(r); }
@@ -2289,7 +2326,7 @@
         const MP = { peer: null, conn: null, code: '', host: false, connected: false, remote: null, label: null, tp: new THREE.Vector3(), tq: new THREE.Quaternion(), armed: false,
                      acc: 0, got: false, opp: { lap: 0, cp: 0, fin: null }, oppName: 'FRIEND', myFin: null, btn: null, busy: false };
         const myName = () => (store.get('liftoff_name', 'PILOT') || 'PILOT').toString().slice(0, 12).toUpperCase();
-        function mpSend(m) { if (MP.conn && MP.connected && MP.conn.open) { try { MP.conn.send(m); } catch (e) {} } }
+        function mpSend(m) { if (MP.conn && MP.connected && MP.conn.open) { try { MP.conn.send(m); PERF.sent += JSON.stringify(m).length; } catch (e) {} } }
         function mpHud() { return MP.connected ? ' &nbsp; | &nbsp; ' + MP.oppName + ' L' + MP.opp.lap + ' CP' + MP.opp.cp + (MP.opp.fin != null ? ' &#10003;' : '') : ''; }
         function mpPlace(tot) { MP.myFin = tot; if (!MP.connected) return ''; return (MP.opp.fin == null || tot < MP.opp.fin) ? ' &nbsp; 1ST PLACE' : ' &nbsp; 2ND PLACE'; }
         function mkLabel(txt) { const c = document.createElement('canvas'); c.width = 256; c.height = 64; const g = c.getContext('2d');
@@ -2307,6 +2344,8 @@
             if (MP.remote) { scene.remove(MP.remote); MP.remote = null; } mpBadge(); if (msg) toast(msg); if (panelEl.style.display === 'block' && MP.btn && panelEl.firstChild && panelEl.firstChild.innerText === 'MULTIPLAYER') renderMP();
         }
         function onData(d) {
+            PERF.recv += JSON.stringify(d).length;
+            if (d.t === 'ping') { mpSend({ t: 'pong', ts: d.ts }); return; } if (d.t === 'pong') { MP.ping = Math.round(performance.now() - d.ts); return; }
             if (d.t === 's') { MP.tp.set(d.p[0], d.p[1], d.p[2]); MP.tq.set(d.q[0], d.q[1], d.q[2], d.q[3]); MP.armed = d.a; MP.opp.lap = d.lap; MP.opp.cp = d.cp;
                 if (MP.remote && !MP.got) { MP.got = true; MP.remote.position.copy(MP.tp); MP.remote.quaternion.copy(MP.tq); MP.remote.visible = true; }
                 if (d.fin != null && MP.opp.fin == null) { MP.opp.fin = d.fin; toast(MP.oppName + ' finished in ' + fmt(d.fin)); } }
@@ -2734,6 +2773,14 @@
             renderScene();
         }
 
+        { const gl = PERF.gl, tq = PERF.tq, orig = animate;   // wrap the game loop: CPU ms per frame + GPU ms (GPU timer query only, where the browser supports it)
+          animate = function () {
+              const t0 = performance.now(); renderer.info.reset(); let q = null;
+              if (tq && gl && !PERF.qPend) { try { q = gl.createQuery(); gl.beginQuery(tq.TIME_ELAPSED_EXT, q); } catch (e) { q = null; } }
+              try { orig.apply(this, arguments); } finally { if (q) { try { gl.endQuery(tq.TIME_ELAPSED_EXT); PERF.qPend = q; } catch (e) {} } }
+              PERF.cpuSum += performance.now() - t0; PERF.cpuN++;
+              if (PERF.qPend) { try { if (gl.getQueryParameter(PERF.qPend, gl.QUERY_RESULT_AVAILABLE)) { if (!gl.getParameter(tq.GPU_DISJOINT_EXT)) PERF.gpuMs = gl.getQueryParameter(PERF.qPend, gl.QUERY_RESULT) / 1e6; gl.deleteQuery(PERF.qPend); PERF.qPend = null; } } catch (e) { PERF.qPend = null; } }
+          }; }
         animate();
 
         /* ===== DJI Virtual Joystick calibration ===== */
