@@ -243,12 +243,18 @@
         @media (max-width: 1250px) { #perf canvas { display: none; } #perf .pt { grid-template-columns: minmax(0, 1fr); padding: 4px 6px; } }
         body.perf-on #bf-time { top: 13vh; } body.perf-on #race-hud { top: 13vh; } body.perf-on #mp-badge { top: 18vh; }
         /* ===== ARM + FULLSCREEN BUTTONS: always visible on phones, above the sticks, clear of the browser bar ===== */
-        #mobile-btns { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(max(20px, env(safe-area-inset-bottom)) + 108px); display: flex; gap: 14px; z-index: 14; pointer-events: none; }
-        #mobile-btns .hud-circle-btn { width: 48px; height: 48px; pointer-events: auto; font-size: 18px; border: 1.5px solid rgba(255,255,255,.25); }
+        #mobile-btns { position: fixed; left: 0; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 8px; z-index: 14; pointer-events: none; }
+        #mb-tab { pointer-events: auto; width: 14px; height: 52px; padding: 0; border: 0; border-radius: 0 10px 10px 0; background: rgba(255,255,255,.16); color: rgba(255,255,255,.7); font-size: 11px; line-height: 52px; }
+        #mobile-btns .hud-circle-btn { display: none; width: 40px; height: 40px; pointer-events: auto; font-size: 15px; border: 1px solid rgba(255,255,255,.25); }
+        #mobile-btns.open .hud-circle-btn { display: flex; }
         body.home-on #mobile-btns, body.pm-open #mobile-btns, body.is-desktop #mobile-btns { display: none !important; }
         #rc-sticks-container { bottom: max(20px, env(safe-area-inset-bottom)); }
         /* top buttons (camera / reset / pause) sit under the stats strip -> push them below it */
-        body.perf-on #top-action-bar { top: 62px; }
+        /* top buttons (view / reset / pause): collapsed behind a thin tab on the right edge */
+        #top-action-bar { position: fixed; top: calc(50% - 26px); right: 0; left: auto; gap: 8px; z-index: 14; }
+        #ta-tab { width: 14px; height: 52px; padding: 0; border: 0; border-radius: 10px 0 0 10px; background: rgba(255,255,255,.16); color: rgba(255,255,255,.7); font-size: 11px; line-height: 52px; cursor: pointer; }
+        #top-action-bar .top-btn { display: none; }
+        #top-action-bar.open .top-btn { display: flex; }
         /* ===== MULTIPLAYER HUD ===== */
         #mp-feed { position: absolute; left: 1.2vw; bottom: 16vh; z-index: 12; font-size: clamp(9px,1.5vh,14px); color: #f2a85a; line-height: 1.35; pointer-events: none; text-shadow: 0 1px 2px #000; }
         #mp-board { display: none; position: absolute; right: 1.4vw; bottom: 3vh; z-index: 12; text-align: right; color: #fff; font-size: clamp(10px,1.8vh,16px); line-height: 1.25; pointer-events: none; text-shadow: 0 1px 3px #000; } #mp-board small { display: block; font-size: .72em; color: #cfd3d8; margin-bottom: .35em; }
@@ -413,6 +419,7 @@
             <button class="top-btn" id="btn-switch-view" title="Switch View">&#127916;</button>
             <button class="top-btn" id="btn-retry" title="Reset">&#8634;</button>
             <button class="top-btn" id="btn-pause" title="Pause">&#10074;&#10074;</button>
+            <button id="ta-tab" type="button" aria-label="Show buttons">&#8249;</button>
         </div>
 
         <!-- DJI Overlay Style Stick Containers -->
@@ -437,6 +444,7 @@
         </div>
 
         <div id="mobile-btns">
+            <button id="mb-tab" type="button" aria-label="Show buttons">&#8250;</button>
             <button id="btn-motor-toggle" class="hud-circle-btn" title="Arm / Disarm">&#10074;&#10074;</button>
             <button id="btn-fullscreen-toggle" class="hud-circle-btn" title="Lock/Fullscreen">&#128274;</button>
         </div>
@@ -2292,7 +2300,7 @@
         var PAUSED = false, PM_OPEN = false;
         const pmEl = document.createElement('div'); pmEl.id = 'pm'; pmEl.innerHTML = '<div class="pm-card"><div id="pm-body"></div></div>'; document.body.appendChild(pmEl);
         const pmBody = pmEl.querySelector('#pm-body'), BTN_START_TXT = document.getElementById('btn-start-game').innerText; let pmPage = 'main', pmT0 = 0; const pmSecs = { play: true };
-        { const pb = document.getElementById('btn-pause'); if (pb) { pb.classList.add('pm-fab'); document.body.appendChild(pb); } }
+        /* pause button stays inside the collapsible right-edge bar (no floating copy) */
         const GEARI = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.6v3M12 18.4v3M2.6 12h3M18.4 12h3M5.4 5.4l2.1 2.1M16.5 16.5l2.1 2.1M18.6 5.4l-2.1 2.1M7.5 16.5l-2.1 2.1"/><circle cx="12" cy="12" r="6.6"/></svg>';
         const pmB = (txt, fn, cls) => { const b = el('button', 'pm-b' + (cls ? ' ' + cls : ''), txt); b.onclick = e => { e.stopPropagation(); fn(); }; return b; };
         const pmHead = t => el('div', 'pm-h', GEARI + '<span>' + t + '</span>');
@@ -2994,6 +3002,25 @@
   // loading screen when entering a game session
   const orig=window.startGameSession;
   if(typeof orig==='function') window.startGameSession=function(){ const r=orig.apply(this,arguments); runLoad('LOADING MAP',1600); return r; };
+})();
+</script>
+<script>
+/* collapsible arm / fullscreen buttons: tap the thin edge tab to show them, they hide again by themselves */
+(function(){var box=document.getElementById('mobile-btns'),tab=document.getElementById('mb-tab'),t;
+if(!box||!tab)return;
+function close(){box.classList.remove('open');}
+function arm(){clearTimeout(t);t=setTimeout(close,3500);}
+tab.addEventListener('click',function(){box.classList.toggle('open');if(box.classList.contains('open'))arm();});
+box.addEventListener('click',function(e){if(e.target!==tab&&box.classList.contains('open'))arm();});
+})();
+</script>
+<script>
+/* collapsible top buttons: tap the thin right-edge tab, they hide again by themselves */
+(function(){var box=document.getElementById('top-action-bar'),tab=document.getElementById('ta-tab'),t;
+if(!box||!tab)return;
+function arm(){clearTimeout(t);t=setTimeout(function(){box.classList.remove('open');},3500);}
+tab.addEventListener('click',function(){box.classList.toggle('open');if(box.classList.contains('open'))arm();});
+box.addEventListener('click',function(e){if(e.target!==tab&&box.classList.contains('open'))arm();});
 })();
 </script>
 </body>
