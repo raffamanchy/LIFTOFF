@@ -226,13 +226,20 @@
         #stunt-msg { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); z-index: 12; display: none; color: #fff; font-style: italic; font-weight: 900; font-size: clamp(24px,5vw,70px); text-shadow: 0 3px 12px rgba(0,0,0,.6); text-align: center; pointer-events: none; } #stunt-msg small { display: block; font-size: .3em; letter-spacing: .2em; color: #ffd23f; }
         #cam-noise { display: none; position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: .14; mix-blend-mode: overlay; animation: camn .15s steps(1) infinite; } @keyframes camn { 0% { background-position: 0 0; } 25% { background-position: -37px 21px; } 50% { background-position: 19px -43px; } 75% { background-position: -52px -17px; } }
         /* ===== PERFORMANCE OVERLAY (top centre) ===== */
-        #perf { display: none; position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 9999; width: min(97vw, 1180px); background: rgba(30,30,30,.86); border-radius: 0 0 8px 8px; box-shadow: 0 2px 10px rgba(0,0,0,.35); font-family: "Segoe UI",Arial,sans-serif; color: #fff; pointer-events: none; }
+        #perf { display: none; position: fixed; top: clamp(6px,1.8vh,18px); left: 50%; transform: translateX(-50%); z-index: 9999; width: min(98vw, 1500px); background: rgba(24,28,28,.72); border-radius: 0; box-shadow: none; font-family: "Segoe UI",Arial,sans-serif; color: #fff; pointer-events: none; }
         body.perf-on #perf { display: flex; }   /* shown everywhere: intro, loading, home, menus, in-game */
-        #perf .pt { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: clamp(4px,1vh,10px) clamp(6px,1.2vw,14px); border-right: 1px solid rgba(255,255,255,.08); min-width: 0; } #perf .pt:last-child { border-right: 0; }
-        #perf .pl { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; } #perf .pl b { font-size: clamp(9px,2vh,16px); font-weight: 700; letter-spacing: .01em; } #perf .pl span { font-size: clamp(8px,1.7vh,14px); color: #d4d4d4; white-space: nowrap; }
-        #perf canvas { width: clamp(30px,4.6vw,66px); height: clamp(14px,3.4vh,30px); flex: 0 0 auto; }
-        @media (max-width: 760px) { #perf canvas { display: none; } #perf .pt { padding: 4px 5px; } }
-        body.perf-on #bf-time { top: 9vh; } body.perf-on #race-hud { top: 9vh; } body.perf-on #mp-badge { top: 14vh; }
+        #perf .pt { flex: 1 1 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: clamp(8px,1.6vw,26px); padding: clamp(8px,2.2vh,20px) clamp(8px,1.5vw,26px); border-right: 1px solid rgba(255,255,255,.06); min-width: 0; } #perf .pt:last-child { border-right: 0; }
+        #perf .pl { display: flex; flex-direction: column; gap: clamp(1px,.5vh,5px); min-width: max-content; } #perf .pl b { font-size: clamp(10px,2vh,16px); font-weight: 700; } #perf .pl span { font-size: clamp(9px,1.75vh,14px); color: #d9d9d9; white-space: nowrap; }
+        #perf canvas { width: clamp(26px,3.2vw,54px); height: clamp(14px,3.2vh,28px); flex: 0 0 auto; margin-bottom: 2px; }
+        #perf { width: min(98vw, 1500px); overflow: hidden; box-sizing: border-box; }
+        body.perf-on #perf { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+        #perf .pt { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: 6px; flex: none; min-width: 0; overflow: hidden; box-sizing: border-box; padding: clamp(6px,1.4vh,14px) clamp(8px,1vw,16px); }
+        #perf .pl { min-width: 0; overflow: hidden; gap: 2px; }
+        #perf .pl b { font-size: clamp(9px, min(1.8vh, 1.05vw), 14px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #perf .pl span { font-size: clamp(8px, min(1.6vh, .95vw), 13px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #perf canvas { width: 30px; height: clamp(12px, 2.6vh, 22px); margin: 0; }
+        @media (max-width: 1250px) { #perf canvas { display: none; } #perf .pt { grid-template-columns: minmax(0, 1fr); padding: 4px 6px; } }
+        body.perf-on #bf-time { top: 13vh; } body.perf-on #race-hud { top: 13vh; } body.perf-on #mp-badge { top: 18vh; }
         /* ===== MULTIPLAYER HUD ===== */
         #mp-feed { position: absolute; left: 1.2vw; bottom: 16vh; z-index: 12; font-size: clamp(9px,1.5vh,14px); color: #f2a85a; line-height: 1.35; pointer-events: none; text-shadow: 0 1px 2px #000; }
         #mp-board { display: none; position: absolute; right: 1.4vw; bottom: 3vh; z-index: 12; text-align: right; color: #fff; font-size: clamp(10px,1.8vh,16px); line-height: 1.25; pointer-events: none; text-shadow: 0 1px 3px #000; } #mp-board small { display: block; font-size: .72em; color: #cfd3d8; margin-bottom: .35em; }
@@ -2210,7 +2217,7 @@
             const e = _bfE.setFromQuaternion(drone.rotation, 'YXZ'), pitch = e.x, roll = e.z, cx = W / 2, cy = H / 2;
             _bfF.set(0, 0, -1).applyQuaternion(drone.rotation); const hd = ((Math.atan2(_bfF.x, -_bfF.z) * 180 / Math.PI) + 360) % 360;
             g.fillStyle = '#fff'; g.strokeStyle = '#fff'; g.shadowColor = '#000'; g.shadowBlur = 3; g.lineWidth = 2;
-            { const tw = W * 0.22, ty = H * 0.165, fs = Math.max(13, H * 0.034); g.font = 'bold ' + fs + 'px "Courier New",monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';   // compass tape: S ' W ' N ' E ' S
+            { const tw = W * 0.22, ty = H * (document.body.classList.contains('perf-on') ? 0.215 : 0.165), fs = Math.max(13, H * 0.034); g.font = 'bold ' + fs + 'px "Courier New",monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';   // compass tape: S ' W ' N ' E ' S
                 for (let a = 0; a < 360; a += 45) { const d = ((a - hd + 540) % 360) - 180, x = cx + d * tw / 360; if (a % 90 === 0) g.fillText(['N', 'E', 'S', 'W'][a / 90], x, ty); else g.fillRect(x - 1, ty - fs * 0.28, 2, fs * 0.56); } }
             const lx = W * 0.335, rx = W * 0.655, y0 = H * 0.25, y1 = H * 0.746;
             for (let i = 0; i <= 12; i++) { const y = y0 + (y1 - y0) * i / 12, big = i % 2 === 0, sz = big ? Math.max(4, H * 0.011) : Math.max(2, H * 0.005); g.fillRect(lx - sz / 2, y - sz / 2, sz, sz * (big ? 1.5 : 1)); g.fillRect(rx - sz / 2, y - sz / 2, sz, sz * (big ? 1.5 : 1)); }
@@ -2240,7 +2247,7 @@
         (function perfLoop() { PERF.frames++; requestAnimationFrame(perfLoop); })();   // real display frame rate: own loop, so it also runs when the game loop is idle (intro, home)
         try { PERF.gl = renderer.getContext(); PERF.tq = PERF.gl.getExtension('EXT_disjoint_timer_query_webgl2'); } catch (e) {}
         try { new PerformanceObserver(l => l.getEntries().forEach(e => { PERF.recv += e.transferSize || e.encodedBodySize || 0; })).observe({ type: 'resource' }); } catch (e) {}   // downloaded bytes
-        const PING_URLS = ['https://www.gstatic.com/generate_204', 'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/package.json'];
+        const PING_URLS = ['https://www.gstatic.com/generate_204', 'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/package.json', location.href.split('#')[0]];   // last one = same site (works where other hosts are blocked)
         function netPing(i) { i = i || 0; if (i >= PING_URLS.length || !navigator.onLine) { if (i >= PING_URLS.length || !navigator.onLine) PERF.netPing = 0; return; } const t = performance.now(); fetch(PING_URLS[i] + '?_=' + Date.now(), { mode: 'no-cors', cache: 'no-store' }).then(() => { PERF.netPing = Math.max(1, Math.round(performance.now() - t)); }).catch(() => netPing(i + 1)); }
         netPing(0); setInterval(() => netPing(0), 2500);
         function perfDraw(id, arr) { const c = document.getElementById('pc-' + id), g = c.getContext('2d'), max = PMAX[id], bad = PBAD[id], low = id === 'fps'; g.clearRect(0, 0, 70, 30); const w = 70 / 30; g.fillStyle = '#8fd13f'; g.fillRect(0, 28, 70, 2);
